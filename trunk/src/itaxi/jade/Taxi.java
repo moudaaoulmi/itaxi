@@ -27,7 +27,7 @@ public class Taxi extends Agent {
 
 	private long _geoPoint[2];
 
-	protected setup() {
+	protected void setup() {
 		System.out.println(getLocalName() + ": A iniciar...");
 		Object[] args = getArguments();
 
@@ -36,11 +36,11 @@ public class Taxi extends Agent {
 		registaAgente();
 
 		// cria o comportamentos para os varios tipos de mensagem
-		addBehaviour(new ServidorInformacao());
-		addBehaviour(new ServidorRecepcaoOfertas());
+		//addBehaviour(new ServidorInformacao());
+		//addBehaviour(new ServidorRecepcaoOfertas());
 		addBehaviour(new ServidorRecepcaoPedidosCompra());
 		// cria um comportamento de timeout WakerBehaviour que e' activado para terminar o leilao
-		addBehaviour(new TimeOutBehaviour(this, timeout * 1000));
+		//addBehaviour(new TimeOutBehaviour(this, timeout * 1000));
 	}
 
 
@@ -54,8 +54,8 @@ public class Taxi extends Agent {
 		public void action() {
 			//Se nao ha' representante vencedor, entao e' porque o leilao nao terminou
 			//ou ninguem fez oferta
-			if(representanteVencedor == null)
-				return;
+			//			if(representanteVencedor == null)
+			//				return;
 
 			// retira a primeira mensagem da lista de entrada
 			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
