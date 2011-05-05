@@ -2,9 +2,10 @@
  * Leiloeiro num leilao do tipo 
  * first-price sealed-bid auction
  */
-package aasm.jade.firstPriceSealedBidAuction;
+package iTaxi.aasma.jade;
 
 import java.util.Hashtable;
+
 import java.util.Iterator;
 
 import jade.core.AID;
