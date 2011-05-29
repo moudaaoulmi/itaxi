@@ -1,9 +1,9 @@
 package itaxi.messages.entities;
 
-import java.util.Date;
+import itaxi.messages.coordinates.Coordinates;
+import itaxi.messages.exceptions.PartySizeException;
 
-import smartfleet.coordinates.Coordinates;
-import smartfleet.exceptions.PartySizeException;
+import java.util.Date;
 
 public class Party {
 
