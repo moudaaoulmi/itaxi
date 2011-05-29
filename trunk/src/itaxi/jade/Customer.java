@@ -31,6 +31,8 @@ public class Customer extends Agent {
 
 	private MessageTemplate _mt;
 
+	private static final long serialVersionUID = 1L;
+
 	protected void setup() {
 		System.out.println(getLocalName() + ": A iniciar...");
 		Object[] args = getArguments();
@@ -38,69 +40,69 @@ public class Customer extends Agent {
 		_destination[0] = 39000000;
 		_destination[1] = 39000000;
 
+		_centralServer = getCentralServer();
+
+		addBehaviour(new CallTaxi());
+
 		// Resgista o agente no DF
 		//registaAgente();
 
 	}
 
-	private void passo0(){
-		_centralServer = getCentralServer();
-
-		//If there is no central server
-		if(_centralServer == null){
-			return;
-		}
-
-		// If there is a central server send message
-		ACLMessage queryIf = new ACLMessage(ACLMessage.QUERY_IF);
-		// Mensagem enviada a todos os leiloeiros
-		//	for (int i = 0; i < leiloeiros.length; ++i)
-		//		queryIf.addReceiver(leiloeiros[i]);
-		queryIf.addReceiver(_centralServer);
-		// Message content is destination
-		queryIf.setContent("" + _destination[0] + _destination[1]);
-		//envia a mensagem
-		myAgent.send(queryIf);
-		System.out.println(getLocalName() + ": Sent request to central server");
-
-		//Reinicializa variavel para contabilizar respostas recebidas
-		//		respostasRecebidas = 0;
-
-		// Prepara o template para a resposta
-		_mt = MessageTemplate.or(
-				MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
-				MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM));
-		passo = 1;
+	private AID getCentralServer() {
+		// TODO: use directory
+		return new AID("centralServer", AID.ISLOCALNAME);
 	}
 
-	private class RequestTaxiBehaviour extends Behaviour {
-		private AID[] leiloeiros;			//Leiloeiros existentes
-		private AID centralServer; 	//O leiloeiro que vende o item desejado
-		private MessageTemplate mt; 		//O template para receber respostas
-		private int respostasRecebidas = 0; //Contabiliza respostas recebidas
+	class CallTaxi extends OneShotBehaviour {
 
-		private int passo = 0; 				//O passo do protocolo de comunicacao
+		private int passo = 0;
+
+		private static final long serialVersionUID = 1L;
 
 		public void action() {
+
 			switch(passo) {
 			case 0:
 				passo0();
 				break;
 			case 1:
-				passo1();
+				//passo1();
 				break;
 			case 2:
-				passo2();
+				//passo2();
 				break;
 			case 3:
-				passo3();
+				//passo3();
 				break;
 			}
 		}
 
-		private AID getCentralServer() {
-			// TODO: use directory
-			return new AID("Servidor", AID.ISLOCALNAME);
+		private void passo0(){
+
+			//If there is no central server
+			if(_centralServer == null){
+				return;
+			}
+
+			ACLMessage queryIf = new ACLMessage(ACLMessage.QUERY_IF);
+
+			queryIf.addReceiver(_centralServer);
+
+			// Message content is destination
+			queryIf.setContent("" + _destination[0] + _destination[1]);
+
+			// send message
+			myAgent.send(queryIf);
+			System.out.println(getLocalName() + ": Sent request to central server");
+
+			// Prepare template for answer
+			_mt = MessageTemplate.or(
+					MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
+					MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM));
+
+			passo = 1;
+
 		}
 	}
-
+}

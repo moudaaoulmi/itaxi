@@ -1,7 +1,3 @@
-/**
- * Leiloeiro num leilao do tipo
- * first-price sealed-bid auction
- */
 package itaxi.jade;
 
 import java.util.Hashtable;
