@@ -1,8 +1,8 @@
 package itaxi.messages.entities;
 
-import java.util.Map;
+import itaxi.messages.coordinates.Coordinates;
 
-import smartfleet.coordinates.Coordinates;
+import java.util.Map;
 
 public class Station {
 

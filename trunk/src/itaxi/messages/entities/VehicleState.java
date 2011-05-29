@@ -1,8 +1,8 @@
 package itaxi.messages.entities;
 
-import java.util.LinkedList;
+import itaxi.messages.coordinates.Coordinates;
 
-import smartfleet.coordinates.Coordinates;
+import java.util.LinkedList;
 
 public class VehicleState {
 	private Coordinates location;
