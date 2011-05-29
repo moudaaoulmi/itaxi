@@ -15,21 +15,22 @@ import jade.lang.acl.MessageTemplate;
 
 public class Taxi extends Agent {
 
+	private int _id;
+	
 	private int _gas;
 
 	private int _capacity;
 
 	private int _passengers;
 
-	private long _geoPoint[2];
+	private long[] _geoPoint = new long[2];
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": A iniciar...");
 		Object[] args = getArguments();
 
-
 		// Resgista o agente no DF
-		registaAgente();
+		registerAgent();
 
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
@@ -37,6 +38,58 @@ public class Taxi extends Agent {
 		addBehaviour(new ServidorRecepcaoPedidosCompra());
 		// cria um comportamento de timeout WakerBehaviour que e' activado para terminar o leilao
 		//addBehaviour(new TimeOutBehaviour(this, timeout * 1000));
+	}
+	
+	/**
+	 * Regista o agent no DF   
+	 */
+	private void registerAgent() {
+		// (Paginas Amarelas)
+		
+		DFAgentDescription df = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("Taxi");
+		sd.setName("Taxi"+_id);
+		df.addServices(sd);
+		
+		try {
+			DFService.register(this, df);
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	protected void takeDown() { // Deregister from the yellow pages
+		try {
+			DFService.deregister(this); 
+		}
+		catch (FIPAException fe) {
+			fe.printStackTrace();
+		}
+		// Close the GUI
+		//myGui.dispose();
+		// Printout a dismissal message
+		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
+	}
+	
+	private AID getCentralServer() {
+		
+		DFAgentDescription df = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("CentralServer");
+		sd.setName("Skynet");
+		df.addServices(sd);
+		AID central=null;
+		try {
+			DFAgentDescription[] dfl = DFService.search( null , df);
+			central = dfl[0].getName();
+			
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return central;
 	}
 
 
