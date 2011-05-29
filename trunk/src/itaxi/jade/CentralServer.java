@@ -10,9 +10,9 @@ public class CentralServer extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	private MessageTemplate _mt;
-	
+
 	protected void setup() {
-		_mt = MessageTemplate.MatchPerformative(ACLMessage.CONFIRM);
+		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
 	}
 
 	class GetCallBehaviour extends OneShotBehaviour {
@@ -20,8 +20,8 @@ public class CentralServer extends Agent {
 		private int passo = 0;
 
 		private static final long serialVersionUID = 1L;
-		
-		
+
+
 
 		public void action() {
 
@@ -30,7 +30,7 @@ public class CentralServer extends Agent {
 				passo0();
 				break;
 			case 1:
-				passo1();
+				//passo1();
 				break;
 			case 2:
 				return;
@@ -47,46 +47,18 @@ public class CentralServer extends Agent {
 			ACLMessage msg = blockingReceive(_mt);
 
 			if(msg != null) {
-				String answer = msg.getContent();
-				System.out.println("Central server answered with " + answer);
+				String query = msg.getContent();
+				System.out.println("Costumer want to go to " + query);
+
+				ACLMessage answer = new ACLMessage(ACLMessage.CONFIRM);
+
+				answer.addReceiver(msg.getSender());
+
+				// send message
+				myAgent.send(answer);
 			}
-
-			ACLMessage queryIf = new ACLMessage(ACLMessage.QUERY_IF);
-
-			queryIf.addReceiver(_centralServer);
-
-			// Message content is destination
-			queryIf.setContent("" + _destination[0] + _destination[1]);
-
-			// send message
-			myAgent.send(queryIf);
-			System.out.println(getLocalName() + ": Sent request to central server");
-
-			// Prepare template for answer
-			_mt = MessageTemplate.or(
-					MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
-					MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM));
-
-			passo = 1;
 
 		}
 
-		private void passo1() {
-
-			//If there is no central server
-			if(_centralServer == null){
-				return;
-			}
-
-			ACLMessage msg = blockingReceive(_mt);
-
-			if(msg != null) {
-				String answer = msg.getContent();
-				System.out.println("Central server answered with " + answer);
-			}
-
-			passo = 2;
-		}
 	}
-
 }
