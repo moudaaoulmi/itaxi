@@ -2,10 +2,12 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/Users/coolkcah/Documents/workspace/iTaxi/lib/http.jar"/>
-	<classpathentry kind="lib" path="/Users/coolkcah/Documents/workspace/iTaxi/lib/iiop.jar"/>
-	<classpathentry kind="lib" path="/Users/coolkcah/Documents/workspace/iTaxi/lib/jade.jar"/>
-	<classpathentry kind="lib" path="/Users/coolkcah/Documents/workspace/iTaxi/lib/jadeTools.jar"/>
-	<classpathentry kind="lib" path="/Users/coolkcah/Documents/workspace/iTaxi/lib/commons-codec/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/commons-net-2.2.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/gson-1.6.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/http.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/iiop.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/jade.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/jadeTools.jar"/>
+	<classpathentry kind="lib" path="/home/aknahs/workspace/iTaxi/lib/commons-codec/commons-codec-1.3.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
