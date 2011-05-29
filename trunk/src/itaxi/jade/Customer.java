@@ -1,29 +1,13 @@
-/**
- * Leiloeiro num leilao do tipo
- * first-price sealed-bid auction
- */
 package itaxi.jade;
-
-import itaxi.jade.Taxi.ServidorRecepcaoPedidosCompra;
-
-import java.util.Hashtable;
-
-import java.util.Iterator;
 
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.*;
-import jade.domain.DFService;
-import jade.domain.FIPAException;
-import jade.domain.FIPAAgentManagement.DFAgentDescription;
-import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
 
 import jade.lang.acl.MessageTemplate;
 
 public class Customer extends Agent {
-
-	//private String _destination;
 
 	private long[] _destination = new long[2];
 
@@ -42,10 +26,10 @@ public class Customer extends Agent {
 
 		_centralServer = getCentralServer();
 
-		addBehaviour(new CallTaxi());
+		addBehaviour(new CallTaxiBehaviour());
 
 		// Resgista o agente no DF
-		//registaAgente();
+		// registaAgente();
 
 	}
 
@@ -54,7 +38,7 @@ public class Customer extends Agent {
 		return new AID("centralServer", AID.ISLOCALNAME);
 	}
 
-	class CallTaxi extends OneShotBehaviour {
+	class CallTaxiBehaviour extends OneShotBehaviour {
 
 		private int passo = 0;
 
@@ -67,11 +51,12 @@ public class Customer extends Agent {
 				passo0();
 				break;
 			case 1:
-				//passo1();
+				passo1();
 				break;
 			case 2:
+				return;
 				//passo2();
-				break;
+				//break;
 			case 3:
 				//passo3();
 				break;
@@ -103,6 +88,23 @@ public class Customer extends Agent {
 
 			passo = 1;
 
+		}
+		
+		private void passo1() {
+
+			//If there is no central server
+			if(_centralServer == null){
+				return;
+			}
+
+			ACLMessage msg = blockingReceive(_mt);
+			
+			if(msg != null) {
+				String answer = msg.getContent();
+				System.out.println("Central server answered with " + answer);
+			}
+
+			passo = 2;
 		}
 	}
 }
