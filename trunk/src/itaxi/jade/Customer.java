@@ -31,11 +31,16 @@ public class Customer extends Agent {
 		_destination[1] = 39000000;
 
 		_centralServer = getCentralServer();
+		
+		if(_centralServer == null) {
+			//FIXME: agent can operate without central server
+			return;
+		}
 
 		addBehaviour(new CallTaxiBehaviour());
 
 		// Resgista o agente no DF
-		 registerAgent();
+		registerAgent();
 
 	}
 
@@ -44,13 +49,13 @@ public class Customer extends Agent {
 	 */
 	private void registerAgent() {
 		// (Paginas Amarelas)
-		
+
 		DFAgentDescription df = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("Customer");
 		sd.setName("Customer"+_id);
 		df.addServices(sd);
-		
+
 		try {
 			DFService.register(this, df);
 		} catch (FIPAException e) {
@@ -58,7 +63,7 @@ public class Customer extends Agent {
 			e.printStackTrace();
 		}	
 	}
-	
+
 	protected void takeDown() { // Deregister from the yellow pages
 		try {
 			DFService.deregister(this); 
@@ -71,9 +76,9 @@ public class Customer extends Agent {
 		// Printout a dismissal message
 		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
 	}
-	
+
 	private AID getCentralServer() {
-				
+
 		DFAgentDescription df = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
 		sd.setType("CentralServer");
@@ -81,16 +86,24 @@ public class Customer extends Agent {
 		df.addServices(sd);
 		AID central=null;
 		try {
-			DFAgentDescription[] dfl = DFService.search( null , df);
-			central = dfl[0].getName();
-			
+			DFAgentDescription[] dfl = DFService.search(this, df);
+
+			if(dfl.length == 0) {
+				System.out.println(getLocalName() + ": central server not found!");
+				return null;
+			}
+			else {
+				central = dfl[0].getName();
+			}
+
+
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 		return central;
 	}
-	
+
 	class CallTaxiBehaviour extends OneShotBehaviour {
 
 		private int passo = 0;

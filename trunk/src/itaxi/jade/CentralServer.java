@@ -66,7 +66,8 @@ public class CentralServer extends Agent {
 		AID[] taxis=null;
 		
 		try {
-			DFAgentDescription[] result = DFService.search(null, df);
+			DFAgentDescription[] result = DFService.search(this, df);
+			
 			taxis = new AID[result.length];
 			for (int i = 0; i < result.length; ++i) {
 				taxis[i] = result[i].getName();
