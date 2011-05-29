@@ -35,7 +35,7 @@ public class Customer extends Agent {
 		addBehaviour(new CallTaxiBehaviour());
 
 		// Resgista o agente no DF
-		// registaAgente();
+		 registerAgent();
 
 	}
 

@@ -1,6 +1,7 @@
 package itaxi.jade;
 
 import itaxi.jade.Customer.CallTaxiBehaviour;
+import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
@@ -15,13 +16,12 @@ public class CentralServer extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	private MessageTemplate _mt;
-	
-	
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": A iniciar...");
 		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
 		addBehaviour(new GetCallBehaviour());
+		registerAgent();
 	}
 
 	/**
@@ -57,6 +57,27 @@ public class CentralServer extends Agent {
 		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
 	}
 	
+	private AID[] getTaxis() {
+		
+		DFAgentDescription df = new DFAgentDescription();
+		ServiceDescription sd = new ServiceDescription();
+		sd.setType("Taxi");
+		df.addServices(sd);
+		AID[] taxis=null;
+		
+		try {
+			DFAgentDescription[] result = DFService.search(null, df);
+			taxis = new AID[result.length];
+			for (int i = 0; i < result.length; ++i) {
+				taxis[i] = result[i].getName();
+			}
+		} catch (FIPAException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		return taxis;
+	}
+	
 	class GetCallBehaviour extends OneShotBehaviour {
 
 		private int passo = 0;
@@ -88,7 +109,7 @@ public class CentralServer extends Agent {
 
 			if(msg != null) {
 				String query = msg.getContent();
-				System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " wants to go to " + query);
+				System.out.println("Costumer want to go to " + query);
 
 				ACLMessage answer = new ACLMessage(ACLMessage.CONFIRM);
 
@@ -96,8 +117,6 @@ public class CentralServer extends Agent {
 
 				// send message
 				myAgent.send(answer);
-				
-				System.out.println(getLocalName() + ": Sent answer to " + msg.getSender().getLocalName());
 			}
 
 		}
