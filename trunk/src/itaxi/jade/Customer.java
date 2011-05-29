@@ -98,21 +98,22 @@ public class Customer extends Agent {
 		private static final long serialVersionUID = 1L;
 
 		public void action() {
-
-			switch(passo) {
-			case 0:
-				passo0();
-				break;
-			case 1:
-				passo1();
-				break;
-			case 2:
-				return;
-				//passo2();
-				//break;
-			case 3:
-				//passo3();
-				break;
+			while(true) {
+				switch(passo) {
+				case 0:
+					passo0();
+					break;
+				case 1:
+					passo1();
+					break;
+				case 2:
+					return;
+					//passo2();
+					//break;
+				case 3:
+					//passo3();
+					break;
+				}
 			}
 		}
 
@@ -132,7 +133,8 @@ public class Customer extends Agent {
 
 			// send message
 			myAgent.send(queryIf);
-			System.out.println(getLocalName() + ": Sent request to central server");
+
+			System.out.println(getLocalName() + ": Sent request to " + _centralServer.getLocalName());
 
 			// Prepare template for answer
 			_mt = MessageTemplate.or(
@@ -142,19 +144,20 @@ public class Customer extends Agent {
 			passo = 1;
 
 		}
-		
+
 		private void passo1() {
 
-			//If there is no central server
-			if(_centralServer == null){
-				return;
-			}
+			System.out.println(getLocalName() + ": now at step 1");
 
 			ACLMessage msg = blockingReceive(_mt);
-			
+
 			if(msg != null) {
-				String answer = msg.getContent();
-				System.out.println("Central server answered with " + answer);
+				//String answer = msg.getContent();
+				//System.out.println("Central server answered with " + answer);
+				if(msg.getPerformative() == ACLMessage.CONFIRM)
+					System.out.println("Central server answered with OK");
+				else
+					System.out.println("Central server answered with NOK");
 			}
 
 			passo = 2;

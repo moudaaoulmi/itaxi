@@ -1,5 +1,6 @@
 package itaxi.jade;
 
+import itaxi.jade.Customer.CallTaxiBehaviour;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
@@ -14,9 +15,13 @@ public class CentralServer extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	private MessageTemplate _mt;
+	
+	
 
 	protected void setup() {
+		System.out.println(getLocalName() + ": A iniciar...");
 		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
+		addBehaviour(new GetCallBehaviour());
 	}
 
 	/**
@@ -83,7 +88,7 @@ public class CentralServer extends Agent {
 
 			if(msg != null) {
 				String query = msg.getContent();
-				System.out.println("Costumer want to go to " + query);
+				System.out.println(getLocalName() + ": " + msg.getSender().getLocalName() + " wants to go to " + query);
 
 				ACLMessage answer = new ACLMessage(ACLMessage.CONFIRM);
 
@@ -91,6 +96,8 @@ public class CentralServer extends Agent {
 
 				// send message
 				myAgent.send(answer);
+				
+				System.out.println(getLocalName() + ": Sent answer to " + msg.getSender().getLocalName());
 			}
 
 		}
