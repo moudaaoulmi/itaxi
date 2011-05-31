@@ -15,9 +15,6 @@ import com.google.gson.Gson;
 
 public class AcceptConnection extends Thread {
 	
-	//Server port
-	private static int SERVER_PORT = 6000;
-	
 	//Socket for accepting new connections
 	private ServerSocket serverSocket;
 	
@@ -33,11 +30,11 @@ public class AcceptConnection extends Thread {
 	
 
 	//Start thread execution
-	public AcceptConnection(Object obj,MessageHandler hand) {
+	public AcceptConnection(int serverPort, Object obj,MessageHandler hand) {
 		try {
 			handler = hand;
 			caller = obj;
-			serverSocket = new ServerSocket(SERVER_PORT);
+			serverSocket = new ServerSocket(serverPort);
 			gson = new Gson();
 			stop = false;
 		} catch (IOException e) {
@@ -107,7 +104,7 @@ public class AcceptConnection extends Thread {
 	}
 
 	//Stop thread execution
-	public void stopThread() {
+	public void stopThread(){
 		try {
 			stop = true;
 			serverSocket.close();
