@@ -1,4 +1,4 @@
-package itaxi.messages.message;
+package itaxi.communications.message;
 
 public enum MessageType {
 	REGISTERSTATION,
