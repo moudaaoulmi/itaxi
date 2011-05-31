@@ -15,8 +15,10 @@ import jade.lang.acl.MessageTemplate;
 
 public class Taxi extends Agent {
 
+	private static final long serialVersionUID = 1L;
+
 	private int _id;
-	
+
 	private int _gas;
 
 	private int _capacity;
@@ -26,7 +28,7 @@ public class Taxi extends Agent {
 	private long[] _geoPoint = new long[2];
 
 	protected void setup() {
-		System.out.println(getLocalName() + ": A iniciar...");
+		System.out.println(getLocalName() + ": initializing...");
 		Object[] args = getArguments();
 
 		// Resgista o agente no DF
@@ -35,93 +37,101 @@ public class Taxi extends Agent {
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
 		//addBehaviour(new ServidorRecepcaoOfertas());
-		addBehaviour(new ServidorRecepcaoPedidosCompra());
+		//addBehaviour(new ServidorRecepcaoPedidosCompra());
 		// cria um comportamento de timeout WakerBehaviour que e' activado para terminar o leilao
 		//addBehaviour(new TimeOutBehaviour(this, timeout * 1000));
 	}
-	
+
 	/**
-	 * Regista o agent no DF   
+	 * Register at the yellow pages   
 	 */
 	private void registerAgent() {
-		// (Paginas Amarelas)
-		
-		DFAgentDescription df = new DFAgentDescription();
+
+		DFAgentDescription dfd = new DFAgentDescription();
+
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("Taxi");
-		sd.setName("Taxi"+_id);
-		df.addServices(sd);
-		
+		sd.setType(Services.TAXI.toString());
+		sd.setName(getLocalName());
+
+		dfd.addServices(sd);
+
 		try {
-			DFService.register(this, df);
+			DFService.register(this, dfd);
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
-	
-	protected void takeDown() { // Deregister from the yellow pages
+
+
+	/**
+	 * Unregister from the yellow pages 
+	 */
+	protected void takeDown() {
 		try {
 			DFService.deregister(this); 
 		}
 		catch (FIPAException fe) {
 			fe.printStackTrace();
 		}
-		// Close the GUI
-		//myGui.dispose();
-		// Printout a dismissal message
-		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
+		System.out.println(getLocalName() + ": terminating.");
 	}
-	
+
 	private AID getCentralServer() {
-		
-		DFAgentDescription df = new DFAgentDescription();
+
+		DFAgentDescription dfd = new DFAgentDescription();
+
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("CentralServer");
-		sd.setName("Skynet");
-		df.addServices(sd);
-		AID central=null;
+		sd.setType(Services.CENTRAL_SERVER.toString());
+
+		dfd.addServices(sd);
+
 		try {
-			DFAgentDescription[] dfl = DFService.search( null , df);
-			central = dfl[0].getName();
-			
+			DFAgentDescription[] result = DFService.search(this, dfd);
+
+			if(result.length == 0)
+				return null;
+			else
+				return result[0].getName();
+
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		return central;
-	}
-
-
-	/**
-	 * Este comportamento recebe um pedido de cliente
-	 */
-	class ServidorRecepcaoPedidosCompra extends CyclicBehaviour {
-		/**
-		 * Define as acções que o comportamento executa.
-		 */
-		public void action() {
-			//Se nao ha' representante vencedor, entao e' porque o leilao nao terminou
-			//ou ninguem fez oferta
-			//			if(representanteVencedor == null)
-			//				return;
-
-			// retira a primeira mensagem da lista de entrada
-			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-			// se a lista estiver vazia a mensagem devolvida é null
-			if (msg != null) {
-				// escreve o conteudo da mensagem na consola
-				if ((msg.getSender().getLocalName().compareTo(representanteVencedor.getLocalName()) == 0)
-						&& msg.getContent().equals("COMPRA"))
-				{
-					enviaResposta(msg, ACLMessage.INFORM, "");
-					System.out.println(getLocalName() + ": Item vendido com sucesso. Terminando...");
-					// termina a execucao
-					doDelete();
-				}
-			} else {
-				block();
-			}
+			return null;
 		}
 	}
+
+
+	//FIXME:
+	//	/**
+	//	 * Este comportamento recebe um pedido de cliente
+	//	 */
+	//	class ServidorRecepcaoPedidosCompra extends CyclicBehaviour {
+	//		/**
+	//		 * Define as acções que o comportamento executa.
+	//		 */
+	//		public void action() {
+	//			//Se nao ha' representante vencedor, entao e' porque o leilao nao terminou
+	//			//ou ninguem fez oferta
+	//			//			if(representanteVencedor == null)
+	//			//				return;
+	//
+	//			// retira a primeira mensagem da lista de entrada
+	//			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+	//			// se a lista estiver vazia a mensagem devolvida é null
+	//			if (msg != null) {
+	//				// escreve o conteudo da mensagem na consola
+	//				if ((msg.getSender().getLocalName().compareTo(representanteVencedor.getLocalName()) == 0)
+	//						&& msg.getContent().equals("COMPRA"))
+	//				{
+	//					enviaResposta(msg, ACLMessage.INFORM, "");
+	//					System.out.println(getLocalName() + ": Item vendido com sucesso. Terminando...");
+	//					// termina a execucao
+	//					doDelete();
+	//				}
+	//			} else {
+	//				block();
+	//			}
+	//		}
+	//	}
 }

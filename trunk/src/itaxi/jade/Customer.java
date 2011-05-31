@@ -24,18 +24,29 @@ public class Customer extends Agent {
 	private static final long serialVersionUID = 1L;
 
 	protected void setup() {
-		System.out.println(getLocalName() + ": A iniciar...");
+		System.out.println(getLocalName() + ": initializing...");
 		Object[] args = getArguments();
 
 		_destination[0] = 39000000;
 		_destination[1] = 39000000;
 
-		_centralServer = getCentralServer();
+		// time for central server to register
+		try {
+		Thread.sleep(500);
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
 		
+		_centralServer = getCentralServer();
+			
 		if(_centralServer == null) {
-			//FIXME: agent can operate without central server
+			System.out.println(getLocalName() + ": central server not found!");
 			return;
 		}
+		else
+			System.out.println(getLocalName() + ": found " + _centralServer.getName());
 
 		addBehaviour(new CallTaxiBehaviour());
 
@@ -45,7 +56,7 @@ public class Customer extends Agent {
 	}
 
 	/**
-	 * Regista o agent no DF   
+	 * Register at the yellow pages   
 	 */
 	private void registerAgent() {
 		// (Paginas Amarelas)
@@ -64,7 +75,10 @@ public class Customer extends Agent {
 		}	
 	}
 
-	protected void takeDown() { // Deregister from the yellow pages
+	/**
+	 * Unregister from the yellow pages 
+	 */
+	protected void takeDown() {
 		try {
 			DFService.deregister(this); 
 		}
@@ -79,29 +93,26 @@ public class Customer extends Agent {
 
 	private AID getCentralServer() {
 
-		DFAgentDescription df = new DFAgentDescription();
+		DFAgentDescription dfd = new DFAgentDescription();
+		
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("CentralServer");
-		sd.setName("Skynet");
-		df.addServices(sd);
-		AID central=null;
+		sd.setType(Services.CENTRAL_SERVER.toString());
+		
+		dfd.addServices(sd);
+		
 		try {
-			DFAgentDescription[] dfl = DFService.search(this, df);
+			DFAgentDescription[] result = DFService.search(this, dfd);
 
-			if(dfl.length == 0) {
-				System.out.println(getLocalName() + ": central server not found!");
+			if(result.length == 0)
 				return null;
-			}
-			else {
-				central = dfl[0].getName();
-			}
-
-
+			else
+				return result[0].getName();
+			
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		return central;
+			return null;
+		}
 	}
 
 	class CallTaxiBehaviour extends OneShotBehaviour {

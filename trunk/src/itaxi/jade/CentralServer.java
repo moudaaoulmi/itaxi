@@ -1,8 +1,8 @@
 package itaxi.jade;
 
-import itaxi.jade.Customer.CallTaxiBehaviour;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
@@ -18,33 +18,40 @@ public class CentralServer extends Agent {
 	private MessageTemplate _mt;
 
 	protected void setup() {
-		System.out.println(getLocalName() + ": A iniciar...");
-		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
-		addBehaviour(new GetCallBehaviour());
+		System.out.println(getLocalName() + ": initializing...");
 		registerAgent();
+		
+		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
+		//addBehaviour(new GetCallBehaviour());
+		addBehaviour(new ListTaxisBehaviour());
+
 	}
 
 	/**
-	 * Regista o agent no DF   
+	 * Register at the yellow pages   
 	 */
 	private void registerAgent() {
-		// (Paginas Amarelas)
 		
-		DFAgentDescription df = new DFAgentDescription();
+		DFAgentDescription dfd = new DFAgentDescription();
+		dfd.setName(getAID());
+		
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("CentralServer");
-		sd.setName("Skynet");
-		df.addServices(sd);
+		sd.setType(Services.CENTRAL_SERVER.toString());
+		sd.setName(getLocalName());
+		dfd.addServices(sd);
 		
 		try {
-			DFService.register(this, df);
+			DFService.register(this, dfd);
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}	
 	}
 	
-	protected void takeDown() { // Deregister from the yellow pages
+	/**
+	 * Unregister from the yellow pages 
+	 */
+	protected void takeDown() { 
 		try {
 			DFService.deregister(this); 
 		}
@@ -54,29 +61,48 @@ public class CentralServer extends Agent {
 		// Close the GUI
 		//myGui.dispose();
 		// Printout a dismissal message
-		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
+		System.out.println(getLocalName() + ": terminating.");
 	}
 	
 	private AID[] getTaxis() {
 		
-		DFAgentDescription df = new DFAgentDescription();
+		DFAgentDescription dfd = new DFAgentDescription();
+		
 		ServiceDescription sd = new ServiceDescription();
-		sd.setType("Taxi");
-		df.addServices(sd);
-		AID[] taxis=null;
+		sd.setType(Services.TAXI.toString());
+		
+		dfd.addServices(sd);
+		
+		AID[] taxis = null;
 		
 		try {
-			DFAgentDescription[] result = DFService.search(this, df);
+			DFAgentDescription[] result = DFService.search(this, dfd);
+			
+			if(result.length == 0)
+				return null;
 			
 			taxis = new AID[result.length];
-			for (int i = 0; i < result.length; ++i) {
+			
+			for (int i = 0; i < result.length; i++) {
 				taxis[i] = result[i].getName();
 			}
 		} catch (FIPAException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return null;
 		}	
 		return taxis;
+	}
+	
+	class ListTaxisBehaviour extends CyclicBehaviour {
+		public void action() {
+			AID[] taxis = getTaxis();
+			
+			System.out.println("Registered taxis:");
+			for(AID taxi : taxis) {
+				System.out.println("\t" + taxi.getName());
+			}
+		}
 	}
 	
 	class GetCallBehaviour extends OneShotBehaviour {
@@ -119,8 +145,8 @@ public class CentralServer extends Agent {
 				// send message
 				myAgent.send(answer);
 			}
-
 		}
-
 	}
+	
+	
 }
