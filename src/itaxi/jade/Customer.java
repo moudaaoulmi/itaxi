@@ -25,7 +25,7 @@ public class Customer extends Agent {
 
 	private AID _centralServer;
 
-	private MessageTemplate _mt;
+	private MessageTemplate _callTaxiMT;
 
 	private static final long serialVersionUID = 1L;
 
@@ -174,7 +174,7 @@ public class Customer extends Agent {
 			System.out.println(getLocalName() + ": Sent <<" + content + ">> to " + _centralServer.getLocalName());
 
 			// Prepare template for answer
-			_mt = MessageTemplate.or(
+			_callTaxiMT = MessageTemplate.or(
 					MessageTemplate.MatchPerformative(ACLMessage.CONFIRM),
 					MessageTemplate.MatchPerformative(ACLMessage.DISCONFIRM));
 
@@ -186,7 +186,7 @@ public class Customer extends Agent {
 
 			System.out.println(getLocalName() + ": now at step 1");
 
-			ACLMessage msg = blockingReceive(_mt);
+			ACLMessage msg = blockingReceive(_callTaxiMT);
 
 			if(msg != null) {
 				//String answer = msg.getContent();

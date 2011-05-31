@@ -1,5 +1,9 @@
 package itaxi.jade;
 
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
+
 import itaxi.communications.messages.Message;
 import itaxi.messages.entities.Party;
 import jade.core.AID;
@@ -18,21 +22,19 @@ import com.google.gson.Gson;
 public class CentralServer extends Agent {
 
 	private static final long serialVersionUID = 1L;
-
-	private MessageTemplate _mt;
+	
+	private Map<String,Party> _pendingBookings = new TreeMap<String, Party>();
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
 		registerAgent();
-
-		_mt = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
+		
 		addBehaviour(new GetCallBehaviour());
 		//addBehaviour(new ListTaxisBehaviour());
-
 	}
 
 	/**
-	 * Register at the yellow pages   
+	 *  Register at the yellow pages   
 	 */
 	private void registerAgent() {
 
@@ -110,7 +112,9 @@ public class CentralServer extends Agent {
 	}
 
 	class GetCallBehaviour extends OneShotBehaviour {
-
+		
+		private MessageTemplate _getCallMT = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
+		
 		private int _passo = 0;
 
 		private static final long serialVersionUID = 1L;
@@ -137,8 +141,7 @@ public class CentralServer extends Agent {
 		private void passo0() {
 
 			Gson gson = new Gson();
-			ACLMessage msg = blockingReceive(_mt);
-
+			ACLMessage msg = blockingReceive(_getCallMT);
 
 			if(msg != null) {
 
@@ -149,6 +152,9 @@ public class CentralServer extends Agent {
 					Party party = gson.fromJson(message.getContent(), Party.class);
 					System.out.println(party.getName() + " has " + party.getSize()
 							+ " passengers and wants to go to " + party.getDestination());
+					
+					_pendingBookings.put(party.getName(),party);
+					
 					break;
 					
 				default:
