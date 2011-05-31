@@ -31,7 +31,6 @@ public class Taxi extends Agent {
 		System.out.println(getLocalName() + ": initializing...");
 		Object[] args = getArguments();
 
-		// Resgista o agente no DF
 		registerAgent();
 
 		// cria o comportamentos para os varios tipos de mensagem

@@ -1,6 +1,6 @@
 package itaxi.jade;
 
-import itaxi.communications.message.Message;
+import itaxi.communications.messages.Message;
 
 public class Tester {
 

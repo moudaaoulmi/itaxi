@@ -1,6 +1,7 @@
 package itaxi.communications.handlers;
 
-import itaxi.communications.message.Message;
+import itaxi.communications.communicator.MessageHandler;
+import itaxi.communications.messages.Message;
 import itaxi.jade.Tester;
 
 import java.io.BufferedWriter;

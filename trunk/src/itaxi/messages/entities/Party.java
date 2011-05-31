@@ -19,9 +19,7 @@ public class Party {
 		
 	}
 	
-	public Party(int station, String name, int size, Coordinates id, PartyState bookState) throws PartySizeException{
-		if(size < 0 || size > 4)
-			throw new PartySizeException();
+	public Party(int station, String name, int size, Coordinates id, PartyState bookState) {
 		this.station = station;
 		this.name = name;
 		this.size = size;

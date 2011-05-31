@@ -1,6 +1,6 @@
 package itaxi.communications.communicator;
 
-import itaxi.communications.message.Message;
+import itaxi.communications.messages.Message;
 
 import java.io.BufferedWriter;
 

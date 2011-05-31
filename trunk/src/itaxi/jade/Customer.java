@@ -1,21 +1,27 @@
 package itaxi.jade;
 
+import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
+import itaxi.messages.coordinates.Coordinates;
+import itaxi.messages.entities.Party;
+import itaxi.messages.entities.Party.PartyState;
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.*;
+import jade.core.behaviours.OneShotBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 import jade.lang.acl.ACLMessage;
-
 import jade.lang.acl.MessageTemplate;
+
+import com.google.gson.Gson;
 
 public class Customer extends Agent {
 
 	private int _id;
 
-	private long[] _destination = new long[2];
+	private int[] _destination = new int[2];
 
 	private AID _centralServer;
 
@@ -52,16 +58,12 @@ public class Customer extends Agent {
 
 		addBehaviour(new CallTaxiBehaviour());
 
-		// Resgista o agente no DF
-
-
 	}
 
 	/**
 	 * Register at the yellow pages   
 	 */
 	private void registerAgent() {
-		// (Paginas Amarelas)
 
 		DFAgentDescription df = new DFAgentDescription();
 		ServiceDescription sd = new ServiceDescription();
@@ -90,7 +92,7 @@ public class Customer extends Agent {
 		// Close the GUI
 		//myGui.dispose();
 		// Printout a dismissal message
-		System.out.println("CentralServer-agent " +getAID().getName()+ " terminating.");
+		System.out.println(getLocalName() + ": terminating.");
 	}
 
 	private AID getCentralServer() {
@@ -151,16 +153,25 @@ public class Customer extends Agent {
 			}
 
 			ACLMessage queryIf = new ACLMessage(ACLMessage.QUERY_IF);
-
+			Gson gson = new Gson();
+			Message msg = new Message(MessageType.PARTY);
+						
+			Coordinates destination = new Coordinates(_destination[0], _destination[1]);
+			Party party = new Party(0, getLocalName(), 1, destination, PartyState.BOOKED);
+			
+			msg.setContent(gson.toJson(party));
+			
+			String content = gson.toJson(msg);
+			
 			queryIf.addReceiver(_centralServer);
-
-			// Message content is destination
-			queryIf.setContent("" + _destination[0] + _destination[1]);
+			
+			// Message content is party
+			queryIf.setContent(content);
 
 			// send message
 			myAgent.send(queryIf);
 
-			System.out.println(getLocalName() + ": Sent request to " + _centralServer.getLocalName());
+			System.out.println(getLocalName() + ": Sent <<" + content + ">> to " + _centralServer.getLocalName());
 
 			// Prepare template for answer
 			_mt = MessageTemplate.or(
