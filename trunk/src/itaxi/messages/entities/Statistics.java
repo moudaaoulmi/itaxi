@@ -1,5 +1,7 @@
 package itaxi.messages.entities;
 
+import java.util.Map;
+
 
 public class Statistics {
 
