@@ -1,4 +1,4 @@
-package itaxi.messages.message;
+package itaxi.communications.message;
 
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
