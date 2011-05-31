@@ -1,8 +1,9 @@
-package itaxi.communications;
+package itaxi.communications.communicator;
+
+import itaxi.communications.message.Message;
+import itaxi.jade.Tester;
 
 import java.io.BufferedWriter;
-
-import itaxi.messages.message.Message;
 
 public class MonitorHandler implements MessageHandler{
 

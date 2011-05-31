@@ -1,8 +1,8 @@
-package itaxi.communications;
+package itaxi.communications.communicator;
+
+import itaxi.communications.message.Message;
 
 import java.io.BufferedWriter;
-
-import itaxi.messages.message.Message;
 
 public interface MessageHandler {
 	void handleMessage(Object obj,Message message);
