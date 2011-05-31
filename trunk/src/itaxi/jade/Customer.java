@@ -26,6 +26,8 @@ public class Customer extends Agent {
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
 		Object[] args = getArguments();
+		
+		registerAgent();
 
 		_destination[0] = 39000000;
 		_destination[1] = 39000000;
@@ -43,7 +45,7 @@ public class Customer extends Agent {
 			
 		if(_centralServer == null) {
 			System.out.println(getLocalName() + ": central server not found!");
-			return;
+			takeDown();
 		}
 		else
 			System.out.println(getLocalName() + ": found " + _centralServer.getName());
@@ -51,7 +53,7 @@ public class Customer extends Agent {
 		addBehaviour(new CallTaxiBehaviour());
 
 		// Resgista o agente no DF
-		registerAgent();
+
 
 	}
 
