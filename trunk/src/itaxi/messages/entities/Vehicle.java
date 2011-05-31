@@ -8,31 +8,34 @@ import java.util.TreeMap;
 
 public class Vehicle {
 
-	public enum BatteryStatus {CHARGING,DISCHARGING};
-	private double batteryLevel;
-	private BatteryStatus status;
-	private int vehicleID;
-	private Coordinates position;
-	private int altitude;
+	private double _gasLevel;
+	
+	private String _vehicleID;
+	
+	private Coordinates _initialPosition;
+	
 	private int parked;
+	
 	private long infoAge;
+	
 	private String otherVehicles;
+	
 	private Map<Integer, Vehicle> interactions;
+	
 	private Map<String, Party> parties;
+	
 	private LinkedList<Coordinates> destinations;
+	
 	private String lastknownpath;
 
 	public Vehicle(){
 	}
 	
-	public Vehicle(int vehicleID, double battery, BatteryStatus status, Coordinates position, int altitude,
+	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition, int altitude,
 			int parked, long infoAge, String otherVehicles) {
-		this.batteryLevel = battery;
-		this.vehicleID = vehicleID;
-		this.position = position;
-		this.altitude = altitude;
-		this.status = status;
-		this.parked = parked;
+		_vehicleID = vehicleID;
+		_gasLevel = gasLevel;
+		_initialPosition = initialPosition;
 		this.infoAge = infoAge;
 		this.interactions = new TreeMap<Integer, Vehicle>();
 		this.otherVehicles = otherVehicles;
@@ -40,6 +43,15 @@ public class Vehicle {
 		this.destinations = new LinkedList<Coordinates>();
 		this.lastknownpath = "";
 	}
+	
+	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition) {
+		_vehicleID = vehicleID;
+		_gasLevel = gasLevel;
+		_initialPosition = initialPosition;
+		this.parties = new TreeMap<String, Party>();
+		this.destinations = new LinkedList<Coordinates>();
+	}
+
 
 	public String getLastknownpath() {
 		return lastknownpath;
@@ -58,45 +70,29 @@ public class Vehicle {
 	}
 
 	public double getBatteryLevel() {
-		return batteryLevel;
+		return _gasLevel;
 	}
 
 	public void setBatteryLevel(double battery) {
-		this.batteryLevel = battery;
+		this._gasLevel = battery;
 	}
 
-	public int getVehicleID() {
-		return vehicleID;
+	public String getVehicleID() {
+		return _vehicleID;
 	}
 
-	public void setVehicleID(int vehicleID) {
-		this.vehicleID = vehicleID;
+	public void setVehicleID(String vehicleID) {
+		_vehicleID = vehicleID;
 	}
 
 	public Coordinates getPosition() {
-		return position;
+		return _initialPosition;
 	}
 
 	public void setPosition(Coordinates position) {
-		this.position = position;
+		this._initialPosition = position;
 	}
-
-	public BatteryStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(BatteryStatus status) {
-		this.status = status;
-	}
-
-	public int getAltitude() {
-		return altitude;
-	}
-
-	public void setAltitude(int altitude) {
-		this.altitude = altitude;
-	}
-	
+		
 	public Map<String, Party> getParties() {
 		return parties;
 	}

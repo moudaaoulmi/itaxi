@@ -11,13 +11,13 @@ public class Station {
 	private int numPassengers;
 	private double avgWaitTime;
 	private Coordinates stationPosition;
-	private Map<Integer,Vehicle> parkedVehicles;
+	private Map<String,Vehicle> parkedVehicles;
 
 	public Station(){
 	}
 	
     public Station(int stationId, String stationDescription, int numPassengers, double avgWaitTime, 
-    		Coordinates stationPosition, Map<Integer,Vehicle> parkedVehicles) {
+    		Coordinates stationPosition, Map<String, Vehicle> parkedVehicles) {
     	this.stationId = stationId;
 		this.stationDescription = stationDescription;
 		this.parkedVehicles = parkedVehicles;
@@ -34,11 +34,11 @@ public class Station {
     	this.parkedVehicles.remove(vehicleID);
     }
 
-	public Map<Integer,Vehicle> getParkedVehicles() {
+	public Map<String, Vehicle> getParkedVehicles() {
 		return parkedVehicles;
 	}
 
-	public void setParkedVehicles(Map<Integer,Vehicle> parkedVehicles) {
+	public void setParkedVehicles(Map<String, Vehicle> parkedVehicles) {
 		this.parkedVehicles = parkedVehicles;
 	}
 	

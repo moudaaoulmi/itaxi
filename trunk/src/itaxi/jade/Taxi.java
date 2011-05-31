@@ -1,34 +1,37 @@
 package itaxi.jade;
 
-import java.util.Hashtable;
-import java.util.Iterator;
+import itaxi.messages.coordinates.Coordinates;
+
+import itaxi.messages.entities.Vehicle;
 
 import jade.core.AID;
 import jade.core.Agent;
-import jade.core.behaviours.*;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
-import jade.lang.acl.ACLMessage;
-import jade.lang.acl.MessageTemplate;
 
 public class Taxi extends Agent {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Vehicle _vehicle;
 
-	private int _id;
-
-	private int _gas;
-
-	private int _capacity;
-
-	private int _passengers;
+	private String _id;
 
 	private long[] _geoPoint = new long[2];
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
+		
+		Integer[] _destination = new Integer[2];
+		
+		_destination[0] = 39000000;
+		_destination[1] = 39000000;
+		
+		Coordinates initialPosition = new Coordinates(_destination[0], _destination[1]);
+		
+		_vehicle = new Vehicle(getLocalName(), (double) 100, initialPosition);
 		Object[] args = getArguments();
 
 		registerAgent();
