@@ -1,4 +1,4 @@
-package itaxi.communications.communicator;
+package itaxi.communications.handlers;
 
 import itaxi.communications.message.Message;
 import itaxi.jade.Tester;
