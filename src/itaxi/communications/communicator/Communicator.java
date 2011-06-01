@@ -44,10 +44,15 @@ public class Communicator extends Thread {
 	
 	public void run() {
 		
+		System.out.println(handler.toString() + " waiting for connections.");
+		
 		//Accept new connections
 		while(!stop) {
 			try {
 				Socket socket = serverSocket.accept();
+				
+				System.out.println(handler.toString() + " accepted connection.");
+				
 				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 

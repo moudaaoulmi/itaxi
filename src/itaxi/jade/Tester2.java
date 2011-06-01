@@ -1,26 +1,25 @@
 package itaxi.jade;
 
 import itaxi.communications.communicator.Communicator;
-import itaxi.communications.handlers.TesterHandler;
+import itaxi.communications.handlers.Tester2Handler;
 import itaxi.communications.messages.Message;
-import itaxi.communications.messages.MessageType;
 
 import com.google.gson.Gson;
 
-public class Tester {
+public class Tester2 {
 	
 	private Communicator communicator;
 	private Gson gson;
 	
-	public Tester(){
-		TesterHandler handler = new TesterHandler();
-		communicator = new Communicator(8000, this, handler);
+	public Tester2(){
+		Tester2Handler handler = new Tester2Handler();
+		communicator = new Communicator(8001, this, handler);
 		communicator.start();
 		
 		//vamos enviar
-		Message message = new Message(MessageType.UPDATEVEHICLE);
-		message.setContent("mensagem de teste");
-		communicator.sendMessage("localhost", 8001, message);
+		/*Message message = new Message(MessageType.UPDATEVEHICLE);
+		message.setContent(gson.toJson(new Vehicle()));
+		communicator.sendMessage("localhost", 6001, message);*/
 	}
 
 	public void handleMessage(Message message){
@@ -31,6 +30,6 @@ public class Tester {
 	}
 	
 	public static void main(String[] args) {
-		Tester tester = new Tester();
+		Tester2 tester = new Tester2();
 	}
 }
