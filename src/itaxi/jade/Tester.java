@@ -3,7 +3,6 @@ package itaxi.jade;
 import itaxi.communications.communicator.Communicator;
 import itaxi.communications.handlers.TesterHandler;
 import itaxi.communications.messages.Message;
-import itaxi.communications.messages.MessageType;
 
 import com.google.gson.Gson;
 

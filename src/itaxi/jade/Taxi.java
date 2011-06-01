@@ -1,15 +1,18 @@
 package itaxi.jade;
 
+import itaxi.communications.communicator.Communicator;
+import itaxi.communications.handlers.TaxiHandler;
+import itaxi.communications.messages.Message;
 import itaxi.messages.coordinates.Coordinates;
-
 import itaxi.messages.entities.Vehicle;
-
 import jade.core.AID;
 import jade.core.Agent;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+
+import com.google.gson.Gson;
 
 public class Taxi extends Agent {
 
@@ -20,6 +23,10 @@ public class Taxi extends Agent {
 	private String _id;
 
 	private long[] _geoPoint = new long[2];
+	
+	//Monitor communication
+	private Communicator communicator;
+	private Gson gson;
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
@@ -35,6 +42,12 @@ public class Taxi extends Agent {
 		Object[] args = getArguments();
 
 		registerAgent();
+		
+		//Monitor communication
+		TaxiHandler handler = new TaxiHandler(_id);
+		//testar com tester.java a correr (escuta o porto 8000)
+		communicator = new Communicator(8001, this, handler);
+		communicator.start();
 
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
@@ -100,6 +113,13 @@ public class Taxi extends Agent {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return null;
+		}
+	}
+	
+	public void handleMessage(Message message){
+		//aqui trata-se da mensagem!
+		System.out.println(_id + " : message handler - " + message.getContent());
+		switch(message.getType()){
 		}
 	}
 
