@@ -6,7 +6,7 @@ import itaxi.jade.Tester;
 
 import java.io.BufferedWriter;
 
-public class MonitorHandler implements MessageHandler{
+public class TesterHandler implements MessageHandler{
 
 	@Override
 	public void handleMessage(Object obj, Message message) {
@@ -17,5 +17,9 @@ public class MonitorHandler implements MessageHandler{
 		//o writer é util para o caso de se querer invocar AcceptConnection.sendMessage(writer, newMessage)
 		//é uma especie de ACK sem ter de reabrir o socket. Devia chamar-se o handleMessage com writer e message
 		((Tester) obj).handleMessage(message);
+	}
+	
+	public String toString(){
+		return "Tester";
 	}
 }

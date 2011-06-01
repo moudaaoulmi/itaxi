@@ -8,4 +8,7 @@ public interface MessageHandler {
 	void handleMessage(Object obj,Message message);
 	
 	void handleMessage(Object obj,BufferedWriter writer, Message message);
+
+	//returns the name of the handler
+	String toString();
 }
