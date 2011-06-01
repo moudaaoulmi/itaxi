@@ -16,11 +16,6 @@ public class Tester {
 		TesterHandler handler = new TesterHandler();
 		communicator = new Communicator(8000, this, handler);
 		communicator.start();
-		
-		//vamos enviar
-		Message message = new Message(MessageType.UPDATEVEHICLE);
-		message.setContent("mensagem de teste");
-		communicator.sendMessage("localhost", 8001, message);
 	}
 
 	public void handleMessage(Message message){
