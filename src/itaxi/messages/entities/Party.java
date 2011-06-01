@@ -7,28 +7,38 @@ import java.util.Date;
 
 public class Party {
 
-	public enum PartyState{NOTBOOKED, BOOKED, FLYING};
+	//public enum PartyState{NOTBOOKED, BOOKED, FLYING};
 	private int station;
 	private String name;
 	private int size;
-	private Coordinates destination;
+	private Coordinates _position;
+	private Coordinates _destination;
 	private long arrivalHour;
-	private PartyState bookState;
+	//private PartyState bookState;
 
 	public Party(){
 		
 	}
 	
-	public Party(int station, String name, int size, Coordinates id, PartyState bookState) {
+//	public Party(int station, String name, int size, Coordinates id, PartyState bookState) {
+//		this.station = station;
+//		this.name = name;
+//		this.size = size;
+//		this.destination = id;
+//		this.setArrivalHour(new Date().getTime());
+//		//this.bookState = bookState;
+//	}
+	
+	public Party(int station, String name, int size, Coordinates position, Coordinates destination) {
 		this.station = station;
 		this.name = name;
 		this.size = size;
-		this.destination = id;
+		_position = position;
+		_destination = destination;
 		this.setArrivalHour(new Date().getTime());
-		this.bookState = bookState;
 	}
 	
-	public Party(int station, String name, int size, int latitude, int longitude, PartyState bookState) throws PartySizeException{
+	public Party(int station, String name, int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
 		if(size < 0 || size > 4)
 			throw new PartySizeException();
 		this.station = station;
@@ -36,7 +46,7 @@ public class Party {
 		this.size = size;
 		setDestination(latitude, longitude);
 		this.setArrivalHour(new Date().getTime());
-		this.bookState = bookState;
+		//this.bookState = bookState;
 	}
 
 	public String getName() {
@@ -56,15 +66,15 @@ public class Party {
 	}
 
 	public Coordinates getDestination() {
-		return destination;
+		return _destination;
 	}
 
 	public void setDestination(Coordinates destination) {
-		this.destination = destination;
+		this._destination = destination;
 	}
 	
 	public void setDestination(int latitude, int longitude){
-		this.destination = new Coordinates(latitude,longitude);
+		this._destination = new Coordinates(latitude,longitude);
 	}
 	
 	public void renewArrivalHour(){
@@ -87,11 +97,11 @@ public class Party {
 		this.station = station;
 	}
 
-	public PartyState getBookState() {
-		return bookState;
-	}
-
-	public void setBookState(PartyState bookState) {
-		this.bookState = bookState;
-	}
+//	public PartyState getBookState() {
+//		return bookState;
+//	}
+//
+//	public void setBookState(PartyState bookState) {
+//		this.bookState = bookState;
+//	}
 }

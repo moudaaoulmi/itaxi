@@ -1,10 +1,10 @@
 package itaxi.jade;
 
 import itaxi.communications.messages.Message;
+
 import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.Party.PartyState;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.OneShotBehaviour;
@@ -21,7 +21,9 @@ public class Customer extends Agent {
 
 	private int _id;
 
-	private int[] _destination = new int[2];
+	private Coordinates _position;
+	private Coordinates _destination;
+	
 
 	private AID _centralServer;
 
@@ -34,9 +36,10 @@ public class Customer extends Agent {
 		Object[] args = getArguments();
 		
 		registerAgent();
+		
+		_position = new Coordinates(38000000, 38000000);
 
-		_destination[0] = 39000000;
-		_destination[1] = 39000000;
+		_destination = new Coordinates(38000000, 38000000);
 
 		// time for central server to register
 		try {
@@ -155,9 +158,8 @@ public class Customer extends Agent {
 			ACLMessage queryIf = new ACLMessage(ACLMessage.QUERY_IF);
 			Gson gson = new Gson();
 			Message msg = new Message(MessageType.PARTY);
-						
-			Coordinates destination = new Coordinates(_destination[0], _destination[1]);
-			Party party = new Party(0, getLocalName(), 1, destination, PartyState.BOOKED);
+			
+			Party party = new Party(0, getLocalName(), 1, _position, _destination);
 			
 			msg.setContent(gson.toJson(party));
 			
@@ -171,7 +173,7 @@ public class Customer extends Agent {
 			// send message
 			myAgent.send(queryIf);
 
-			System.out.println(getLocalName() + ": Sent <<" + content + ">> to " + _centralServer.getLocalName());
+			//System.out.println(getLocalName() + ": Sent <<" + content + ">> to " + _centralServer.getLocalName());
 
 			// Prepare template for answer
 			_callTaxiMT = MessageTemplate.or(

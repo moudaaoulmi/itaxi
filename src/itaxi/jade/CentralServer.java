@@ -22,13 +22,13 @@ import com.google.gson.Gson;
 public class CentralServer extends Agent {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Map<String,Party> _pendingBookings = new TreeMap<String, Party>();
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
 		registerAgent();
-		
+
 		addBehaviour(new GetCallBehaviour());
 		//addBehaviour(new ListTaxisBehaviour());
 	}
@@ -112,29 +112,31 @@ public class CentralServer extends Agent {
 	}
 
 	class GetCallBehaviour extends OneShotBehaviour {
-		
+
 		private MessageTemplate _getCallMT = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
-		
+
 		private int _passo = 0;
 
 		private static final long serialVersionUID = 1L;
 
 		public void action() {
 
-			switch(_passo) {
-			case 0:
-				passo0();
-				break;
-			case 1:
-				//passo1();
-				break;
-			case 2:
-				return;
-				//passo2();
-				//break;
-			case 3:
-				//passo3();
-				break;
+			while(true) {
+				switch(_passo) {
+				case 0:
+					passo0();
+					break;
+				case 1:
+					//passo1();
+					break;
+				case 2:
+					return;
+					//passo2();
+					//break;
+				case 3:
+					//passo3();
+					break;
+				}
 			}
 		}
 
@@ -150,13 +152,16 @@ public class CentralServer extends Agent {
 				switch(message.getType()) {
 				case PARTY:
 					Party party = gson.fromJson(message.getContent(), Party.class);
-					System.out.println(party.getName() + " has " + party.getSize()
+					/*System.out.println(party.getName() + " has " + party.getSize()
 							+ " passengers and wants to go to " + party.getDestination());
-					
+*/
 					_pendingBookings.put(party.getName(),party);
-					
+
+					System.out.println("Pending parties:");
+					for(Party p : _pendingBookings.values())
+						System.out.println(p.getName());
 					break;
-					
+
 				default:
 					System.out.println("Message type not expected!");
 
@@ -171,6 +176,4 @@ public class CentralServer extends Agent {
 			}
 		}
 	}
-
-
 }
