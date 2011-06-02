@@ -10,6 +10,7 @@ import itaxi.messages.entities.Vehicle;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -58,7 +59,7 @@ public class Taxi extends Agent {
 		communicator = new Communicator(8001, this, handler);
 		communicator.start();
 		
-		addBehaviour(new GetRequest(this));
+		addBehaviour(new GetRequest(this,5000));
 
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
@@ -138,25 +139,37 @@ public class Taxi extends Agent {
 	/**
 	 * Gets requests
 	 */
-	class GetRequest extends CyclicBehaviour {
+	class GetRequest extends TickerBehaviour {
+		
+		public GetRequest(Agent a, long period) {
+			super(a, period);
+			_taxi = (Taxi) a;
+			// TODO Auto-generated constructor stub
+		}
 
 		private Taxi _taxi; 
 		private static final long serialVersionUID = 1L;
 
-		public GetRequest(Taxi taxi) {
-			_taxi = taxi;
-		}
 
-		public void action() {
-
+		@Override
+		public void onTick() {
+			
+			System.out.println(getLocalName() + ": at GetRequest");
+			
 			ACLMessage request = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
 
 			if (request != null) {
+				
+				System.out.println(getLocalName() + ": at GetRequest");
 
 				Request req = Request.valueOf(request.getContent());
+				
+				System.out.println(getLocalName() + ": at received VEHICLE request received: " + req);
 
 				switch (req) {
 				case VEHICLE:
+					
+					
 					
 					ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
 					Message message = new Message(MessageType.UPDATEVEHICLE);
@@ -172,9 +185,6 @@ public class Taxi extends Agent {
 				default:
 					break;
 				}
-
-			} else {
-				block();
 			}
 		}
 	}
