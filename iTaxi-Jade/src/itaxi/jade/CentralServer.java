@@ -25,6 +25,8 @@ import com.google.gson.Gson;
 public class CentralServer extends Agent {
 
 	private static final long serialVersionUID = 1L;
+	
+	private Gson _gson = new Gson();
 
 	private Map<String,Party> _pendingBookings = new TreeMap<String, Party>();
 
@@ -32,8 +34,7 @@ public class CentralServer extends Agent {
 		System.out.println(getLocalName() + ": initializing...");
 		registerAgent();
 
-		addBehaviour(new GetCallBehaviour(this,1000));
-		addBehaviour(new AssignTaxiBehaviour(this,1000));
+		addBehaviour(new GetCallBehaviour(this,1000));;
 	}
 
 	/**
@@ -114,20 +115,15 @@ public class CentralServer extends Agent {
 		}
 	}
 
-	class AssignTaxiBehaviour extends TickerBehaviour {
+	class AssignTaxiBehaviour extends OneShotBehaviour {
 
 		private static final long serialVersionUID = 1L;
-		private Gson _gson;
-
-		public AssignTaxiBehaviour(Agent a, long period) {
-			super(a, period);
-			_gson = new Gson();
-		}
 
 		@Override
-		protected void onTick() {
-			System.out.println("TOU aQUI");
+		public void action() {
+			System.out.println("Let's assign taxis");
 			passo0();
+			System.out.println("Finished assigning taxis");
 		}
 
 		private void passo0() {
@@ -140,6 +136,8 @@ public class CentralServer extends Agent {
 				System.out.println(getLocalName() + ": no taxis available");
 				return;
 			}
+			
+			System.out.println(getLocalName() + ": " + taxis.length + " taxi(s) available");
 			
 			Map<String,Vehicle> vehicles = new TreeMap<String, Vehicle>();
 
@@ -163,8 +161,12 @@ public class CentralServer extends Agent {
 			request.addReceiver(taxi);
 
 			request.setContent(Request.VEHICLE.toString());
+			
+			System.out.println("I'll send: " + Request.VEHICLE.toString() + " to " + taxi.getLocalName());
+			
+			myAgent.send(request);
 
-			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+			ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
 
 			if(msg != null) {
 				Message message = _gson.fromJson(msg.getContent(), Message.class);
@@ -196,16 +198,15 @@ public class CentralServer extends Agent {
 
 		private void passo0() {
 
-			Gson gson = new Gson();
 			ACLMessage msg = blockingReceive(_getCallMT);
 
 			if(msg != null) {
 
-				Message message = gson.fromJson(msg.getContent(), Message.class);
+				Message message = _gson.fromJson(msg.getContent(), Message.class);
 
 				switch(message.getType()) {
 				case PARTY:
-					Party party = gson.fromJson(message.getContent(), Party.class);
+					Party party = _gson.fromJson(message.getContent(), Party.class);
 					/*System.out.println(party.getName() + " has " + party.getSize()
 								+ " passengers and wants to go to " + party.getDestination());
 					 */
@@ -227,6 +228,9 @@ public class CentralServer extends Agent {
 
 				// send message
 				myAgent.send(answer);
+				
+				addBehaviour(new AssignTaxiBehaviour());
+				
 			}
 		}
 

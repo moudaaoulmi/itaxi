@@ -49,6 +49,8 @@ public class Taxi extends Agent {
 		Coordinates initialPosition = new Coordinates(_destination[0], _destination[1]);
 
 		_vehicle = new Vehicle(getLocalName(), (double) 100, initialPosition);
+		_gson = new Gson();
+		
 		Object[] args = getArguments();
 
 		registerAgent();
@@ -160,7 +162,7 @@ public class Taxi extends Agent {
 
 			if (request != null) {
 				
-				System.out.println(getLocalName() + ": at GetRequest");
+				System.out.println(getLocalName() + ": at GetRequest received: " + request.getContent());
 
 				Request req = Request.valueOf(request.getContent());
 				
@@ -169,12 +171,12 @@ public class Taxi extends Agent {
 				switch (req) {
 				case VEHICLE:
 					
-					
-					
 					ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
 					Message message = new Message(MessageType.UPDATEVEHICLE);
 
 					message.setContent(_gson.toJson(_taxi.getVehicle()));
+					
+					inform.setContent(_gson.toJson(message));
 
 					inform.addReceiver(request.getSender());
 					
