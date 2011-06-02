@@ -32,8 +32,8 @@ public class CentralServer extends Agent {
 		System.out.println(getLocalName() + ": initializing...");
 		registerAgent();
 
-		addBehaviour(new GetCallBehaviour());
-		addBehaviour(new AssignTaxiBehaviour(this,5000));
+		addBehaviour(new GetCallBehaviour(this,1000));
+		addBehaviour(new AssignTaxiBehaviour(this,1000));
 	}
 
 	/**
@@ -117,113 +117,82 @@ public class CentralServer extends Agent {
 	class AssignTaxiBehaviour extends TickerBehaviour {
 
 		private static final long serialVersionUID = 1L;
-
-		private int _passo;
-		//private MessageTemplate _assignTaxiMT;
 		private Gson _gson;
 
 		public AssignTaxiBehaviour(Agent a, long period) {
 			super(a, period);
-			_passo = 0;
-			//_assignTaxiMT = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
 			_gson = new Gson();
 		}
-
 
 		@Override
 		protected void onTick() {
 			System.out.println("TOU aQUI");
-			switch(_passo) {
-			case 0:
-				passo0();
-				break;
-			case 1:
-				//passo1();
-				break;
-			case 2:
-				return;
-				//passo2();
-				//break;
-			case 3:
-				//passo3();
-				break;
-			}
+			passo0();
 		}
-		
+
 		private void passo0() {
-			
+
 			System.out.println(getLocalName() + ": at step0 of AssignTaxiBehaviour");
-			
+
 			AID[] taxis = getTaxis();
-			
+
 			if(taxis.length == 0) {
 				System.out.println(getLocalName() + ": no taxis available");
 				return;
 			}
 			
 			Map<String,Vehicle> vehicles = new TreeMap<String, Vehicle>();
-			
+
 			for(AID taxi : taxis) {
 				Vehicle vehicle = getTaxiVehicle(taxi);
-				
+
 				if(vehicle != null) {
 					vehicles.put(vehicle.getVehicleID(), vehicle);
 				}
 			}
-			
-			System.out.println("Available taxis:");
+
+			System.out.println("Available taxis(" + vehicles.values().size() + "):");
 			for(Vehicle v : vehicles.values())
-				System.out.println(v.getVehicleID() + " at " + v.getPosition());
+				System.out.println("\t" + v.getVehicleID() + " at " + v.getPosition());
 		}
-		
+
 		private Vehicle getTaxiVehicle(AID taxi) {
-			
+
 			ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
-			
+
 			request.addReceiver(taxi);
-			
+
 			request.setContent(Request.VEHICLE.toString());
-			
-			ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
-			
+
+			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+
 			if(msg != null) {
 				Message message = _gson.fromJson(msg.getContent(), Message.class);
-				
+
 				Vehicle vehicle = _gson.fromJson(message.getContent(), Vehicle.class);
 
 				return vehicle;
 			}
-			
+
 			return null;
 		}
 	}
 
-	class GetCallBehaviour extends CyclicBehaviour {
+	class GetCallBehaviour extends TickerBehaviour {
+		
+		private MessageTemplate _getCallMT;
 
-		private MessageTemplate _getCallMT = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
-
-		private int _passo = 0;
+		private int _passo;
 
 		private static final long serialVersionUID = 1L;
 
-		public void action() {
-
-			switch(_passo) {
-			case 0:
-				passo0();
-				break;
-			case 1:
-				//passo1();
-				break;
-			case 2:
-				return;
-				//passo2();
-				//break;
-			case 3:
-				//passo3();
-				break;
-			}
+		public GetCallBehaviour(Agent a, long period) {
+			super(a, period);
+			_getCallMT = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
+			_passo = 0;
+			// TODO Auto-generated constructor stub
 		}
+
 
 		private void passo0() {
 
@@ -259,6 +228,12 @@ public class CentralServer extends Agent {
 				// send message
 				myAgent.send(answer);
 			}
+		}
+
+
+		@Override
+		protected void onTick() {
+			passo0();
 		}
 	}
 
