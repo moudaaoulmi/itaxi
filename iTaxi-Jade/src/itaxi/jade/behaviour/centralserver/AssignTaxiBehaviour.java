@@ -7,12 +7,12 @@ import itaxi.jade.CentralServer;
 import itaxi.jade.Request;
 import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Vehicle;
+
 import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-
-import java.util.Collection;
+import jade.tools.logging.ontology.GetAllLoggers;
 
 import com.google.gson.Gson;
 
@@ -22,21 +22,32 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 
 	private CentralServer _centralServer;
 	private Gson _gson;
+	private int _passo;
+	private int _proposes;
 
 	public AssignTaxiBehaviour(CentralServer centralServer) {
 		_centralServer = centralServer;
 		_gson = new Gson();
+		_passo = 0;
+		_proposes = 0;
 	}
 
 	@Override
 	public void action() {
-		passo0();
+		switch(_passo) {
+		case 0:
+			propose();
+			break;
+		case 1:
+			;
+			break;
+		}
 	}
 
-	private void passo0() {
+	private void propose() {
 
 		AID[] taxis = _centralServer.getTaxis();
-		
+
 		System.out.println(myAgent.getLocalName() + ": " + taxis.length + " taxi(s) available");
 
 		if(taxis.length == 0)
@@ -63,12 +74,26 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 			if(t != null) {
 				System.out.println(p + " assigned to " + t);
 				proposePartyToTaxi(p, t);
+				_proposes++;
+			}
+		}
+	}
+
+	private void receiveAnswers() {
+		
+		while(_proposes > 0) {
+			
+			ACLMessage msg = myAgent.receive(MessageTemplate.or(
+					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
+					MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)));
+			
+			_proposes--;
+			
+			if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+				
 			}
 		}
 
-		//TODO: send parties to taxis
-
-		//TODO: wait for taxis to accept parties
 	}
 
 	private Vehicle getTaxiVehicle(AID taxi) {
@@ -97,7 +122,7 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 		Message msg = new Message(MessageType.PARTY);
 		msg.setContent(_gson.toJson(party));
 
-		propose.addReceiver(taxi.getAID());
+		propose.addReceiver(new AID(taxi.getVehicleID(),false));
 		propose.setContent(_gson.toJson(msg));
 
 		// send message
