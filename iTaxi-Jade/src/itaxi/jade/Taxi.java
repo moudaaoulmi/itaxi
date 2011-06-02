@@ -39,6 +39,10 @@ public class Taxi extends Agent {
 	public Vehicle getVehicle() {
 		return _vehicle;
 	}
+	
+	public void addParty(Party p){
+		_vehicle.addParty(p);
+	}
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
