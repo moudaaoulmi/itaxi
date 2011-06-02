@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SmartFleet: Monitor</string>
+    <string name="vehiclemenu">SmartFleet: Monitor > Vehicle Details</string>
+    <string name="stationmenu">SmartFleet: Monitor > Station Details</string>
+    <string name="statisticsmenu">SmartFleet: Monitor > Overall Statistics</string>
+    <string-array name="menu">
+        <item>Visualize Stations and Vehicles</item>
+        <item>Visualize Vehicle Details</item>
+        <item>Visualize Station Details</item>
+        <item>Visualize Overall Statistics</item>
+    </string-array>
+    <string-array name="menuVehicle">
+        <item>Last known number of passengers</item>
+        <item>Last known battery level</item>
+        <item>Last known travel path</item>
+        <item>Last known interactions</item>
+        <item>Information age</item>
+    </string-array>   
+    <string-array name="menuStation">
+        <item>Number of passengers waiting</item>
+        <item>Average wait time</item>
+        <item>Parked vehicles</item>
+    </string-array>  
+    <string-array name="menuStatistics">
+        <item>Numbers of passengers transported</item>
+        <item>Traveled kilometers</item>
+        <item>Total distance from stations to each destination</item>
+        <item>Used energy</item>
+        <item>Average travel time</item>
+        <item>Missing vehicles</item>
+    </string-array>        
+</resources>

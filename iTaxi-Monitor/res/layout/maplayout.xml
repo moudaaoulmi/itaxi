@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mapLayout"
+    android:orientation="vertical"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent">
+	
+    <com.google.android.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:apiKey="0Yk72orjaIKIHMUHGlrLalh8kb91LZY3vPe3Ovg"
+    />
+    
+	<LinearLayout 
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent" 
+		android:orientation="vertical" 
+		android:gravity="bottom" 
+		android:paddingLeft="5px" 
+		android:paddingTop="5px" 
+		android:paddingRight="5px">
+		
+	    <itaxi.monitor.MapTransparentPanel
+	        android:id="@+id/mapPanel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal"
+	        android:paddingLeft="5px"
+	        android:paddingTop="5px"
+	        android:paddingRight="5px"
+	        android:paddingBottom="5px">
+	
+		    <Button android:id="@+id/mapChangeView"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		        android:text="Satellite" />
+		        
+		    <ImageButton android:id="@+id/mapZoomIn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent"
+		        android:src="@drawable/zoomin" />
+		        
+			<ImageButton android:id="@+id/mapZoomOut"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent"
+		        android:src="@drawable/zoomout" />
+		        
+		    <Button android:id="@+id/overallStatistics"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		        android:text="Overall Statistics" />
+  		</itaxi.monitor.MapTransparentPanel>
+	</LinearLayout>
+</FrameLayout>

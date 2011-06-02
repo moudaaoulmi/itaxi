@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:stretchColumns="1" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/statistics_root">
+
+	<TableRow android:layout_weight="1">
+	    <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/numberPassengersStatisticsImage"
+	        android:scaleType="center" />
+	   
+	    <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/numberPassengersStatisticsText" />
+    </TableRow>
+	<TableRow android:layout_weight="1" android:layout_width="wrap_content">
+	    <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/traveledKmImage"
+	        android:scaleType="center" />
+	   
+	  	<TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/traveledKmText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/straightLineImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/straightLineText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/usedEnergyImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/usedEnergyText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/averageTravelImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/averageTravelText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/missingVehiclesImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/missingVehiclesText"/>
+    </TableRow>
+</TableLayout>
