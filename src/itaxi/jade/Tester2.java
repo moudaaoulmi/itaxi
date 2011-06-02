@@ -4,6 +4,8 @@ import itaxi.communications.communicator.Communicator;
 import itaxi.communications.handlers.Tester2Handler;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
+import itaxi.messages.coordinates.Coordinates;
+import itaxi.messages.entities.Vehicle;
 
 import com.google.gson.Gson;
 
@@ -17,6 +19,8 @@ public class Tester2 {
 		communicator = new Communicator(8001, this, handler);
 		communicator.start();
 		
+		gson = new Gson();
+		
 		try {
 			Thread.sleep(2000);
 		} catch (InterruptedException e) {
@@ -25,8 +29,11 @@ public class Tester2 {
 		}
 		//vamos enviar
 		Message message = new Message(MessageType.UPDATEVEHICLE);
-		message.setContent("mensagem do tester2");
-		communicator.sendMessage("localhost", 8000, message);
+		String newcontent = gson.toJson(new Vehicle("Carro do ze", 50, 
+				new Coordinates((int) (38.737169*1E6),(int) (-9.302655*1E6)), 
+				0, 0, 0, ""));
+		message.setContent(newcontent);
+		communicator.sendMessage("localhost", 8002, message);
 	}
 
 	public void handleMessage(Message message){
