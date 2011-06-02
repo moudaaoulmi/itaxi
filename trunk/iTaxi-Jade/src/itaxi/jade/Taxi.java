@@ -23,6 +23,8 @@ import com.google.gson.Gson;
 public class Taxi extends Agent {
 
 	private static final long serialVersionUID = 1L;
+	
+	private AID _aid;
 
 	private Vehicle _vehicle;
 
@@ -40,6 +42,8 @@ public class Taxi extends Agent {
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
+		
+		_aid = getAID();
 
 		Integer[] _destination = new Integer[2];
 
@@ -48,7 +52,7 @@ public class Taxi extends Agent {
 
 		Coordinates initialPosition = new Coordinates(_destination[0], _destination[1]);
 
-		_vehicle = new Vehicle(getLocalName(), (double) 100, initialPosition);
+		_vehicle = new Vehicle(getLocalName(), _aid, (double) 100, initialPosition);
 		_gson = new Gson();
 		
 		Object[] args = getArguments();
