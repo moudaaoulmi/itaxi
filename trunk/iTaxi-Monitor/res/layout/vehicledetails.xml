@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:stretchColumns="1" 
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:id="@+id/vehicledetails_root">
+
+	<TableRow android:layout_weight="1">
+	    <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/numberPassengersVehicleImage"
+	        android:scaleType="center" />
+	   
+	    <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/numberPassengersVehicleText" />
+    </TableRow>
+	<TableRow android:layout_weight="1" android:layout_width="wrap_content">
+	    <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/batteryLevelVehicleImage"
+	        android:scaleType="center" />
+	   
+	  	<TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/batteryLevelVehicleText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/travelPathImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/travelPathText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/interactionsImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/interactionsText"/>
+    </TableRow>
+    <TableRow android:layout_weight="1">
+	   <ImageView  
+	        android:layout_width="fill_parent" 
+	        android:layout_height="wrap_content" 
+	        android:paddingTop="12dip"
+	        android:paddingLeft="18dip"
+	    	android:id="@+id/informationAgeImage"
+	        android:scaleType="center" />
+	   
+	   <TextView
+	    	android:layout_height="wrap_content" 
+	    	android:layout_width="match_parent" 
+	        android:layout_gravity="center_vertical"
+	        android:padding="8dip"
+	        android:textSize="18px"
+	        android:id="@+id/informationAgeText"/>
+    </TableRow>
+</TableLayout>
