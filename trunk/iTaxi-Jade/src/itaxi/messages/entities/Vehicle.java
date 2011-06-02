@@ -10,7 +10,7 @@ import java.util.TreeMap;
 
 public class Vehicle {
 	
-	private AID _aid; 
+	//private AID _aid; 
 
 	private double _gasLevel;
 	
@@ -49,7 +49,7 @@ public class Vehicle {
 	}
 	
 	public Vehicle(String vehicleID, AID aid, double gasLevel, Coordinates initialPosition) {
-		_aid = aid;
+		//_aid = aid;
 		_vehicleID = vehicleID;
 		_gasLevel = gasLevel;
 		_position = initialPosition;
@@ -61,9 +61,9 @@ public class Vehicle {
 		return "[VEHICLE] name=" + _vehicleID + " gas=" + _gasLevel + " position=" + _position;
 	}
 	
-	public AID getAID() {
-		return _aid;
-	}
+//	public AID getAID() {
+//		return _aid;
+//	}
 
 
 	public String getLastknownpath() {
