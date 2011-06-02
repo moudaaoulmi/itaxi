@@ -14,7 +14,7 @@ public class Statistics {
 	
 	
 	public Statistics() {
-		
+
 	}
 	
 	public Statistics(int passengersTransported, double traveledKm, double distanceSum, 
