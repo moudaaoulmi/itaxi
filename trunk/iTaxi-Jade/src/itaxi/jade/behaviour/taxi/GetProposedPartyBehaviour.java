@@ -40,13 +40,17 @@ public class GetProposedPartyBehaviour extends TickerBehaviour{
 					Vehicle vec = _taxi.getVehicle();
 					ACLMessage answer;
 					
+					System.out.println("Received fucking proposal!");
+					
 					if(vec.getPassengers() + party.getSize()<=4){
 						answer = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 						_taxi.addParty(party);
+						System.out.println("Accept : " + party);
 					}
-					else
+					else{
 						answer = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
-					
+						System.out.println("Rejected : " + party);
+					}
 					answer.addReceiver(msg.getSender());
 					// send message
 					myAgent.send(answer);
