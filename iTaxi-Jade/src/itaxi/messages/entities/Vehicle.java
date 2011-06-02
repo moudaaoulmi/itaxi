@@ -2,11 +2,15 @@ package itaxi.messages.entities;
 
 import itaxi.messages.coordinates.Coordinates;
 
+import jade.core.AID;
+
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Vehicle {
+	
+	private AID _aid; 
 
 	private double _gasLevel;
 	
@@ -44,12 +48,21 @@ public class Vehicle {
 		this.lastknownpath = "";
 	}
 	
-	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition) {
+	public Vehicle(String vehicleID, AID aid, double gasLevel, Coordinates initialPosition) {
+		_aid = aid;
 		_vehicleID = vehicleID;
 		_gasLevel = gasLevel;
 		_position = initialPosition;
 		this.parties = new TreeMap<String, Party>();
 		this.destinations = new LinkedList<Coordinates>();
+	}
+	
+	public String toString() {
+		return "[VEHICLE] name=" + _vehicleID + " gas=" + _gasLevel + " position=" + _position;
+	}
+	
+	public AID getAID() {
+		return _aid;
 	}
 
 

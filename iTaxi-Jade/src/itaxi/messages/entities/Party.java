@@ -20,6 +20,10 @@ public class Party {
 		
 	}
 	
+	public String toString() {
+		return "[PARTY] name=" + name + " size=" + size + " position=" + _position + " destination=" + _destination;
+	}
+	
 //	public Party(int station, String name, int size, Coordinates id, PartyState bookState) {
 //		this.station = station;
 //		this.name = name;
