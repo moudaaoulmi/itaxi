@@ -3,51 +3,62 @@ package itaxi.jade;
 import itaxi.communications.communicator.Communicator;
 import itaxi.communications.handlers.TaxiHandler;
 import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
+import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Vehicle;
 import jade.core.AID;
 import jade.core.Agent;
+import jade.core.behaviours.CyclicBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
+import jade.lang.acl.ACLMessage;
+import jade.lang.acl.MessageTemplate;
 
 import com.google.gson.Gson;
 
 public class Taxi extends Agent {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	private Vehicle _vehicle;
 
 	private String _id;
 
 	private long[] _geoPoint = new long[2];
-	
+
 	//Monitor communication
 	private Communicator communicator;
-	private Gson gson;
+	private Gson _gson;
+	
+	public Vehicle getVehicle() {
+		return _vehicle;
+	}
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
-		
+
 		Integer[] _destination = new Integer[2];
-		
+
 		_destination[0] = 39000000;
 		_destination[1] = 39000000;
-		
+
 		Coordinates initialPosition = new Coordinates(_destination[0], _destination[1]);
-		
+
 		_vehicle = new Vehicle(getLocalName(), (double) 100, initialPosition);
 		Object[] args = getArguments();
 
 		registerAgent();
-		
+
 		//Monitor communication
-		TaxiHandler handler = new TaxiHandler(_id);
+		TaxiHandler handler = new TaxiHandler(getLocalName());
 		//testar com tester.java a correr (escuta o porto 8000)
 		communicator = new Communicator(8001, this, handler);
 		communicator.start();
+		
+		addBehaviour(new GetRequest(this));
 
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
@@ -115,7 +126,7 @@ public class Taxi extends Agent {
 			return null;
 		}
 	}
-	
+
 	public void handleMessage(Message message){
 		//aqui trata-se da mensagem!
 		System.out.println(_id + " : message handler - " + message.getContent());
@@ -124,36 +135,47 @@ public class Taxi extends Agent {
 	}
 
 
-	//FIXME:
-	//	/**
-	//	 * Este comportamento recebe um pedido de cliente
-	//	 */
-	//	class ServidorRecepcaoPedidosCompra extends CyclicBehaviour {
-	//		/**
-	//		 * Define as acções que o comportamento executa.
-	//		 */
-	//		public void action() {
-	//			//Se nao ha' representante vencedor, entao e' porque o leilao nao terminou
-	//			//ou ninguem fez oferta
-	//			//			if(representanteVencedor == null)
-	//			//				return;
-	//
-	//			// retira a primeira mensagem da lista de entrada
-	//			ACLMessage msg = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
-	//			// se a lista estiver vazia a mensagem devolvida é null
-	//			if (msg != null) {
-	//				// escreve o conteudo da mensagem na consola
-	//				if ((msg.getSender().getLocalName().compareTo(representanteVencedor.getLocalName()) == 0)
-	//						&& msg.getContent().equals("COMPRA"))
-	//				{
-	//					enviaResposta(msg, ACLMessage.INFORM, "");
-	//					System.out.println(getLocalName() + ": Item vendido com sucesso. Terminando...");
-	//					// termina a execucao
-	//					doDelete();
-	//				}
-	//			} else {
-	//				block();
-	//			}
-	//		}
-	//	}
+	/**
+	 * Gets requests
+	 */
+	class GetRequest extends CyclicBehaviour {
+
+		private Taxi _taxi; 
+		private static final long serialVersionUID = 1L;
+
+		public GetRequest(Taxi taxi) {
+			_taxi = taxi;
+		}
+
+		public void action() {
+
+			ACLMessage request = receive(MessageTemplate.MatchPerformative(ACLMessage.REQUEST));
+
+			if (request != null) {
+
+				Request req = Request.valueOf(request.getContent());
+
+				switch (req) {
+				case VEHICLE:
+					
+					ACLMessage inform = new ACLMessage(ACLMessage.INFORM);
+					Message message = new Message(MessageType.UPDATEVEHICLE);
+
+					message.setContent(_gson.toJson(_taxi.getVehicle()));
+
+					inform.addReceiver(request.getSender());
+					
+					// send message
+					myAgent.send(inform);
+					break;
+
+				default:
+					break;
+				}
+
+			} else {
+				block();
+			}
+		}
+	}
 }

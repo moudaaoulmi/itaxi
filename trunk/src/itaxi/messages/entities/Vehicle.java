@@ -12,7 +12,7 @@ public class Vehicle {
 	
 	private String _vehicleID;
 	
-	private Coordinates _initialPosition;
+	private Coordinates _position;
 	
 	private int parked;
 	
@@ -35,7 +35,7 @@ public class Vehicle {
 			int parked, long infoAge, String otherVehicles) {
 		_vehicleID = vehicleID;
 		_gasLevel = gasLevel;
-		_initialPosition = initialPosition;
+		_position = initialPosition;
 		this.infoAge = infoAge;
 		this.interactions = new TreeMap<Integer, Vehicle>();
 		this.otherVehicles = otherVehicles;
@@ -47,7 +47,7 @@ public class Vehicle {
 	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition) {
 		_vehicleID = vehicleID;
 		_gasLevel = gasLevel;
-		_initialPosition = initialPosition;
+		_position = initialPosition;
 		this.parties = new TreeMap<String, Party>();
 		this.destinations = new LinkedList<Coordinates>();
 	}
@@ -86,11 +86,11 @@ public class Vehicle {
 	}
 
 	public Coordinates getPosition() {
-		return _initialPosition;
+		return _position;
 	}
 
 	public void setPosition(Coordinates position) {
-		this._initialPosition = position;
+		this._position = position;
 	}
 		
 	public Map<String, Party> getParties() {

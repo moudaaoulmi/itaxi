@@ -70,7 +70,15 @@ public class Party {
 	}
 
 	public void setDestination(Coordinates destination) {
-		this._destination = destination;
+		_destination = destination;
+	}
+	
+	public Coordinates getPosition() {
+		return _position;
+	}
+
+	public void setPosition(Coordinates position) {
+		_position = position;
 	}
 	
 	public void setDestination(int latitude, int longitude){
