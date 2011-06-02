@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/connectServerLayout"
+              android:orientation="horizontal"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent" >
+    <TableLayout 
+    	android:layout_height="wrap_content" 
+    	android:layout_width="match_parent" 
+    	android:id="@+id/tableConnectLayout">
+    	<TableRow  
+    		android:baselineAligned="true" 
+    		android:layout_weight="1"
+    		android:paddingLeft="20px"
+    		android:paddingRight="20px">
+    		<TextView  
+			    android:layout_width="fill_parent" 
+			    android:text="Server IP:" 
+			    android:layout_height="wrap_content" 
+			    android:layout_weight="1" 
+			    android:layout_gravity="center_vertical"/>
+		    <EditText 
+		    	android:id="@+id/serverIpAdress"
+		    	android:text="172.20.21.240" 
+		    	android:layout_height="wrap_content" 
+		    	android:layout_width="match_parent" 
+		    	android:layout_weight="10" 
+		    	android:layout_gravity="fill_vertical"/>
+    	</TableRow>
+   		<TableRow 
+   			android:baselineAligned="true" 
+   			android:layout_weight="1"
+    		android:paddingLeft="20px"
+    		android:paddingRight="20px">
+    		<TextView  
+			    android:layout_width="fill_parent" 
+			    android:text="Server Port:" 
+			    android:layout_height="wrap_content" 
+			    android:layout_weight="1" 
+			    android:layout_gravity="center_vertical"/>
+		    <EditText 
+		    	android:id="@+id/serverPort"
+		    	android:text="6000" 
+		    	android:layout_height="wrap_content" 
+		    	android:layout_width="match_parent" 
+		    	android:layout_weight="10" 
+		    	android:layout_gravity="fill_vertical"/>
+    	</TableRow>
+		<TableRow 
+			android:baselineAligned="true" 
+			android:layout_weight="1"
+    		android:paddingTop="10px">
+			<Button 
+				android:text="Connect" 
+				android:id="@+id/connectButton" 
+				android:layout_height="wrap_content" 
+				android:layout_width="match_parent" 
+				android:layout_gravity="fill_vertical" 
+				android:layout_weight="1"/>
+		</TableRow>
+    </TableLayout>
+</LinearLayout>
