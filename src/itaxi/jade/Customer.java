@@ -39,7 +39,7 @@ public class Customer extends Agent {
 		
 		_position = new Coordinates(38000000, 38000000);
 
-		_destination = new Coordinates(38000000, 38000000);
+		_destination = new Coordinates(39000000, 39000000);
 
 		// time for central server to register
 		try {
@@ -151,7 +151,7 @@ public class Customer extends Agent {
 		private void passo0(){
 
 			//If there is no central server
-			if(_centralServer == null){
+			if(_centralServer == null) {
 				return;
 			}
 

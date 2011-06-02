@@ -5,11 +5,14 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
 import itaxi.messages.entities.Party;
+import itaxi.messages.entities.Vehicle;
 import jade.core.AID;
 import jade.core.Agent;
 import jade.core.behaviours.CyclicBehaviour;
 import jade.core.behaviours.OneShotBehaviour;
+import jade.core.behaviours.TickerBehaviour;
 import jade.domain.DFService;
 import jade.domain.FIPAException;
 import jade.domain.FIPAAgentManagement.DFAgentDescription;
@@ -30,7 +33,7 @@ public class CentralServer extends Agent {
 		registerAgent();
 
 		addBehaviour(new GetCallBehaviour());
-		//addBehaviour(new ListTaxisBehaviour());
+		addBehaviour(new AssignTaxiBehaviour(this,5000));
 	}
 
 	/**
@@ -111,7 +114,91 @@ public class CentralServer extends Agent {
 		}
 	}
 
-	class GetCallBehaviour extends OneShotBehaviour {
+	class AssignTaxiBehaviour extends TickerBehaviour {
+
+		private static final long serialVersionUID = 1L;
+
+		private int _passo;
+		//private MessageTemplate _assignTaxiMT;
+		private Gson _gson;
+
+		public AssignTaxiBehaviour(Agent a, long period) {
+			super(a, period);
+			_passo = 0;
+			//_assignTaxiMT = MessageTemplate.MatchPerformative(ACLMessage.INFORM);
+			_gson = new Gson();
+		}
+
+
+		@Override
+		protected void onTick() {
+			System.out.println("TOU aQUI");
+			switch(_passo) {
+			case 0:
+				passo0();
+				break;
+			case 1:
+				//passo1();
+				break;
+			case 2:
+				return;
+				//passo2();
+				//break;
+			case 3:
+				//passo3();
+				break;
+			}
+		}
+		
+		private void passo0() {
+			
+			System.out.println(getLocalName() + ": at step0 of AssignTaxiBehaviour");
+			
+			AID[] taxis = getTaxis();
+			
+			if(taxis.length == 0) {
+				System.out.println(getLocalName() + ": no taxis available");
+				return;
+			}
+			
+			Map<String,Vehicle> vehicles = new TreeMap<String, Vehicle>();
+			
+			for(AID taxi : taxis) {
+				Vehicle vehicle = getTaxiVehicle(taxi);
+				
+				if(vehicle != null) {
+					vehicles.put(vehicle.getVehicleID(), vehicle);
+				}
+			}
+			
+			System.out.println("Available taxis:");
+			for(Vehicle v : vehicles.values())
+				System.out.println(v.getVehicleID() + " at " + v.getPosition());
+		}
+		
+		private Vehicle getTaxiVehicle(AID taxi) {
+			
+			ACLMessage request = new ACLMessage(ACLMessage.REQUEST);
+			
+			request.addReceiver(taxi);
+			
+			request.setContent(Request.VEHICLE.toString());
+			
+			ACLMessage msg = blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.INFORM));
+			
+			if(msg != null) {
+				Message message = _gson.fromJson(msg.getContent(), Message.class);
+				
+				Vehicle vehicle = _gson.fromJson(message.getContent(), Vehicle.class);
+
+				return vehicle;
+			}
+			
+			return null;
+		}
+	}
+
+	class GetCallBehaviour extends CyclicBehaviour {
 
 		private MessageTemplate _getCallMT = MessageTemplate.MatchPerformative(ACLMessage.QUERY_IF);
 
@@ -121,22 +208,20 @@ public class CentralServer extends Agent {
 
 		public void action() {
 
-			while(true) {
-				switch(_passo) {
-				case 0:
-					passo0();
-					break;
-				case 1:
-					//passo1();
-					break;
-				case 2:
-					return;
-					//passo2();
-					//break;
-				case 3:
-					//passo3();
-					break;
-				}
+			switch(_passo) {
+			case 0:
+				passo0();
+				break;
+			case 1:
+				//passo1();
+				break;
+			case 2:
+				return;
+				//passo2();
+				//break;
+			case 3:
+				//passo3();
+				break;
 			}
 		}
 
@@ -153,13 +238,13 @@ public class CentralServer extends Agent {
 				case PARTY:
 					Party party = gson.fromJson(message.getContent(), Party.class);
 					/*System.out.println(party.getName() + " has " + party.getSize()
-							+ " passengers and wants to go to " + party.getDestination());
-*/
+								+ " passengers and wants to go to " + party.getDestination());
+					 */
 					_pendingBookings.put(party.getName(),party);
 
 					System.out.println("Pending parties:");
 					for(Party p : _pendingBookings.values())
-						System.out.println(p.getName());
+						System.out.println(p.getName() + " is at " + p.getPosition() + " and wants to go to " + p.getDestination());
 					break;
 
 				default:
@@ -176,4 +261,5 @@ public class CentralServer extends Agent {
 			}
 		}
 	}
+
 }
