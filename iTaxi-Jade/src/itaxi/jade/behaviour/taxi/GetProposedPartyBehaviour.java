@@ -1,9 +1,11 @@
 package itaxi.jade.behaviour.taxi;
 
 import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
 import itaxi.jade.Taxi;
 import itaxi.jade.behaviour.centralserver.AssignTaxiBehaviour;
 import itaxi.messages.entities.Party;
+import itaxi.messages.entities.PartyProposalResponse;
 import itaxi.messages.entities.Vehicle;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -45,12 +47,18 @@ public class GetProposedPartyBehaviour extends TickerBehaviour{
 					if(vec.getPassengers() + party.getSize()<=4){
 						answer = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
 						_taxi.addParty(party);
+						
+						Message rspmsg = new Message(MessageType.PARTYPROPOSALRESPONSE);
+						rspmsg.setContent(_gson.toJson(new PartyProposalResponse(_taxi.getVehicle().getVehicleID(), party.getName())));
+						answer.setContent(_gson.toJson(rspmsg));
+						
 						System.out.println("Accept : " + party);
 					}
 					else{
 						answer = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
 						System.out.println("Rejected : " + party);
 					}
+					
 					answer.addReceiver(msg.getSender());
 					// send message
 					myAgent.send(answer);
