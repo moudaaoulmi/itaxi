@@ -1,12 +1,14 @@
 package itaxi.jade;
 
 import java.util.Collection;
+
 import java.util.Map;
 import java.util.TreeMap;
 
 import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Vehicle;
 
+import itaxi.jade.behaviour.centralserver.AssignTaxiBehaviour;
 import itaxi.jade.behaviour.centralserver.GetCallBehaviour;
 
 import jade.core.AID;
@@ -36,6 +38,7 @@ public class CentralServer extends Agent {
 		registerAgent();
 
 		addBehaviour(new GetCallBehaviour(this,1000));
+		addBehaviour(new AssignTaxiBehaviour(this,1000));
 	}
 
 	/**
@@ -58,6 +61,8 @@ public class CentralServer extends Agent {
 			e.printStackTrace();
 		}	
 	}
+	
+	
 	
 	public Collection<Party> getPendingBookings() {
 		return _pendingBookings.values();

@@ -5,7 +5,7 @@ import itaxi.communications.messages.MessageType;
 import itaxi.jade.Taxi;
 import itaxi.jade.behaviour.centralserver.AssignTaxiBehaviour;
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.PartyProposalResponse;
+import itaxi.messages.entities.PartyBid;
 import itaxi.messages.entities.Vehicle;
 import jade.core.Agent;
 import jade.core.behaviours.TickerBehaviour;
@@ -14,7 +14,7 @@ import jade.lang.acl.MessageTemplate;
 
 import com.google.gson.Gson;
 
-public class GetProposedPartyBehaviour extends TickerBehaviour{
+public class BidForParties extends TickerBehaviour{
 
 	private static final long serialVersionUID = -6245822289702782240L;
 
@@ -22,7 +22,7 @@ public class GetProposedPartyBehaviour extends TickerBehaviour{
 	
 	private Taxi _taxi;
 	
-	public GetProposedPartyBehaviour(Agent a, long period) {
+	public BidForParties(Agent a, long period) {
 		super(a, period);
 		_gson = new Gson();
 		_taxi = (Taxi) a;
@@ -40,28 +40,31 @@ public class GetProposedPartyBehaviour extends TickerBehaviour{
 				case PARTY:
 					Party party = _gson.fromJson(message.getContent(), Party.class);
 					Vehicle vec = _taxi.getVehicle();
-					ACLMessage answer;
 					
-					System.out.println("Received fucking proposal!");
+					double bid = vec.getPosition().distanceTo(party.getPosition());
+					
+					ACLMessage proposal;
+					
+					System.out.println(myAgent.getLocalName() + ": will bid for" + party.getName());
 					
 					if(vec.getPassengers() + party.getSize()<=4){
-						answer = new ACLMessage(ACLMessage.ACCEPT_PROPOSAL);
-						_taxi.addParty(party);
+						proposal = new ACLMessage(ACLMessage.PROPOSE);
+						//_taxi.addParty(party);
 						
-						Message rspmsg = new Message(MessageType.PARTYPROPOSALRESPONSE);
-						rspmsg.setContent(_gson.toJson(new PartyProposalResponse(_taxi.getVehicle().getVehicleID(), party.getName())));
-						answer.setContent(_gson.toJson(rspmsg));
+						Message msg2 = new Message(MessageType.PARTY_BID);
+						msg2.setContent(_gson.toJson(new PartyBid(_taxi.getVehicle().getVehicleID(), party.getName(), bid)));
+						proposal.setContent(_gson.toJson(msg2));
 						
-						System.out.println("Accept : " + party);
+						System.out.println("bid for " + party + " with " + bid);
 					}
 					else{
-						answer = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
+						proposal = new ACLMessage(ACLMessage.REJECT_PROPOSAL);
 						System.out.println("Rejected : " + party);
 					}
 					
-					answer.addReceiver(msg.getSender());
+					proposal.addReceiver(msg.getSender());
 					// send message
-					myAgent.send(answer);
+					myAgent.send(proposal);
 					
 					break;
 				default:

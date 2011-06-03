@@ -1,47 +1,114 @@
 package itaxi.jade.behaviour.centralserver;
 
+import java.util.ArrayList;
+
 import itaxi.communications.messages.Message;
+
 import itaxi.communications.messages.MessageType;
 
 import itaxi.jade.CentralServer;
+import itaxi.jade.PartyAuction;
 import itaxi.jade.Request;
+
+
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.PartyProposalResponse;
+import itaxi.messages.entities.PartyBid;
 import itaxi.messages.entities.Vehicle;
 
 import jade.core.AID;
-import jade.core.behaviours.OneShotBehaviour;
+import jade.core.Agent;
+
+import jade.core.behaviours.TickerBehaviour;
+
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
 
 import com.google.gson.Gson;
 
-public class AssignTaxiBehaviour extends OneShotBehaviour {
+public class AssignTaxiBehaviour extends TickerBehaviour {
 
 	private static final long serialVersionUID = 1L;
 
 	private CentralServer _centralServer;
 	private Gson _gson;
 	private int _passo;
-	private int _proposes;
 
-	public AssignTaxiBehaviour(CentralServer centralServer) {
-		_centralServer = centralServer;
+	private ArrayList<PartyAuction> _activeAuctions;
+	private ArrayList<PartyAuction> _finnishedAuctions;
+
+	public AssignTaxiBehaviour(Agent a, long period) {
+		super(a,period);
+		_centralServer = (CentralServer) a;
 		_gson = new Gson();
 		_passo = 0;
-		_proposes = 0;
+		_activeAuctions = new ArrayList<PartyAuction>();
+		_finnishedAuctions = new ArrayList<PartyAuction>();
+	}
+
+	private PartyAuction getActivePartyAuction(String partyName) {
+
+		for(PartyAuction pa : _activeAuctions)
+			if(pa.getPartyName().compareTo(partyName) == 0)
+				return pa;
+
+		return null;
+	}
+
+	private PartyAuction getFinnishedPartyAuction(String partyName) {
+
+		for(PartyAuction pa : _finnishedAuctions)
+			if(pa.getPartyName().compareTo(partyName) == 0)
+				return pa;
+
+		return null;
+	}
+
+	private void removeActivePartyAuction(String partyName) {
+
+		PartyAuction remove = null;
+
+		for(PartyAuction pa : _activeAuctions)
+			if(pa.getPartyName().compareTo(partyName) == 0) {
+				remove = pa;
+				break;
+			}
+
+		if(remove != null)
+			_activeAuctions.remove(remove);
+	}
+
+	private void removeFinnishedPartyAuction(String partyName) {
+
+		PartyAuction remove = null;
+
+		for(PartyAuction pa : _finnishedAuctions)
+			if(pa.getPartyName().compareTo(partyName) == 0) {
+				remove = pa;
+				break;
+			}
+
+		if(remove != null)
+			_activeAuctions.remove(remove);
 	}
 
 	@Override
-	public void action() {
+	public void onTick() {
 		switch(_passo) {
 		case 0:
 			propose();
 			break;
 		case 1:
-			receiveAnswers();
+			receiveBids();
 			break;
 		}
+	}
+
+	public ArrayList<PartyAuction> getAuctions() {
+		return _activeAuctions;
+	}
+
+	public void addAuction(PartyAuction pa) {
+		_activeAuctions.add(pa);
 	}
 
 	private void propose() {
@@ -54,57 +121,55 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 			return;
 
 		//FIXME: should only add new available taxis and not clear every time
-		_centralServer.removeAllAvailableTaxis();
-
-		for(AID taxi : taxis) {
-			Vehicle vehicle = getTaxiVehicle(taxi);
-
-			if(vehicle != null) {
-				_centralServer.addAvailableTaxi(vehicle);
-			}
-		}
-
-		System.out.println("Available taxis(" + _centralServer.getAvailableTaxis().size() + "):");
-		for(Vehicle v : _centralServer.getAvailableTaxis())
-			System.out.println("\t" + v.getVehicleID() + " at " + v.getPosition());
+		//_centralServer.removeAllAvailableTaxis();
 
 		for(Party p : _centralServer.getPendingBookings()) {
-			Vehicle t = assignTaxiToParty(p);
-
-			if(t != null) {
-				System.out.println(p + " assigned to " + t);
+			PartyAuction auction = new PartyAuction(p.getName(), taxis.length);
+			for(AID t : taxis) {
 				proposePartyToTaxi(p, t);
-				_proposes++;
 			}
+			_activeAuctions.add(auction);
 		}
-		
-		receiveAnswers();
-		_passo = 1;
+
+		receiveBids();
 	}
 
-	private void receiveAnswers() {
+	private void receiveBids() {
 		
-		while(_proposes > 0) {
+		System.out.println("receiving bids");
+
+		while(_activeAuctions.size() > 0) {
 			
-			ACLMessage msg = myAgent.blockingReceive(MessageTemplate.or(
-					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
-					MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)));
+
+			//FIXME: change performative
+			ACLMessage bid = myAgent.blockingReceive(MessageTemplate.MatchPerformative(ACLMessage.PROPOSE));
+
+			Message message = _gson.fromJson(bid.getContent(), Message.class);
+			PartyBid ppr = _gson.fromJson(message.getContent(), PartyBid.class);
 			
-			_proposes--;
+
+			String bidPartyName = ppr.getPartyName();
+			String bidTaxiName = ppr.getVehicleID();
+			double bidValue = ppr.getBid();
 			
-			Message message = _gson.fromJson(msg.getContent(), Message.class);
-			PartyProposalResponse ppr = _gson.fromJson(message.getContent(), PartyProposalResponse.class);
-			
-			if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-				System.out.println(ppr.getPartyID() + " accepted by " + ppr.getVehicleID());
-				_centralServer.removePendingBookingById(ppr.getPartyID());
-				_centralServer.removePendingBookingById(ppr.getVehicleID());
-			}
-			else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-				System.out.println(ppr.getPartyID() + " rejected by " + ppr.getVehicleID());
+			System.out.println(myAgent.getLocalName() + ": party=" + bidPartyName + " taxi=" + bidTaxiName + " bid=" + bidValue);
+
+			PartyAuction pa = getActivePartyAuction(bidPartyName);
+
+			pa.addBid(bidTaxiName, bidValue);
+
+			if(pa.getRemainingBids() == 0) {
+				removeActivePartyAuction(pa.getPartyName());
+				_finnishedAuctions.add(pa);
 			}
 		}
-
+		
+		System.out.println("Will now assign parties");
+		assignParties();
+	}
+	
+	private void assignParties() {
+		
 	}
 
 	private Vehicle getTaxiVehicle(AID taxi) {
@@ -126,14 +191,14 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 		return null;
 	}
 
-	private void proposePartyToTaxi(Party party, Vehicle taxi) {
+	private void proposePartyToTaxi(Party party, AID taxi) {
 
 		ACLMessage propose = new ACLMessage(ACLMessage.PROPOSE);
 
 		Message msg = new Message(MessageType.PARTY);
 		msg.setContent(_gson.toJson(party));
 
-		propose.addReceiver(new AID(taxi.getVehicleID(),false));
+		propose.addReceiver(taxi);
 		propose.setContent(_gson.toJson(msg));
 
 		// send message

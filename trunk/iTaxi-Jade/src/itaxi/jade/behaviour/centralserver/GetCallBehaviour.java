@@ -60,8 +60,6 @@ public class GetCallBehaviour extends TickerBehaviour {
 
 			// send message
 			myAgent.send(answer);
-
-			myAgent.addBehaviour(new AssignTaxiBehaviour(_centralServer));
 		}
 	}
 
