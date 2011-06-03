@@ -6,6 +6,7 @@ import itaxi.communications.messages.MessageType;
 import itaxi.jade.CentralServer;
 import itaxi.jade.Request;
 import itaxi.messages.entities.Party;
+import itaxi.messages.entities.PartyProposalResponse;
 import itaxi.messages.entities.Vehicle;
 
 import jade.core.AID;
@@ -91,13 +92,16 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 			
 			_proposes--;
 			
+			Message message = _gson.fromJson(msg.getContent(), Message.class);
+			PartyProposalResponse ppr = _gson.fromJson(message.getContent(), PartyProposalResponse.class);
 			
 			if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
-				System.out.println("Proposal accepted");
-				
+				System.out.println(ppr.getPartyID() + " accepted by " + ppr.getVehicleID());
+				_centralServer.removePendingBookingById(ppr.getPartyID());
+				_centralServer.removePendingBookingById(ppr.getVehicleID());
 			}
 			else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
-				System.out.println("Proposal rejected");
+				System.out.println(ppr.getPartyID() + " rejected by " + ppr.getVehicleID());
 			}
 		}
 
