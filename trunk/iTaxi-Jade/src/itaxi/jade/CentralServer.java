@@ -71,6 +71,10 @@ public class CentralServer extends Agent {
 		_pendingBookings.remove(p.getName());
 	}
 	
+	public void removePendingBookingById(String partyName) {
+		_pendingBookings.remove(partyName);
+	}
+	
 	public Collection<Party> getAssignedBookings() {
 		return _assignedBookings.values();
 	}
@@ -93,6 +97,10 @@ public class CentralServer extends Agent {
 	
 	public void removeAvailableTaxi(Vehicle v) {
 		_availableTaxis.remove(v.getVehicleID());
+	}
+	
+	public void removeAvailableTaxiById(String vehicleParty) {
+		_availableTaxis.remove(vehicleParty);
 	}
 	
 	public void removeAllAvailableTaxis() {
