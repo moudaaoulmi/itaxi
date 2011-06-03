@@ -4,6 +4,7 @@ import itaxi.communications.communicator.Communicator;
 import itaxi.communications.handlers.TaxiHandler;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
+import itaxi.jade.behaviour.taxi.GetProposedPartyBehaviour;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Vehicle;
@@ -70,6 +71,7 @@ public class Taxi extends Agent {
 		communicator.start();
 		
 		addBehaviour(new GetRequest(this,5000));
+		addBehaviour(new GetProposedPartyBehaviour(this, 5000));
 
 		// cria o comportamentos para os varios tipos de mensagem
 		//addBehaviour(new ServidorInformacao());
