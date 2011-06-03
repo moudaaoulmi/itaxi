@@ -12,7 +12,6 @@ import jade.core.AID;
 import jade.core.behaviours.OneShotBehaviour;
 import jade.lang.acl.ACLMessage;
 import jade.lang.acl.MessageTemplate;
-import jade.tools.logging.ontology.GetAllLoggers;
 
 import com.google.gson.Gson;
 
@@ -39,7 +38,7 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 			propose();
 			break;
 		case 1:
-			;
+			receiveAnswers();
 			break;
 		}
 	}
@@ -77,20 +76,28 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 				_proposes++;
 			}
 		}
+		
+		receiveAnswers();
+		_passo = 1;
 	}
 
 	private void receiveAnswers() {
 		
 		while(_proposes > 0) {
 			
-			ACLMessage msg = myAgent.receive(MessageTemplate.or(
+			ACLMessage msg = myAgent.blockingReceive(MessageTemplate.or(
 					MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL),
 					MessageTemplate.MatchPerformative(ACLMessage.REJECT_PROPOSAL)));
 			
 			_proposes--;
 			
+			
 			if(msg.getPerformative() == ACLMessage.ACCEPT_PROPOSAL) {
+				System.out.println("Proposal accepted");
 				
+			}
+			else if(msg.getPerformative() == ACLMessage.REJECT_PROPOSAL) {
+				System.out.println("Proposal rejected");
 			}
 		}
 
@@ -149,7 +156,6 @@ public class AssignTaxiBehaviour extends OneShotBehaviour {
 			_centralServer.removeAvailableTaxi(assignedVehicle);
 			return assignedVehicle;
 		}
-
 		return null;
 	}
 }
