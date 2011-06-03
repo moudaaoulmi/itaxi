@@ -33,7 +33,7 @@ public class Customer extends Agent {
 
 	protected void setup() {
 		System.out.println(getLocalName() + ": initializing...");
-		Object[] args = getArguments();
+		//Object[] args = getArguments();
 		
 		registerAgent();
 		
