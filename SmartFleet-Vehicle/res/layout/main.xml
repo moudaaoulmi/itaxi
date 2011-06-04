@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mapLayout"
+    android:orientation="vertical"
+	android:layout_width="fill_parent" 
+	android:layout_height="fill_parent">
+	
+    <com.google.android.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:clickable="true"
+        android:apiKey="005R_HsvWByOWhsN39O_tNR6Ef7uxC_TjKXnV4w"
+    />
+    
+	<LinearLayout 
+		android:layout_width="fill_parent" 
+		android:layout_height="fill_parent" 
+		android:orientation="vertical" 
+		android:gravity="bottom" 
+		android:paddingLeft="5px" 
+		android:paddingTop="5px" 
+		android:paddingRight="5px">
+		
+	    <smartfleet.vehicle.MapTransparentPanel
+	        android:id="@+id/mapPanel"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+		    android:layout_gravity="center_horizontal"
+	        android:paddingLeft="5px"
+	        android:paddingTop="5px"
+	        android:paddingRight="5px"
+	        android:paddingBottom="5px">
+		        
+		    <ImageButton android:id="@+id/mapZoomIn"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent"
+		        android:src="@drawable/zoomin" />
+		        
+			<ImageButton android:id="@+id/mapZoomOut"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent"
+		        android:src="@drawable/zoomout" />
+			
+		    <ImageView android:id="@+id/wirelessState"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent" />
+		    	
+		   	<ImageView android:id="@+id/batteryLevel"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		    	android:background="@android:color/transparent" />
+		        
+		    <LinearLayout
+				android:id="@+id/widget44"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="5px"
+				android:orientation="vertical"
+				android:gravity="center_horizontal">
+				<ImageView
+					android:id="@+id/altitudeIcon"
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			    	android:background="@android:color/transparent"
+		        	android:src="@drawable/altitudehigh" >
+				</ImageView>
+				<TextView
+					android:id="@+id/altitudeIconText"
+					android:layout_width="wrap_content"
+					android:layout_height="wrap_content"
+					android:gravity="center_horizontal"
+			    	android:background="@android:color/transparent"
+					android:textColorHighlight="#656565">
+				</TextView>
+			</LinearLayout>
+		    	
+		    <Button android:id="@+id/nextStop"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		    	android:layout_gravity="center_vertical"
+		        android:text="Next Stop" />
+  		</smartfleet.vehicle.MapTransparentPanel>
+	</LinearLayout>
+</FrameLayout>
