@@ -186,7 +186,11 @@ public class Taxi extends Agent {
 
 					message.setContent(_gson.toJson(_taxi.getVehicle()));
 					
-					inform.setContent(_gson.toJson(message));
+					String sendthis = _gson.toJson(message);
+					
+					System.out.println("MENSAGEM A ENVIAR - " + sendthis);
+					
+					inform.setContent(sendthis);
 
 					inform.addReceiver(request.getSender());
 					
