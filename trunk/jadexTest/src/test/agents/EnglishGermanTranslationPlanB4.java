@@ -1,7 +1,5 @@
 package test.agents;
 
-import jadex.base.fipa.SFipa;
-import jadex.bdi.runtime.IMessageEvent;
 import jadex.bdi.runtime.Plan;
 
 import java.util.HashMap;
