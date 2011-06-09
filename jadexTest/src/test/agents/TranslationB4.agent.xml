@@ -1,0 +1,46 @@
+<!--  Super translation bitch 2. --> 
+<agent xmlns="http://jadex.sourceforge.net/jadex-bdi"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
+                      http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
+  name="TranslationB4"
+  package="test.agents">
+
+	<imports>
+		<import>jadex.base.fipa.*</import>
+	</imports>
+
+  <plans>
+    <plan name="egtrans">
+    	<parameter name="eword" class="String">
+				<messageeventmapping ref="request_translation.content" />
+		</parameter>
+  		<body class="EnglishGermanTranslationPlanB4"/>
+  			<trigger>
+    			<messageevent ref="request_translation"/>
+  			</trigger>
+  			<precondition>
+    			EnglishGermanTranslationPlanB4.containsWord((String)$event.getParameter(SFipa.CONTENT).getValue())
+  			</precondition>
+	</plan>
+    <plan name="searchonline" priority="-1">
+  		<body class="SearchTranslationOnlineB4"/>
+ 	 		<trigger>
+    			<messageevent ref="request_translation"/>
+  			</trigger>
+	</plan>
+  </plans>
+
+  <events>
+    <messageevent name="request_translation" direction="receive" type="fipa">
+      <parameter name="performative" class="String" direction="fixed">
+        <value>jadex.base.fipa.SFipa.REQUEST</value>
+      </parameter>
+    </messageevent>
+  </events>
+
+  <properties>
+    <property name="debugging">true</property>
+  </properties>
+
+</agent>
