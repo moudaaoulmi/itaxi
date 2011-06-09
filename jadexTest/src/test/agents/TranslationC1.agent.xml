@@ -1,0 +1,52 @@
+<!--  Super translation bitch C1. --> 
+<agent xmlns="http://jadex.sourceforge.net/jadex-bdi"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
+                           http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
+  name="TranslationC1"
+  package="test.agents">
+
+  <imports>
+    <import>java.util.logging.*</import>
+    <import>java.util.*</import>
+    <import>jadex.base.fipa.*</import>
+  </imports>
+
+  <beliefs>
+    <belief name="egwords" class="Map">
+      <fact>EnglishGermanTranslationPlanC1.getDictionary()</fact>
+    </belief>
+  </beliefs>
+
+  <plans>
+    <plan name="addword">
+      <body class="EnglishGermanAddWordPlanC1"/>
+      <trigger>
+        <messageevent ref="request_addword"/>
+      </trigger>
+    </plan>
+		
+    <plan name="egtrans">
+      <body class="EnglishGermanTranslationPlanC1"/>
+      <trigger>
+        <messageevent ref="request_translation"/>
+      </trigger>
+    </plan>
+  </plans>
+
+  <events>
+    <messageevent name="request_addword" direction="receive" type="fipa">
+      <parameter name="performative" class="String" direction="fixed">
+        <value>SFipa.REQUEST</value>
+      </parameter>
+      <match>$content instanceof String &amp;&amp; ((String)$content).startsWith("{\"type\":\"ADD")</match>
+    </messageevent>
+	
+    <messageevent name="request_translation" direction="receive" type="fipa">
+      <parameter name="performative" class="String" direction="fixed">
+        <value>SFipa.REQUEST</value>
+      </parameter>
+      <match>$content instanceof String &amp;&amp; ((String)$content).startsWith("{\"type\":\"TRANSLATE")</match>
+    </messageevent>
+  </events>
+</agent>
