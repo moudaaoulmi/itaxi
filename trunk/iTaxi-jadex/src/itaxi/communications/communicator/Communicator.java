@@ -44,7 +44,8 @@ public class Communicator extends Thread {
 	
 	public void run() {
 		
-		System.out.println(handler.toString() + " waiting for connections.");
+		if(handler!=null)
+			System.out.println(handler.toString() + " waiting for connections.");
 		
 		//Accept new connections
 		while(!stop) {
@@ -56,11 +57,17 @@ public class Communicator extends Thread {
 				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 
-				// Read incoming messages
-				Message msg = gson.fromJson(reader.readLine(), Message.class);
-				System.out.println("Received Message: " + gson.toJson(msg));
-				handleMessage(writer, msg);
-				reader.close();
+				if (handler != null) {
+					// Read incoming messages
+					Message msg = gson.fromJson(reader.readLine(),
+							Message.class);
+					System.out.println("Received Message: " + gson.toJson(msg));
+					handleMessage(writer, msg);
+					reader.close();
+				}
+				else
+					reader.close();
+				
 				socket.close(); 	
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
