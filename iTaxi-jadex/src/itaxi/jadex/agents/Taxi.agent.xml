@@ -15,6 +15,7 @@
 		<import>jadex.base.fipa.*</import>
 		<import>java.util.logging.*</import>
 		<import>itaxi.messages.coordinates.*</import>
+		<import>itaxi.jadex.plans.taxi</import>
 	</imports>
 
 	<beliefs>
