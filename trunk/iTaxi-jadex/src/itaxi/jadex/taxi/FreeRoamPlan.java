@@ -15,6 +15,7 @@ public class FreeRoamPlan extends Plan
 	 */
 	public FreeRoamPlan()
 	{
+		System.out.println("FreeRoamPlan!");
 	}
 
 	/**
@@ -31,6 +32,7 @@ public class FreeRoamPlan extends Plan
 		try
 		{
 		  dispatchSubgoal(goal);
+		  System.out.println("Dispatch move goal!");
 		  //dispatchSubgoalAndWait(goal);
 		  //getLogger().info("Translated from "+goal+" "+
 		  //word+" - "+goal.getParameter("result").getValue());
