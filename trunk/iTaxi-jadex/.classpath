@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="lib" path="lib/jadex/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/antlr-runtime-3.1.3.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-applib-bdi-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-applications-bdi-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-bridge-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-commons-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-javaparser-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-kernel-application-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-kernel-application-opengl-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-kernel-bdi-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-nuggets-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-platform-base-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-platform-standalone-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-platform-standalone-launch-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-rules-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-rules-applications-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-rules-tools-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-runtimetools-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/jadex-xml-2.0-rc6.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/janino-2.5.10.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/stringtemplate-3.2.jar"/>
+	<classpathentry kind="lib" path="lib/jadex/xpp3-1.1.4c.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/commons-codec-1.3.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/commons-net-2.2.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/gson-1.6.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/http.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/iiop.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
