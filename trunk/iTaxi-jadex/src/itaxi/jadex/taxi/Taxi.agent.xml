@@ -35,7 +35,7 @@
 	</beliefs>
 
 	<goals>
-		<achievegoal name="move" recur="true" recurdelay="10">
+		<achievegoal name="move" recur="true" recurdelay="5000">
 			<parameter name="positionlatitude" class="int" />
 			<parameter name="positionlongitude" class="int" />
 			<targetcondition>

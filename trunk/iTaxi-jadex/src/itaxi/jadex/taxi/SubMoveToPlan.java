@@ -29,8 +29,8 @@ public class SubMoveToPlan extends Plan
 	{
 		System.out.println("SubMovePlan body!");
 		//le os beliefs e soma 10
-		int latitude = 10 + ((Integer)getBeliefbase().getBelief("latitude").getFact()).intValue(); 
-		int longitude = 10 + ((Integer)getBeliefbase().getBelief("longitude").getFact()).intValue(); 
+		int latitude = 1 + ((Integer)getBeliefbase().getBelief("latitude").getFact()).intValue(); 
+		int longitude = 1 + ((Integer)getBeliefbase().getBelief("longitude").getFact()).intValue(); 
 		
 		//faz set dos beliefs
 		getBeliefbase().getBelief("latitude").setFact(latitude);
@@ -53,5 +53,13 @@ public class SubMoveToPlan extends Plan
 		
 		
 		communicator.sendMessage("localhost", 8002, message);
+		
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		communicator.stopThread();
 	}
 }
