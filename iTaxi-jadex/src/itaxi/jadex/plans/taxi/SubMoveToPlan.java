@@ -1,7 +1,13 @@
 package itaxi.jadex.plans.taxi;
 
+import itaxi.communications.communicator.Communicator;
+import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
+import itaxi.messages.entities.Vehicle;
 import jadex.bdi.runtime.Plan;
+
+import com.google.gson.Gson;
 
 public class SubMoveToPlan extends Plan
 {
@@ -20,7 +26,7 @@ public class SubMoveToPlan extends Plan
 	  }
 	  return position;
 	}
-
+	
 	public static void setPosition(Coordinates coords){
 		position = coords;
 	}
@@ -38,6 +44,20 @@ public class SubMoveToPlan extends Plan
 	 */
 	public void body()
 	{
-
+		Coordinates coords = (Coordinates)getBeliefbase().getBelief("position");
+		coords.setLatitude(coords.getLatitude()+10);
+		coords.setLongitude(coords.getLongitude()+10);
+		
+		Communicator communicator = new Communicator(8001,this,null);
+		Gson gson = new Gson();
+		
+		Message message = new Message(MessageType.UPDATEVEHICLE);
+		String newcontent = gson.toJson(new Vehicle("Carro do ze", 50, 
+				coords, 
+				0, 0, 0, ""));
+		message.setContent(newcontent);
+		
+		
+		communicator.sendMessage("localhost", 8002, message);
 	}
 }
