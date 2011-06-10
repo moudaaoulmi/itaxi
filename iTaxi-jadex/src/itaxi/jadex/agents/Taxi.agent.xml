@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+	<H3>Taxi!</H3>
+	taxi-o-matic
+-->
+<agent xmlns="http://jadex.sourceforge.net/jadex-bdi"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
+	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
+	name="Taxi"
+	package="itaxi.jadex.agents">
+
+	<imports>
+		<import>jadex.commons.*</import>
+		<import>jadex.base.fipa.*</import>
+		<import>java.util.logging.*</import>
+		<import>itaxi.messages.coordinates.*</import>
+	</imports>
+
+	<beliefs>
+		<belief name="position" class="Coordinates">
+		<fact>SubMoveToPlan.getPosition()</fact>
+		</belief>
+		
+		<belief name="gas" class="int">
+		<fact>100</fact>
+		</belief>
+		
+		<belief name="maxgas" class="int">
+		<fact>100</fact>
+		</belief>
+		
+	</beliefs>
+	
+	<goals>
+    	<achievegoal name="move">
+        	<parameter name="position" class="Coordinates"/>
+        	<targetcondition>
+    			$beliefbase.getBeliefSet("position").isEqual($goal.position)
+  			</targetcondition>
+    	</achievegoal>
+    	
+	</goals>
+
+	<plans>
+ 		<plan name="submoveto">
+ 			<parameter name="position" class="String">
+				<goalmapping ref="move.position"/>
+			</parameter>
+ 			
+ 			<body class="SubMoveToPlan">
+ 			</body>
+ 			
+ 			<trigger>
+				<goal ref="move">
+				</goal>
+			</trigger>
+			
+ 		</plan>
+ 		
+ 		<plan name="freeroam">
+ 			<body class="FreeRoamPlan">
+ 			</body>
+ 		</plan>	
+ 	</plans>
+
+	<configurations>
+		<configuration name="default">
+			<plans>
+				<initialplan ref="freeroam"/>
+			</plans>
+		</configuration>
+	</configurations>
+
+</agent>
+
