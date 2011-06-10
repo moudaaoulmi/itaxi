@@ -8,6 +8,8 @@ import jadex.bdi.runtime.Plan;
 
 public class FreeRoamPlan extends Plan
 {
+	private static final long serialVersionUID = -5636941172691936629L;
+
 	/**
 	 *  Create a new plan.
 	 */
