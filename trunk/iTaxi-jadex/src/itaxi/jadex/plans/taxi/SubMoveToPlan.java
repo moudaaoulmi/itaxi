@@ -1,6 +1,7 @@
 package itaxi.jadex.plans.taxi;
 
 import itaxi.messages.coordinates.Coordinates;
+import jadex.bdi.runtime.Plan;
 
 public class SubMoveToPlan extends Plan
 {
