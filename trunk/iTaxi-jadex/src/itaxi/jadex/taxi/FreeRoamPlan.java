@@ -1,4 +1,4 @@
-package itaxi.jadex.plans.taxi;
+package itaxi.jadex.taxi;
 
 import itaxi.messages.coordinates.Coordinates;
 import jadex.bdi.runtime.GoalFailureException;
@@ -25,7 +25,8 @@ public class FreeRoamPlan extends Plan
 		Coordinates destination = new Coordinates(39001000,39001000);
 		
 		IGoal goal = createGoal("move");
-		goal.getParameter("position").setValue(destination);
+		goal.getParameter("latitude").setValue(destination.getLatitude());
+		goal.getParameter("longitude").setValue(destination.getLongitude());
 
 		try
 		{

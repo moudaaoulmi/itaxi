@@ -1,4 +1,4 @@
-package itaxi.jadex.plans.taxi;
+package itaxi.jadex.taxi;
 
 import itaxi.communications.communicator.Communicator;
 import itaxi.communications.messages.Message;
@@ -13,24 +13,6 @@ public class SubMoveToPlan extends Plan
 {
 	
 	private static final long serialVersionUID = -4734256815117513268L;
-
-	
-	//beliefs-------------------------------------
-	protected static Coordinates position;
-	
-	public static Coordinates getPosition()
-	{
-	  if(position==null)
-	  {
-		  position = new Coordinates(39000000,39000000);
-	  }
-	  return position;
-	}
-	
-	public static void setPosition(Coordinates coords){
-		position = coords;
-	}
-	//--------------------------------------------
 	
 	/**
 	 *  Create a new plan.
@@ -44,10 +26,19 @@ public class SubMoveToPlan extends Plan
 	 */
 	public void body()
 	{
-		Coordinates coords = (Coordinates)getBeliefbase().getBelief("position");
-		coords.setLatitude(coords.getLatitude()+10);
-		coords.setLongitude(coords.getLongitude()+10);
 		
+		//le os beliefs e soma 10
+		int latitude = 10 + ((Integer)getBeliefbase().getBelief("latitude").getFact()).intValue(); 
+		int longitude = 10 + ((Integer)getBeliefbase().getBelief("longitude").getFact()).intValue(); 
+		
+		//faz set dos beliefs
+		getBeliefbase().getBelief("latitude").setFact(latitude);
+		getBeliefbase().getBelief("longitude").setFact(longitude);
+		
+		//gera as coordenadas
+		Coordinates coords = new Coordinates(latitude,longitude);
+		
+		//envia mensagem com as novas coordenadas para o monitor
 		Communicator communicator = new Communicator(8001,this,null);
 		Gson gson = new Gson();
 		

@@ -14,12 +14,15 @@
 		<import>java.util.logging.*</import>
 		<import>itaxi.messages.coordinates.*</import>
 		<import>itaxi.jadex.plans.taxi</import>
-		<import>itaxi.communications.communicator</import>
 	</imports>
 
 	<beliefs>
-		<belief name="position" class="Coordinates">
-			<fact>SubMoveToPlan.getPosition()</fact>
+		<belief name="latitude" class="int">
+			<fact>39000000</fact>
+		</belief>
+		
+		<belief name="longitude" class="int">
+			<fact>39000000</fact>
 		</belief>
 
 		<belief name="gas" class="int">
@@ -29,18 +32,16 @@
 		<belief name="maxgas" class="int">
 			<fact>100</fact>
 		</belief>
-		
-		<belief name="communicator" class="Communicator">
-			<fact>SubMoveToPlan.getCommunicator()</fact>
-		</belief>
 
 	</beliefs>
 
 	<goals>
 		<achievegoal name="move">
-			<parameter name="position" class="Coordinates" />
+			<parameter name="positionlatitude" class="int" />
+			<parameter name="positionlongitude" class="int" />
 			<targetcondition>
-				$beliefbase.getBeliefSet("position").isEqual($goal.position)
+				$beliefbase.latitude == $goal.positionlatitude &amp;&amp;
+				$beliefbase.longitude == $goal.positionlongitude
 			</targetcondition>
 		</achievegoal>
 
@@ -48,8 +49,11 @@
 
 	<plans>
 		<plan name="submoveto">
-			<parameter name="position" class="String">
-				<goalmapping ref="move.position" />
+			<parameter name="latitude" class="int">
+				<goalmapping ref="move.positionlatitude" />
+			</parameter>
+			<parameter name="longitude" class="int">
+				<goalmapping ref="move.positionlongitude" />
 			</parameter>
 
 			<body class="SubMoveToPlan">
