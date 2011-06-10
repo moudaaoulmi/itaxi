@@ -41,6 +41,8 @@ public class SubMoveToPlan extends Plan
 		
 		//envia mensagem com as novas coordenadas para o monitor
 		Communicator communicator = new Communicator(8001,this,null);
+		communicator.start();
+		
 		Gson gson = new Gson();
 		
 		Message message = new Message(MessageType.UPDATEVEHICLE);
