@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SmartFleet: Monitor</string>
-    <string name="vehiclemenu">SmartFleet: Monitor > Vehicle Details</string>
-    <string name="stationmenu">SmartFleet: Monitor > Station Details</string>
-    <string name="statisticsmenu">SmartFleet: Monitor > Overall Statistics</string>
+    <string name="app_name">iTaxi Monitor</string>
+    <string name="vehiclemenu">iTaxi Monitor &gt; Vehicle Details</string>
+    <string name="stationmenu">iTaxi Monitor &gt; Station Details</string>
+    <string name="statisticsmenu">iTaxi Monitor &gt; Overall Statistics</string>
     <string-array name="menu">
         <item>Visualize Stations and Vehicles</item>
         <item>Visualize Vehicle Details</item>
