@@ -1,54 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3>Taxi!</H3> taxi-o-matic -->
 <agent xmlns="http://jadex.sourceforge.net/jadex-bdi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
 	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
-	name="Taxi" package="itaxi.jadex.taxi">
-
+	name="CentralServer" package="itaxi.jadex.centralserver">
+ 
 	<imports>
 		<import>jadex.commons.*</import>
 		<import>jadex.commons.service.*</import>
 		<import>jadex.base.fipa.*</import>
-		<import>java.util.logging.*</import>
 		<import>jadex.planlib.*</import>
-		<import>com.google.gson.Gson</import>
-	</imports>
+		<import>java.util.logging.*</import>
+	</imports> 
 
 	<capabilities>
 		<!-- Include the directory facilitator capability under the name dfcap. -->
 		<capability name="dfcap" file="jadex.bdi.planlib.df.DF" />
 	</capabilities>
 
-	<beliefs>
-		<belief name="latitude" class="int">
-			<fact>39000000</fact>
-		</belief>
-
-		<belief name="longitude" class="int">
-			<fact>39000000</fact>
-		</belief>
-
-		<belief name="gas" class="int">
-			<fact>100</fact>
-		</belief>
-
-		<belief name="maxgas" class="int">
-			<fact>100</fact>
-		</belief>
-
-	</beliefs>
-
 	<goals>
-
-		<achievegoal name="move" recur="true" recurdelay="5000">
-			<parameter name="positionlatitude" class="int" />
-			<parameter name="positionlongitude" class="int" />
-			<targetcondition>
-				$beliefbase.latitude == $goal.positionlatitude
-				&amp;&amp;
-				$beliefbase.longitude == $goal.positionlongitude
-			</targetcondition>
-		</achievegoal>
 
 		<!-- Imported DF-Goals -->
 
@@ -58,62 +27,39 @@
 		</maintaingoalref>
 
 		<achievegoalref name="df_search">
-			<concrete ref="dfcap.df_search" />
+			<concrete ref="dfcap.df_search"/>
 		</achievegoalref>
-
+		
 		<achievegoalref name="df_deregister">
-			<concrete ref="dfcap.df_deregister" />
+			<concrete ref="dfcap.df_deregister"/>
 		</achievegoalref>
-
-
+		
 	</goals>
 
 	<plans>
-		<plan name="submoveto">
-			<parameter name="latitude" class="int">
-				<goalmapping ref="move.positionlatitude" />
-			</parameter>
-			<parameter name="longitude" class="int">
-				<goalmapping ref="move.positionlongitude" />
-			</parameter>
-
-			<body class="SubMoveToPlan">
-			</body>
-
-			<trigger>
-				<goal ref="move">
-				</goal>
-			</trigger>
-
-		</plan>
-
-		<plan name="freeroam">
-			<body class="FreeRoamPlan">
-			</body>
+		<plan name="getTaxis">
+			<body class="GetTaxisPlan"></body>
 		</plan>
 	</plans>
-
+  
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
 		<property name="logging.level">Level.INFO</property>
 		<!-- The default parent handler prints out log messages on the console. -->
 		<property name="logging.useParentHandlers">true</property>
 		<!--<property name="debugging">true</property> -->
-		<property name="dfservice" class="IFuture">SServiceProvider.getService($scope.getServiceProvider(),IDF.class)
-		</property>
+		<property name="dfservice" class="IFuture">SServiceProvider.getService($scope.getServiceProvider(),IDF.class)</property>
 	</properties>
-
+ 
 	<configurations>
 		<configuration name="default">
- 
 			<goals>
 				<initialgoal ref="df_keep_registered">
 					<parameter ref="description">
 						<value>
 							$propertybase.getProperty("dfservice")
-							.createDFComponentDescription(null,
-							$propertybase.getProperty("dfservice")
-							.createDFServiceDescription("service_taxi", "taxi", "IST"))
+							.createDFComponentDescription(null, $propertybase.getProperty("dfservice")
+							.createDFServiceDescription("service_taxiCentral", "taxiCentral", "IST"))
  						</value>
 					</parameter>
 					<parameter ref="leasetime">
@@ -121,12 +67,13 @@
 					</parameter>
 				</initialgoal>
 
+
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
 			</goals>
-
+			
 			<plans>
-				<initialplan ref="freeroam" />
+				<initialplan ref="getTaxis" />
 			</plans>
 		</configuration>
 	</configurations>
