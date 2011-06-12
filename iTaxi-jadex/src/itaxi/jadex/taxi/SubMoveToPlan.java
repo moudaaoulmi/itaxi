@@ -6,7 +6,6 @@ import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Vehicle;
 import jadex.bdi.runtime.Plan;
-
 import com.google.gson.Gson;
 
 public class SubMoveToPlan extends Plan {
@@ -25,19 +24,24 @@ public class SubMoveToPlan extends Plan {
 	 */
 	public void body() {
 		System.out.println("SubMovePlan body!");
-		// le os beliefs e soma 10
-		int latitude = 10 + ((Integer) getBeliefbase().getBelief("latitude")
+
+		final int latitude = ((Integer) getBeliefbase().getBelief("latitude")
 				.getFact());
-		int longitude = 10 + ((Integer) getBeliefbase().getBelief("longitude")
+		final int longitude = ((Integer) getBeliefbase().getBelief("longitude")
 				.getFact());
+		
+		final int step = ((Integer) getBeliefbase().getBelief("velocity").getFact());
  
+		Coordinates nextCoord = Coordinates.nextCoord(latitude, longitude, 
+				(Integer)getParameter("nextLatitude").getValue(), (Integer)getParameter("nextLongitude").getValue(), step);
+		
 		// faz set dos beliefs
-		getBeliefbase().getBelief("latitude").setFact(latitude);
-		getBeliefbase().getBelief("longitude").setFact(longitude);
+		getBeliefbase().getBelief("latitude").setFact(nextCoord.getLatitude());
+		getBeliefbase().getBelief("longitude").setFact(nextCoord.getLongitude());
 
-		updateGUIcoordinates(latitude, longitude);
+		updateGUIcoordinates(nextCoord.getLatitude(), nextCoord.getLongitude());
 	}
-
+	
 	private void updateGUIcoordinates(int latitude, int longitude) {
 		// envia mensagem com as novas coordenadas para o monitor
 		Communicator communicator = (Communicator) getBeliefbase().getBelief(

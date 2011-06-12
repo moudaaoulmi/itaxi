@@ -61,7 +61,7 @@ public class GotoDestinationPlan extends Plan {
 														"monitorCom").getFact();
 
 		if (communicator == null) {
-			communicator = new Communicator(8001, this, null);
+			communicator = new Communicator(8000, this, null);
 			communicator.start();
 		}
 
@@ -74,12 +74,6 @@ public class GotoDestinationPlan extends Plan {
 
 		communicator.sendMessage("localhost", 8002, message);
 
-		try {
-			Thread.sleep(3000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		// communicator.stopThread();
 	}
 	
