@@ -212,11 +212,9 @@ public class iTaxiMainActivity extends MapActivity {
 	}
 	
 	private void removeFromMap(Vehicle vec){
-		if(vehicleItems.containsOverlay(vec.getVehicleID()))
-    		vehicleItems.removeOverlay(vec.getVehicleID());
-		
-		vehicleItems.removeOverlay(vec.getVehicleID());
-    	mapOverlays.remove(vehicleItems);
+		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
+    	vehicleItems.removeOverlay(vec.getVehicleID());
+	    mapOverlays.remove(vehicleItems);
     	mapView.invalidate();
 	}
 	
@@ -380,6 +378,7 @@ public class iTaxiMainActivity extends MapActivity {
 				 
 			case REMOVE_VEHICLE:
 				ID = message.getContent();
+				Log.d("Monitor", "RECEIVED REMOVE VEHICLE " + ID);
 				removeFromMap(vehicles.get(message.getContent()));
 				vehicles.remove(message.getContent());
 				break;
