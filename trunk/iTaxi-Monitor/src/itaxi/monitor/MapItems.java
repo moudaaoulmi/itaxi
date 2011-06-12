@@ -9,7 +9,7 @@ import com.google.android.maps.ItemizedOverlay;
 
 public class MapItems extends ItemizedOverlay<MapOverlayItem>{
 	
-	public enum Elements{STATIONS,VEHICLES};
+	public enum Elements{STATIONS,VEHICLES, PARTIES};
 	private ArrayList<MapOverlayItem> mOverlays = new ArrayList<MapOverlayItem>();
 	private iTaxiMainActivity monitor;
 	private Elements elements;
