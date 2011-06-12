@@ -150,7 +150,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	//Show monitor menu options
 	private void init() {
-		Log.d("MONITOR","INITIALIZING MONITOR\n\n");
+		Log.d("Monitor","INITIALIZING MONITOR\n\n");
 		//Set map properties
     	mapController.setZoom(16);
         mapController.animateTo(new GeoPoint((int)38742369, (int)-9140110));
