@@ -112,6 +112,7 @@ public class iTaxiMainActivity extends MapActivity {
         gson = new Gson();
         
         vehicles = new TreeMap<String,Vehicle>();
+        parties = new TreeMap<String,Party>();
         statistics = new Statistics(0,0,0,0,0,null);
         
         //Get zoom out button
@@ -141,6 +142,8 @@ public class iTaxiMainActivity extends MapActivity {
         vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
         partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
                 
+       
+        
         //Init map information
         init();
 	}
