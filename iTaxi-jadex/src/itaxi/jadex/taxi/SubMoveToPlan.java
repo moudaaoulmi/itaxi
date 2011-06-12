@@ -26,11 +26,11 @@ public class SubMoveToPlan extends Plan {
 	public void body() {
 		System.out.println("SubMovePlan body!");
 		// le os beliefs e soma 10
-		int latitude = 1 + ((Integer) getBeliefbase().getBelief("latitude")
+		int latitude = 10 + ((Integer) getBeliefbase().getBelief("latitude")
 				.getFact()).intValue();
-		int longitude = 1 + ((Integer) getBeliefbase().getBelief("longitude")
+		int longitude = 10 + ((Integer) getBeliefbase().getBelief("longitude")
 				.getFact()).intValue();
-
+ 
 		// faz set dos beliefs
 		getBeliefbase().getBelief("latitude").setFact(latitude);
 		getBeliefbase().getBelief("longitude").setFact(longitude);
@@ -56,15 +56,15 @@ public class SubMoveToPlan extends Plan {
 		String newcontent = gson.toJson(new Vehicle(getScope().getAgentName(),
 				50, coords, 0, 0, 0, ""));
 		message.setContent(newcontent);
-
+ 
 		communicator.sendMessage("localhost", 8002, message);
 
-		try {
-			Thread.sleep(3000);
+		/*try {
+			Thread.sleep(100);
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 		// communicator.stopThread();
 	}
 
