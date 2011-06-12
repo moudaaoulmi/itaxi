@@ -6,8 +6,6 @@
 	<classpathentry kind="lib" path="lib/gson-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/http.jar"/>
 	<classpathentry kind="lib" path="lib/iiop.jar"/>
-	<classpathentry kind="lib" path="lib/jade.jar"/>
-	<classpathentry kind="lib" path="lib/jadeTools.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec/commons-codec-1.3.jar"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/iTaxi-jadex"/>

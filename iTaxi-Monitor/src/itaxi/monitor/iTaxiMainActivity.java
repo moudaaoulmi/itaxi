@@ -1,19 +1,26 @@
 package itaxi.monitor;
 
+import itaxi.communications.communicator.Communicator;
 import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
+import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Station;
 import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
 import itaxi.monitor.MapItems.Elements;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -48,6 +55,8 @@ public class iTaxiMainActivity extends MapActivity {
 	private MapController mapController;
 	private List<Overlay> mapOverlays;
 	private MapItems vehicleItems;
+	private MapItems partyItems;
+
 	//private MapItems stationItems;
 	private ImageButton zoomOut;
 	private ImageButton zoomIn;
@@ -55,6 +64,11 @@ public class iTaxiMainActivity extends MapActivity {
 	private Button overallStatistics;
 	
 	private TreeMap<String,Vehicle> vehicles;
+	private TreeMap<String,Party> parties;
+	private TreeMap<String,Socket> partiesComms;
+
+	private HashSet<String> waitingParties = new HashSet<String>();
+	private HashSet<String> roamingVehicles = new HashSet<String>();
 	
 	private Statistics statistics;
 	
@@ -118,7 +132,8 @@ public class iTaxiMainActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         //stationItems = new MapItems(Elements.STATIONS, getResources().getDrawable(R.drawable.station), this);
         vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
-        
+        partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
+                
         //Init map information
         init();
 	}
@@ -135,12 +150,32 @@ public class iTaxiMainActivity extends MapActivity {
 		}
 	}
 	
+	private void addParty(Party part){
+		if(!parties.containsKey(part.getPartyID())){
+			insertOnMap(part);
+			parties.put(part.getPartyID(), part);
+			//TODO porto correcto
+			//Communicator communicator = new Communicator(8002, this, null);
+			//communicator.start();
+			//partiesComms.put(part.getPartyID(), communicator);
+		}
+		else{
+			parties.remove(part.getPartyID());
+			parties.put(part.getPartyID(), part);			
+		}
+	}
+	
 	private Vehicle getVehicle(String id){
 		if(vehicles.containsKey(id))
 			return vehicles.get(id);
 		return null;
 	}
 	
+	private Party getParty(String id){
+		if(parties.containsKey(id))
+			return parties.get(id);
+		return null;
+	}
 	
 	//Show monitor menu options
 	private void init() {
@@ -174,6 +209,39 @@ public class iTaxiMainActivity extends MapActivity {
     	mapOverlays.add(vehicleItems); 
     	mapView.invalidate();
         
+	}
+	
+	private void removeFromMap(Vehicle vec){
+		if(vehicleItems.containsOverlay(vec.getVehicleID()))
+    		vehicleItems.removeOverlay(vec.getVehicleID());
+		
+		vehicleItems.removeOverlay(vec.getVehicleID());
+    	mapOverlays.remove(vehicleItems);
+    	mapView.invalidate();
+	}
+	
+	
+	private void insertOnMap(Party part){
+		GeoPoint p = new GeoPoint(part.getPosition().getLatitude(), part.getPosition().getLongitude());
+		
+		if(partyItems.containsOverlay(part.getPartyID()))
+    		partyItems.removeOverlay(part.getPartyID());
+		
+		partyItems.addOverlay(new MapOverlayItem(part.getPartyID(), p, "Party " + part.getPartyID(), "Welcome to iTaxi services!"));
+		
+    	mapOverlays.remove(partyItems);
+    	mapOverlays.add(partyItems); 
+    	mapView.invalidate();
+        
+	}
+	
+	private void removeFromMap(Party par){
+		if(partyItems.containsOverlay(par.getPartyID()))
+    		partyItems.removeOverlay(par.getPartyID());
+		
+		partyItems.removeOverlay(par.getPartyID());
+    	mapOverlays.remove(partyItems);
+    	mapView.invalidate();
 	}
 	
 	//Sets the map properties
@@ -219,6 +287,17 @@ public class iTaxiMainActivity extends MapActivity {
     	mapOverlays.add(vehicleItems); 
     	mapView.invalidate();
     }
+    
+    private void updatePartyPosition(Party party) {
+    	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
+    	if(partyItems.containsOverlay(party.getPartyID()))
+    		partyItems.removeOverlay(party.getPartyID());
+		partyItems.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
+    	mapOverlays.remove(partyItems);
+    	mapOverlays.add(partyItems); 
+    	mapView.invalidate();
+    }
+    
     
 	/*//Show connect to server dialog
 	private void showConnectionDialog() {
@@ -276,38 +355,86 @@ public class iTaxiMainActivity extends MapActivity {
 		}
 	}
 	*/
-	
-	//Send messages to server
-	/*public synchronized void sendMessage(Message message, boolean waitResponse) throws IOException, SecurityException, UnknownHostException {
-			Socket socket = new Socket(serverIp, serverPort);
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			writer.write(gson.toJson(message) + "\n");
-			writer.flush();
-			if(waitResponse) {
-				BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-				handleMessage(gson.fromJson(reader.readLine(), Message.class));
-				reader.close();
-			}
-			writer.close();
-			socket.close();
-	}
-	*/
+		
     
 	//Handles incoming messages
 	private void handleMessage(Message message) {
+		String ID;
 		switch (message.getType()) {
 			case UPDATEVEHICLE:
 				Log.d("Monitor", "RECEIVED UPDATEVEHICLE");
 				Vehicle vec = new Gson().fromJson(message.getContent(), Vehicle.class);
 				addVehicle(vec);
 				updateVehiclePosition(vec);
+				checkPositions(vec);
 				Log.d("Monitor", "UPDATED");
+				break;
+			
+			case UPDATEPARTY:
+				Log.d("Monitor", "RECEIVED UPDATEPARTY");
+				Party part = new Gson().fromJson(message.getContent(), Party.class);
+				addParty(part);
+				updatePartyPosition(part);
+				Log.d("Monitor", "UPDATED");
+				break;
+				 
+			case REMOVE_VEHICLE:
+				ID = message.getContent();
+				removeFromMap(vehicles.get(message.getContent()));
+				vehicles.remove(message.getContent());
+				break;
+			case REMOVE_PARTY:
+				ID = message.getContent();
+				removeFromMap(parties.get(ID));
+				parties.remove(ID);
+				//partiesComms.get(ID).stopThread();
+				partiesComms.remove(ID);
+				break;
+			case PARTY_WAITING:
+				waitingParties.add(message.getContent());
+				break;
+			case TAXI_ROAMING:
+				roamingVehicles.add(message.getContent());
 				break;
 			default:
 				Log.d("Monitor", "RECEIVED DEFAULT");
 				break;
 		}
 	}
+	
+	private void checkPositions(Vehicle v) {
+		for(String partyID : waitingParties) {
+			Party p = parties.get(partyID);
+			if(v.getPosition().distanceTo(p.getPosition()) < 5) {
+				//TODO ir buscar porto correcto da party
+				//Socket socket = partiesComms.get(partyID);
+				
+				//TODO usar socket guardado ou porto
+				Message message = new Message(MessageType.TAXI_ROAMING);
+				message.setContent(v.getVehicleID());
+				sendMessage("localhost", 8000, message);
+			}
+		}
+	}
+	
+	//Send message to client
+	public synchronized void sendMessage(String ip, int port, Message message) {
+		try {
+			Socket socket = new Socket(ip, port);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			String msg = gson.toJson(message);
+			writer.write(msg + "\n");
+			writer.flush();
+			System.out.println("Send Message to Party: " + msg);
+			writer.close();
+			socket.close();
+		} catch (UnknownHostException e) {
+			System.err.println(e.getMessage() + " " + ip + " " + port);
+		} catch (IOException e) {
+			System.err.println(e.getMessage() + " " + ip + " " + port);
+		}
+	}
+	
 	
 	//Receives messages from server in the background
 	private class ServerConnectionTask extends AsyncTask<Void, Message, Void> {
@@ -328,7 +455,7 @@ public class iTaxiMainActivity extends MapActivity {
 			}
 			return null;
 		}
-		
+			
 		@Override
 		protected void onProgressUpdate(Message... messages) {
 			handleMessage(messages[0]);
