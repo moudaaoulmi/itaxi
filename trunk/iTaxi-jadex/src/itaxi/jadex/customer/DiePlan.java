@@ -18,7 +18,10 @@ public class DiePlan extends Plan {
 		"monitorCom").getFact();
 
 		if (communicator == null) {
-			communicator = new Communicator(8000, this, null);
+			int agentPort = 8003 + getAgentId(getScope().getAgentName());
+			System.out.println("Agent Port = " + agentPort);
+			communicator = new Communicator(agentPort, this, null);
+			getBeliefbase().getBelief("monitorCom").setFact(communicator);
 			communicator.start();
 		}
 		Message message = new Message(MessageType.REMOVE_PARTY);
@@ -27,5 +30,17 @@ public class DiePlan extends Plan {
 		communicator.sendMessage("localhost", 8002, message);
 		
 		communicator.stopThread();
+	}
+	
+	private int getAgentId(String id){
+		String atoi;
+		if(id != null && id.length() > 0){
+			for(int i=0; i < id.length(); i++)
+				if(id.charAt(i) >= '0' && id.charAt(i) <= '9'){
+					atoi = id.substring(i);
+					return new Integer(atoi);
+				}
+		}
+		return -1;
 	}
 }
