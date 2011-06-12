@@ -31,7 +31,9 @@ public class CallTaxiManualPlan extends Plan {
 		Communicator communicator = (Communicator)getBeliefbase().getBelief("monitorCom").getFact();
 		if(communicator==null) {
 			communicator = new Communicator(8000,this,null);
+			getBeliefbase().getBelief("monitorCom").setFact(communicator);
 			communicator.start();
+			
 		}
 		Gson gson = new Gson();
 		Message message = new Message(MessageType.PARTY_WAITING);
