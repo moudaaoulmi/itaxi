@@ -38,7 +38,8 @@ public class Communicator extends Thread {
 			gson = new Gson();
 			stop = false;
 		} catch (IOException e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
+			System.out.println("Communicator couldn't stablish connection");
 		}
 	}
 	
@@ -70,7 +71,8 @@ public class Communicator extends Thread {
 				
 				socket.close(); 	
 			} catch (IOException e) {
-				System.err.println(e.getMessage());
+				//System.err.println(e.getMessage());
+				System.out.println("Communicator Accept connections error!");
 			}
 		}
 	}
