@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3>Taxi!</H3> taxi-o-matic -->
+<!-- <H3>Customer!</H3> taxi-o-matic -->
 <agent xmlns="http://jadex.sourceforge.net/jadex-bdi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
 	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
-	name="Taxi" package="itaxi.jadex.taxi">
+	name="Customer" package="itaxi.jadex.customer">
 
 	<imports>
 		<import>jadex.commons.*</import>
@@ -12,6 +12,7 @@
 		<import>java.util.logging.*</import>
 		<import>jadex.planlib.*</import>
 		<import>com.google.gson.Gson</import>
+		<import>jadex.bridge.IComponentIdentifier</import>
 		<import>itaxi.communications.communicator.Communicator</import>
 	</imports>
 
@@ -21,40 +22,41 @@
 	</capabilities>
 
 	<beliefs>
-		<belief name="monitorCom" class="Communicator" >
-			<fact>null</fact>
-		</belief>
+		<belief name="monitorCom" class="Communicator" />
 		
 		<belief name="latitude" class="int">
-			<fact>38742365</fact>
+			<fact>38742369</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9140106</fact>
+			<fact>-9140110</fact>
 		</belief>
 
-		<belief name="gas" class="int">
-			<fact>100</fact>
-		</belief>
-
-		<belief name="maxgas" class="int">
-			<fact>100</fact>
+		<belief name="emotional_state" class="int">
+			<fact>1000</fact>
 		</belief>
 
 	</beliefs>
 
 	<goals>
-		
-		<!-- Sub-Goals -->
-		<achievegoal name="move" recur="true" recurdelay="5000">
-			<parameter name="positionlatitude" class="int" />
-			<parameter name="positionlongitude" class="int" />
+		<achievegoal name="gotoDestination">
+			<parameter name="destinationLatitude" class="int" />
+			<parameter name="destinationLongitude" class="int" />
 			<targetcondition>
-				$beliefbase.latitude == $goal.positionlatitude
+				$beliefbase.latitude == $goal.destinationLatitude
 				&amp;&amp;
-				$beliefbase.longitude == $goal.positionlongitude
+				$beliefbase.longitude == $goal.destinationLatitude
 			</targetcondition>
 		</achievegoal>
+
+		<!-- Sub-Goals -->
+
+		<performgoal name="callTaxi" randomselection="true">
+			<parameter name="foundTaxi" class="IComponentIdentifier"
+				direction="out" />
+			<parameter name="destinationLatitude" class="int" />
+			<parameter name="destinationLongitude" class="int" />
+		</performgoal>
 
 		<!-- Imported DF-Goals -->
 
@@ -71,35 +73,60 @@
 			<concrete ref="dfcap.df_deregister" />
 		</achievegoalref>
 
-
 	</goals>
 
 	<plans>
-		<plan name="submoveto">
+		<plan name="GotoDestinationPlan">
 			<parameter name="latitude" class="int">
-				<goalmapping ref="move.positionlatitude" />
+				<goalmapping ref="gotoDestination.destinationLatitude" />
 			</parameter>
 			<parameter name="longitude" class="int">
-				<goalmapping ref="move.positionlongitude" />
+				<goalmapping ref="gotoDestination.destinationLongitude" />
 			</parameter>
 
-			<body class="SubMoveToPlan">
-			</body>
+			<body class="GotoDestinationPlan"></body>
 
 			<trigger>
-				<goal ref="move">
+				<goal ref="gotoDestination">
 				</goal>
 			</trigger>
 
 		</plan>
 
+	<!--	<plan name="callTaxiCentral">
+			<parameter name="latitude" class="int">
+				<goalmapping ref="callTaxi.destinationLatitude" />
+			</parameter>
+			<parameter name="longitude" class="int">
+				<goalmapping ref="callTaxi.destinationLongitude" />
+			</parameter>
+
+			<body class="CallTaxiCentralPlan">
+			</body>
+
+			<trigger>
+				<goal ref="callTaxi">
+				</goal>
+			</trigger>
+		</plan> -->
+
+		<plan name="callTaxiManual">
+			<parameter name="foundTaxi" class="IComponentIdentifier"
+				direction="out">
+				<goalmapping ref="callTaxi.foundTaxi" />
+			</parameter>
+
+			<body class="CallTaxiManualPlan">
+			</body>
+
+			<trigger>
+				<goal ref="callTaxi">
+				</goal>
+			</trigger>
+		</plan>
+
 		<plan name="freeroam">
 			<body class="FreeRoamPlan">
-			</body>
-		</plan>
-		
-		<plan name="die">
-			<body class="DiePlan">
 			</body>
 		</plan>
 	</plans>
@@ -116,16 +143,24 @@
 
 	<configurations>
 		<configuration name="default">
- 
+			
 			<goals>
+				<initialgoal ref="gotoDestination">
+					<parameter ref="destinationLatitude">
+						<value>38736980</value>
+					</parameter>
+					<parameter ref="destinationLongitude">
+						<value>-9138672</value>
+					</parameter>
+				</initialgoal>
 				<initialgoal ref="df_keep_registered">
 					<parameter ref="description">
 						<value>
 							$propertybase.getProperty("dfservice")
 							.createDFComponentDescription(null,
 							$propertybase.getProperty("dfservice")
-							.createDFServiceDescription("service_taxi", "taxi", "IST"))
- 						</value>
+							.createDFServiceDescription("customer", "customer", "IST"))
+						</value>
 					</parameter>
 					<parameter ref="leasetime">
 						<value>20000</value>
@@ -135,11 +170,14 @@
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
 			</goals>
-
+			
+			<!--
+			fazer plano com sub-goals gotoDestination - lista de destinos
 			<plans>
 				<initialplan ref="freeroam" />
-				<endplan ref="die" />
 			</plans>
+			-->
+			
 		</configuration>
 	</configurations>
 
