@@ -379,8 +379,11 @@ public class iTaxiMainActivity extends MapActivity {
 			case REMOVE_VEHICLE:
 				ID = message.getContent();
 				Log.d("Monitor", "RECEIVED REMOVE VEHICLE " + ID);
-				removeFromMap(vehicles.get(message.getContent()));
-				vehicles.remove(message.getContent());
+				Vehicle v = vehicles.get(ID);
+				if(v!=null) {
+					removeFromMap(v);
+					vehicles.remove(ID);
+				}
 				break;
 			case REMOVE_PARTY:
 				ID = message.getContent();
