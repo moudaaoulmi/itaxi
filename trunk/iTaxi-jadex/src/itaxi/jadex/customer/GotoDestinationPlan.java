@@ -59,6 +59,7 @@ public class GotoDestinationPlan extends Plan {
 
 		if (communicator == null) {
 			communicator = new Communicator(8000, this, null);
+			getBeliefbase().getBelief("monitorCom").setFact(communicator);
 			communicator.start();
 		}
 
