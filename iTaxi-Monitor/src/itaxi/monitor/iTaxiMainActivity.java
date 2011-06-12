@@ -55,7 +55,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private static int EMULATORPORT = 5554;
 	private static String EMULATORIP = "10.0.2.2";
-	private static int INITIALPORT = 8002;
+	private static int MONITORPORT = 8002;
 	
 	//Manage Map
 	private MapView mapView;	
@@ -72,7 +72,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private TreeMap<String,Vehicle> vehicles;
 	private TreeMap<String,Party> parties;
-	private TreeMap<String,Socket> partiesComms;
+	//private TreeMap<String,Socket> partiesComms;
 
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
@@ -155,8 +155,8 @@ public class iTaxiMainActivity extends MapActivity {
 		//serverSocket = choosePort();
         
 		try {
-			redirEmulatorPort(INITIALPORT);
-			serverSocket = new ServerSocket(INITIALPORT);
+			redirEmulatorPort(MONITORPORT);
+			serverSocket = new ServerSocket(MONITORPORT);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			//Log.d("INIT", e.getStackTrace().toString());
@@ -170,7 +170,7 @@ public class iTaxiMainActivity extends MapActivity {
 	}
 
 	//Choose port for accepting connections
-	protected static ServerSocket choosePort() {
+	/*protected static ServerSocket choosePort() {
 		ServerSocket socket;
 		int port = INITIALPORT;
 		while(true) {
@@ -185,7 +185,7 @@ public class iTaxiMainActivity extends MapActivity {
 			}
 		}
 		return socket;
-	}
+	}*/
 	
 	//Apply redir instruction to the emulator using telnet
 	protected static void redirEmulatorPort(int port) throws IOException {
@@ -209,13 +209,11 @@ public class iTaxiMainActivity extends MapActivity {
 		String response = reader.readLine();
 		tc.disconnect();
 		if(!response.equals("OK"))
-			throw new IOException("Port already assigned");
+			Log.d("Monitor","TELNET REDIR : Port 8002 was already registered!");
+		else
+			Log.d("Monitor","TELNET REDIR : Port 8002 was registered!");
 		
 	}
-	
-	
-	
-	
 	
 	private void addVehicle(Vehicle vec){
 		if(!vehicles.containsKey(vec.getVehicleID())){
@@ -255,8 +253,6 @@ public class iTaxiMainActivity extends MapActivity {
 			return parties.get(id);
 		return null;
 	}
-	
-	
 	
 	private void insertOnMap(Vehicle vec){
 		GeoPoint p = new GeoPoint(vec.getPosition().getLatitude(), vec.getPosition().getLongitude());
@@ -454,7 +450,7 @@ public class iTaxiMainActivity extends MapActivity {
 					removeFromMap(p);
 					parties.remove(ID);
 					//partiesComms.get(ID).stopThread();
-					partiesComms.remove(ID);
+					//partiesComms.remove(ID);
 				}
 				break;
 			case PARTY_WAITING:
@@ -474,9 +470,9 @@ public class iTaxiMainActivity extends MapActivity {
 			Party p = parties.get(partyID);
 			if(v.getPosition().distanceTo(p.getPosition()) < 5) {
 				//TODO ir buscar porto correcto da party
-				//Socket socket = partiesComms.get(partyID);
-				
+				//Socket socket = partiesComms.get(partyID)
 				//TODO usar socket guardado ou porto
+				Log.d("Monitor","A mandar para 8000...mudar!");
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				message.setContent(v.getVehicleID());
 				sendMessage("localhost", 8000, message);
@@ -492,13 +488,13 @@ public class iTaxiMainActivity extends MapActivity {
 			String msg = gson.toJson(message);
 			writer.write(msg + "\n");
 			writer.flush();
-			System.out.println("Send Message to Party: " + msg);
+			Log.d("Monitor","Send Message to Party: " + msg);
 			writer.close();
 			socket.close();
 		} catch (UnknownHostException e) {
-			System.err.println(e.getMessage() + " " + ip + " " + port);
+			Log.d("Monitor",e.getMessage() + " " + ip + " " + port);
 		} catch (IOException e) {
-			System.err.println(e.getMessage() + " " + ip + " " + port);
+			Log.d("Monitor",e.getMessage() + " " + ip + " " + port);
 		}
 	}
 	
