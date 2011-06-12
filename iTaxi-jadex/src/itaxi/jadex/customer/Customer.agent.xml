@@ -22,7 +22,9 @@
 	</capabilities>
 
 	<beliefs>
-		<belief name="monitorCom" class="Communicator" />
+		<belief name="monitorCom" class="Communicator">
+			<fact>null</fact>
+		</belief>
 		
 		<belief name="latitude" class="int">
 			<fact>38742369</fact>
@@ -129,6 +131,11 @@
 			<body class="FreeRoamPlan">
 			</body>
 		</plan>
+
+	<plan name="die">
+		<body class="DiePlan">
+		</body>
+	</plan>
 	</plans>
 
 	<properties>
@@ -172,11 +179,12 @@
 			</goals>
 			
 			<!--
-			fazer plano com sub-goals gotoDestination - lista de destinos
+			fazer plano com sub-goals gotoDestination - lista de destinos -->
 			<plans>
 				<initialplan ref="freeroam" />
+				<endplan ref="die" />
 			</plans>
-			-->
+			
 			
 		</configuration>
 	</configurations>

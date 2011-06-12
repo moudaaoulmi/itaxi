@@ -10,6 +10,7 @@
 		<import>jadex.base.fipa.*</import>
 		<import>jadex.planlib.*</import>
 		<import>java.util.logging.*</import>
+		<import>itaxi.communications.communicator.Communicator</import>
 	</imports> 
 
 	<capabilities>
@@ -17,6 +18,13 @@
 		<capability name="dfcap" file="jadex.bdi.planlib.df.DF" />
 	</capabilities>
 
+	<beliefs>
+	<!--	<belief name="monitorCom" class="Communicator" >
+			<fact>null</fact>
+		</belief>-->
+		
+	</beliefs>
+	
 	<goals>
 
 		<!-- Imported DF-Goals -->
@@ -39,6 +47,11 @@
 	<plans>
 		<plan name="getTaxis">
 			<body class="GetTaxisPlan"></body>
+		</plan>
+		
+		<plan name="die">
+			<body class="DiePlan">
+			</body>
 		</plan>
 	</plans>
   
@@ -74,6 +87,7 @@
 			
 			<plans>
 				<initialplan ref="getTaxis" />
+				<endplan ref="die" />
 			</plans>
 		</configuration>
 	</configurations>
