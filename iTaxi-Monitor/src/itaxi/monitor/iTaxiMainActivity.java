@@ -200,7 +200,7 @@ public class iTaxiMainActivity extends MapActivity {
 	private void insertOnMap(Vehicle vec){
 		GeoPoint p = new GeoPoint(vec.getPosition().getLatitude(), vec.getPosition().getLongitude());
 		
-		if(vehicleItems.containsOverlay(vec.getVehicleID()))
+		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
     		vehicleItems.removeOverlay(vec.getVehicleID());
 		
 		vehicleItems.addOverlay(new MapOverlayItem(vec.getVehicleID(), p, "Vehicle " + vec.getVehicleID(), "Welcome to iTaxi services!"));
@@ -278,7 +278,7 @@ public class iTaxiMainActivity extends MapActivity {
     //Update the position of the vehicle in the map
     private void updateVehiclePosition(Vehicle vehicle) {
     	GeoPoint gp = new GeoPoint(vehicle.getPosition().getLatitude(), vehicle.getPosition().getLongitude());
-    	if(vehicleItems.containsOverlay(vehicle.getVehicleID()))
+    	//if(vehicleItems.containsOverlay(vehicle.getVehicleID()))
     		vehicleItems.removeOverlay(vehicle.getVehicleID());
 		vehicleItems.addOverlay(new MapOverlayItem(vehicle.getVehicleID(), gp, "", ""));
     	mapOverlays.remove(vehicleItems);
