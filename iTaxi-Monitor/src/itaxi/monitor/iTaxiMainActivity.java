@@ -25,6 +25,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
 
+
+import org.apache.commons.net.telnet.TelnetClient;
+
 import android.app.AlertDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -49,6 +52,10 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 public class iTaxiMainActivity extends MapActivity {
+	
+	private static int EMULATORPORT = 5554;
+	private static String EMULATORIP = "10.0.2.2";
+	private static int INITIALPORT = 8002;
 	
 	//Manage Map
 	private MapView mapView;	
@@ -138,6 +145,78 @@ public class iTaxiMainActivity extends MapActivity {
         init();
 	}
 	
+	//Show monitor menu options
+	private void init() {
+		Log.d("MONITOR","INITIALIZING MONITOR\n\n");
+		//Set map properties
+    	mapController.setZoom(16);
+        mapController.animateTo(new GeoPoint((int)38742369, (int)-9140110));
+        
+		//serverSocket = choosePort();
+        
+		try {
+			redirEmulatorPort(INITIALPORT);
+			serverSocket = new ServerSocket(INITIALPORT);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			//Log.d("INIT", e.getStackTrace().toString());
+			//e.printStackTrace();
+		} 
+		connectionTask = new ServerConnectionTask();
+		connectionTask.execute();
+        
+		//Get connection to server
+		//showConnectionDialog();
+	}
+
+	//Choose port for accepting connections
+	protected static ServerSocket choosePort() {
+		ServerSocket socket;
+		int port = INITIALPORT;
+		while(true) {
+			try {
+				redirEmulatorPort(port);
+				socket = new ServerSocket(port);
+				Log.d("Vehicle", "Accepting connections (" + EMULATORPORT + ") in port: " + port);
+				break;
+			} catch (IOException e) {
+				port++;
+				continue;
+			}
+		}
+		return socket;
+	}
+	
+	//Apply redir instruction to the emulator using telnet
+	protected static void redirEmulatorPort(int port) throws IOException {
+		
+		// Initiate a telnet connection to the emulator
+		TelnetClient tc = new TelnetClient();
+		tc.connect(EMULATORIP, EMULATORPORT);
+		BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(tc.getOutputStream()));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(tc.getInputStream()));
+		
+		// Remove first line of the emulator console 
+		reader.readLine();
+		reader.readLine();
+		
+		// Apply redir command
+		writer.write("redir del tcp:" + port + "\n");
+		writer.flush();
+		reader.readLine();
+		writer.write("redir add tcp:" + port + ":" + port + "\n");
+		writer.flush();
+		String response = reader.readLine();
+		tc.disconnect();
+		if(!response.equals("OK"))
+			throw new IOException("Port already assigned");
+		
+	}
+	
+	
+	
+	
+	
 	private void addVehicle(Vehicle vec){
 		if(!vehicles.containsKey(vec.getVehicleID())){
 			insertOnMap(vec);
@@ -177,25 +256,7 @@ public class iTaxiMainActivity extends MapActivity {
 		return null;
 	}
 	
-	//Show monitor menu options
-	private void init() {
-
-		//Set map properties
-    	mapController.setZoom(13);
-        mapController.animateTo(new GeoPoint((int)38.754525E6, (int)-9.20228E6));
-        
-        try {
-			serverSocket = new ServerSocket(8002);
-		} catch (IOException e) {
-			Log.d("Monitor", "Socket IO exception!");
-		}
-		
-		connectionTask = new ServerConnectionTask();
-		connectionTask.execute();
-        
-		//Get connection to server
-		//showConnectionDialog();
-	}
+	
 	
 	private void insertOnMap(Vehicle vec){
 		GeoPoint p = new GeoPoint(vec.getPosition().getLatitude(), vec.getPosition().getLongitude());
