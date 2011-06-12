@@ -387,10 +387,14 @@ public class iTaxiMainActivity extends MapActivity {
 				break;
 			case REMOVE_PARTY:
 				ID = message.getContent();
-				removeFromMap(parties.get(ID));
-				parties.remove(ID);
-				//partiesComms.get(ID).stopThread();
-				partiesComms.remove(ID);
+				Log.d("Monitor", "RECEIVED REMOVE PARTY " + ID);
+				Party p = parties.get(ID);
+				if(p!=null) {
+					removeFromMap(p);
+					parties.remove(ID);
+					//partiesComms.get(ID).stopThread();
+					partiesComms.remove(ID);
+				}
 				break;
 			case PARTY_WAITING:
 				waitingParties.add(message.getContent());
