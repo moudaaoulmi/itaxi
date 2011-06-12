@@ -30,7 +30,7 @@ public class CallTaxiManualPlan extends Plan {
 		
 		Communicator communicator = (Communicator)getBeliefbase().getBelief("monitorCom").getFact();
 		if(communicator==null) {
-			communicator = new Communicator(8001,this,null);
+			communicator = new Communicator(8000,this,null);
 			communicator.start();
 		}
 		Gson gson = new Gson();

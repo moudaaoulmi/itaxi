@@ -27,9 +27,9 @@ public class SubMoveToPlan extends Plan {
 		System.out.println("SubMovePlan body!");
 		// le os beliefs e soma 10
 		int latitude = 10 + ((Integer) getBeliefbase().getBelief("latitude")
-				.getFact()).intValue();
+				.getFact());
 		int longitude = 10 + ((Integer) getBeliefbase().getBelief("longitude")
-				.getFact()).intValue();
+				.getFact());
  
 		// faz set dos beliefs
 		getBeliefbase().getBelief("latitude").setFact(latitude);
