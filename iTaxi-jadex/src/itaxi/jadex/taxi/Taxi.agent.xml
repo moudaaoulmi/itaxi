@@ -70,10 +70,6 @@
 		<achievegoalref name="df_deregister">
 			<concrete ref="dfcap.df_deregister" />
 		</achievegoalref>
-		
-		<performgoal name="diegoal">
-		</performgoal>
-
 
 	</goals>
 
@@ -104,9 +100,6 @@
 		<plan name="die">
 			<body class="DiePlan">
 			</body>
-			<trigger>
-				<goal ref="diegoal"></goal>
-			</trigger>
 		</plan>
 	</plans>
 
@@ -140,7 +133,6 @@
 
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
-				<endgoal ref="diegoal" />
 			</goals>
 
 			<plans>
