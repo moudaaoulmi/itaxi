@@ -96,10 +96,10 @@
 		</plan>
 
 	<!--	<plan name="callTaxiCentral">
-			<parameter name="latitude" class="int">
+			<parameter name="destinationLatitude" class="int">
 				<goalmapping ref="callTaxi.destinationLatitude" />
 			</parameter>
-			<parameter name="longitude" class="int">
+			<parameter name="destinationLongitude" class="int">
 				<goalmapping ref="callTaxi.destinationLongitude" />
 			</parameter>
 
