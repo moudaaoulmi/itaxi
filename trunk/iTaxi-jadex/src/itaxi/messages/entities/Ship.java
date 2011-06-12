@@ -34,7 +34,7 @@ public class Ship {
 	}
 	
 	public void addParty(Party party) {
-		this.parties.put(party.getName(), party);
+		this.parties.put(party.getPartyID(), party);
 	}
 
 }

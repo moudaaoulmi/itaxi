@@ -8,12 +8,12 @@ import java.util.Date;
 public class Party {
 
 	//public enum PartyState{NOTBOOKED, BOOKED, FLYING};
-	private int station;
-	private String name;
+	//private int station;
+	private String partyID;
 	private int size;
 	private Coordinates _position;
 	private Coordinates _destination;
-	private long arrivalHour;
+	//private long arrivalHour;
 	//private PartyState bookState;
 
 	public Party(){
@@ -21,44 +21,44 @@ public class Party {
 	}
 	
 	public String toString() {
-		return "[PARTY] name=" + name + " size=" + size + " position=" + _position + " destination=" + _destination;
+		return "[PARTY] partyID=" + partyID + " size=" + size + " position=" + _position; //+ " destination=" + _destination;
 	}
 	
-//	public Party(int station, String name, int size, Coordinates id, PartyState bookState) {
+//	public Party(int station, String partyID, int size, Coordinates id, PartyState bookState) {
 //		this.station = station;
-//		this.name = name;
+//		this.partyID = partyID;
 //		this.size = size;
 //		this.destination = id;
 //		this.setArrivalHour(new Date().getTime());
 //		//this.bookState = bookState;
 //	}
 	
-	public Party(int station, String name, int size, Coordinates position, Coordinates destination) {
-		this.station = station;
-		this.name = name;
+	public Party(int station, String partyID, int size, Coordinates position, Coordinates destination) {
+		//this.station = station;
+		this.partyID = partyID;
 		this.size = size;
 		_position = position;
 		_destination = destination;
-		this.setArrivalHour(new Date().getTime());
+		//this.setArrivalHour(new Date().getTime());
 	}
 	
-	public Party(int station, String name, int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
+	public Party(int station, String partyID, int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
 		if(size < 0 || size > 4)
 			throw new PartySizeException();
-		this.station = station;
-		this.name = name;
+		//this.station = station;
+		this.partyID = partyID;
 		this.size = size;
 		setDestination(latitude, longitude);
-		this.setArrivalHour(new Date().getTime());
+		//this.setArrivalHour(new Date().getTime());
 		//this.bookState = bookState;
 	}
 
-	public String getName() {
-		return name;
+	public String getPartyID() {
+		return partyID;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setPartyID(String partyID) {
+		this.partyID = partyID;
 	}
 
 	public int getSize() {
@@ -88,7 +88,7 @@ public class Party {
 	public void setDestination(int latitude, int longitude){
 		this._destination = new Coordinates(latitude,longitude);
 	}
-	
+	/*
 	public void renewArrivalHour(){
 		this.arrivalHour = new Date().getTime();
 	}
@@ -107,7 +107,7 @@ public class Party {
 
 	public void setStation(int station) {
 		this.station = station;
-	}
+	}*/
 
 //	public PartyState getBookState() {
 //		return bookState;

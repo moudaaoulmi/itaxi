@@ -1,6 +1,7 @@
 package itaxi.jadex.taxi;
 
-import itaxi.messages.coordinates.Coordinates;
+import java.util.Random;
+
 import jadex.bdi.runtime.GoalFailureException;
 import jadex.bdi.runtime.IGoal;
 import jadex.bdi.runtime.Plan;
@@ -23,11 +24,19 @@ public class FreeRoamPlan extends Plan
 	 */
 	public void body()
 	{
-		Coordinates destination = new Coordinates(39001000,39001000);
+		// saldanha-campoPequeno-areeiro-arroios
+		final int minlat = 38733833;
+		final int maxlat = 38742034;
+		final int minlon = 9133458;
+		final int maxlon = 9145131;
+		 
+		Random rand = new Random();
+		final int lat = rand.nextInt(maxlat-minlat+1)+minlat;
+		final int lon = -rand.nextInt(maxlon-minlon+1)+minlon;
 		
 		IGoal goal = createGoal("move");
-		goal.getParameter("latitude").setValue(destination.getLatitude());
-		goal.getParameter("longitude").setValue(destination.getLongitude());
+		goal.getParameter("latitude").setValue(lat);
+		goal.getParameter("longitude").setValue(lon);
 
 		try
 		{

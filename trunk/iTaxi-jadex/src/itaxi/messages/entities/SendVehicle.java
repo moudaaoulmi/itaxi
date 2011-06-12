@@ -68,7 +68,7 @@ public class SendVehicle {
 	public boolean containsParty(LinkedList<Party> list, Party p){
 		boolean result = false;
 		for(Party party : list){
-			if(party.getName().compareTo(p.getName())==0)
+			if(party.getPartyID().compareTo(p.getPartyID())==0)
 				return true;
 		}
 		return result;
@@ -102,8 +102,8 @@ public class SendVehicle {
 		Map<String,Party> result = new TreeMap<String,Party>();
 		for(VehicleState state : vehicleStates){
 			for(Party p : state.getParties()){
-				if(!result.containsKey(p.getName()))
-					result.put(p.getName(),p);
+				if(!result.containsKey(p.getPartyID()))
+					result.put(p.getPartyID(),p);
 			}
 		}
 		return result;

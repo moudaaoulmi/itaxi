@@ -1,10 +1,5 @@
 package itaxi.jadex.centralserver;
 
-import itaxi.messages.entities.Vehicle;
-
-import java.util.Map;
-import java.util.TreeMap;
-
 import jadex.base.fipa.IDF;
 import jadex.base.fipa.IDFComponentDescription;
 import jadex.base.fipa.IDFServiceDescription;
