@@ -22,20 +22,15 @@ public class Communicator extends Thread {
 	private boolean stop;
 	
 	//Serializes and deserializes json objects
-	private Gson gson;
+	private final Gson gson = new Gson();
 	
 	public MessageHandler handler;
-	
-	public Object caller;
-	
-
+		
 	//Start thread execution
-	public Communicator(int serverPort, Object obj,MessageHandler hand) {
+	public Communicator(int serverPort, MessageHandler hand) {
 		try {
 			handler = hand;
-			caller = obj;
 			serverSocket = new ServerSocket(serverPort);
-			gson = new Gson();
 			stop = false;
 		} catch (IOException e) {
 			//System.err.println(e.getMessage());
@@ -78,40 +73,7 @@ public class Communicator extends Thread {
 	}
 	
 	//Send message to client
-	public synchronized void sendMessage(String ip, int port, Message message) {
-		try {
-			Socket socket = new Socket(ip, port);
-			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
-			String msg = gson.toJson(message);
-			writer.write(msg + "\n");
-			writer.flush();
-			System.out.println("Send Message: " + msg);
-			writer.close();
-			socket.close();
-		} catch (UnknownHostException e) {
-			System.err.println(e.getMessage() + " " + ip + " " + port);
-		} catch (IOException e) {
-			System.err.println(e.getMessage() + " " + ip + " " + port);
-		}
-	}
-	
-	//Send message to client
-	public synchronized void sendMessage(BufferedWriter writer, Message message) {
-		try {
-			String msg = gson.toJson(message);
-			writer.write(msg + "\n");
-			writer.flush();
-			System.out.println("Send Message: " + msg);
-			writer.close();
-		} catch (UnknownHostException e) {
-			System.err.println(e.getMessage());
-		} catch (IOException e) {
-			System.err.println(e.getMessage());
-		}
-	}
-	
-	//Send message to client
-	public static synchronized void staticSendMessage(String ip, int port, Message message) {
+	public static synchronized void sendMessage(String ip, int port, Message message) {
 		try {
 			Socket socket = new Socket(ip, port);
 			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
@@ -129,7 +91,7 @@ public class Communicator extends Thread {
 	}
 	
 	//Send message to client
-	public static synchronized void staticSendMessage(BufferedWriter writer, Message message) {
+	public static synchronized void sendMessage(BufferedWriter writer, Message message) {
 		try {
 			String msg = new Gson().toJson(message);
 			writer.write(msg + "\n");
@@ -142,12 +104,14 @@ public class Communicator extends Thread {
 			System.err.println(e.getMessage());
 		}
 	}
+	
 	
 
 	//Handle received message
 	public void handleMessage(BufferedWriter writer, Message message) {
+		
 		//recebe o writer para o caso de se querer confirmar
-		handler.handleMessage(caller, message);
+		handler.handleMessage(message);
 		//handler.handleMessage(caller, writer, message);
 	}
 

@@ -43,15 +43,7 @@ public class SubMoveToPlan extends Plan {
 	}
 	
 	private void updateGUIcoordinates(int latitude, int longitude) {
-		// envia mensagem com as novas coordenadas para o monitor
-		Communicator communicator = (Communicator) getBeliefbase().getBelief(
-														"monitorCom").getFact();
-
-		if (communicator == null) {
-			communicator = new Communicator(8001, this, null);
-			getBeliefbase().getBelief("monitorCom").setFact(communicator);
-			communicator.start();
-		}
+		
 		//Communicator communicator = new Communicator(8010, this, null);
 		Gson gson = new Gson();
 		// gera as coordenadas
@@ -61,15 +53,8 @@ public class SubMoveToPlan extends Plan {
 				50, coords, 0, 0, 0, ""));
 		message.setContent(newcontent);
  
-		communicator.sendMessage("localhost", 8002, message);
+		Communicator.sendMessage("localhost", 8002, message);
 
-		/*try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/
-		// communicator.stopThread();
 	}
 
 }
