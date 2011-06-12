@@ -1,12 +1,8 @@
 package itaxi.jadex.taxi;
 
-import com.google.gson.Gson;
-
 import itaxi.communications.communicator.Communicator;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
-import itaxi.messages.coordinates.Coordinates;
-import itaxi.messages.entities.Vehicle;
 import jadex.bdi.runtime.Plan;
 
 public class DiePlan extends Plan {
@@ -15,6 +11,9 @@ public class DiePlan extends Plan {
 
 	@Override
 	public void body() {
+		
+		System.out.println("DIE PLAN");
+		
 		Communicator communicator = (Communicator) getBeliefbase().getBelief(
 		"monitorCom").getFact();
 
@@ -22,9 +21,6 @@ public class DiePlan extends Plan {
 			communicator = new Communicator(8001, this, null);
 			communicator.start();
 		}
-		//Communicator communicator = new Communicator(8010, this, null);
-		Gson gson = new Gson();
-		// gera as coordenadas
 		Message message = new Message(MessageType.REMOVE_VEHICLE);
 		message.setContent(getScope().getAgentName());
 
