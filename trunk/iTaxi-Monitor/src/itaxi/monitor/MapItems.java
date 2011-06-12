@@ -40,6 +40,7 @@ public class MapItems extends ItemizedOverlay<MapOverlayItem>{
 			if(item.getId().compareTo(id)==0)
 				break;
 		}
+		if(index==mOverlays.size()) return;
 		mOverlays.remove(index);
 		populate();
 	}
