@@ -33,6 +33,11 @@
 			<fact>-9140106</fact>
 		</belief>
 
+		<!-- for now, step in meters for each recurdelay in the move sub-goal -->
+		<belief name="velocity" class="int">
+			<fact>10</fact>
+		</belief>
+
 		<belief name="gas" class="int">
 			<fact>100</fact>
 		</belief>
@@ -46,13 +51,13 @@
 	<goals>
 		
 		<!-- Sub-Goals -->
-		<achievegoal name="move" recur="true" recurdelay="5000">
-			<parameter name="positionlatitude" class="int" />
-			<parameter name="positionlongitude" class="int" />
+		<achievegoal name="move" recur="true" recurdelay="1000">
+			<parameter name="nextLatitude" class="int" />
+			<parameter name="nextLongitude" class="int" />
 			<targetcondition>
-				$beliefbase.latitude == $goal.positionlatitude
+				$beliefbase.latitude == $goal.nextLatitude
 				&amp;&amp;
-				$beliefbase.longitude == $goal.positionlongitude
+				$beliefbase.longitude == $goal.nextLongitude
 			</targetcondition>
 		</achievegoal>
 
@@ -75,11 +80,11 @@
 
 	<plans>
 		<plan name="submoveto">
-			<parameter name="latitude" class="int">
-				<goalmapping ref="move.positionlatitude" />
+			<parameter name="nextLatitude" class="int">
+				<goalmapping ref="move.nextLatitude" />
 			</parameter>
-			<parameter name="longitude" class="int">
-				<goalmapping ref="move.positionlongitude" />
+			<parameter name="nextLongitude" class="int">
+				<goalmapping ref="move.nextLongitude" />
 			</parameter>
 
 			<body class="SubMoveToPlan">

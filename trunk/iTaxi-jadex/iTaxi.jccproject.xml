@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <p0:properties xmlns:p0="http://jadex.sourceforge.net/jadexconf" __ID="0">
-	<p0:property __ID="1" type="perspective">Starter</p0:property>
+	<p0:property __ID="1" type="perspective">jadex.commons.service.library.ILibraryService</p0:property>
 	<p0:properties __ID="2" type="window">
 		<p0:property __ID="3" type="width">710</p0:property>
 		<p0:property __ID="4" type="height">710</p0:property>
@@ -36,59 +36,59 @@
 			<entries>
 				<p0:NodePath __ID="8" entry="0">
 					<path>
-						<p1:String__1 xmlns:p1="typeinfo:java.lang" __ID="9">
+						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="9">
 							<entries>
 								<p1:String __ID="10" content="itaxi"></p1:String>
-							</entries>
-						</p1:String__1>
-					</path>
-				</p0:NodePath>
-				<p0:NodePath __ID="11" entry="0">
-					<path>
-						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="12">
-							<entries>
-								<p1:String __ID="13" content="itaxi"></p1:String>
-								<p1:String __ID="14" content="jadex"></p1:String>
-								<p1:String __ID="15" content="centralserver"></p1:String>
+								<p1:String __ID="11" content="jadex"></p1:String>
+								<p1:String __ID="12" content="centralserver"></p1:String>
 							</entries>
 						</p1:String__3>
 					</path>
 				</p0:NodePath>
-				<p0:NodePath __ID="16" entry="0">
+				<p0:NodePath __ID="13" entry="0">
 					<path>
-						<p1:String__0 xmlns:p1="typeinfo:java.lang" __ID="17"></p1:String__0>
+						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="14">
+							<entries>
+								<p1:String __ID="15" content="itaxi"></p1:String>
+								<p1:String __ID="16" content="jadex"></p1:String>
+								<p1:String __ID="17" content="taxi"></p1:String>
+							</entries>
+						</p1:String__3>
 					</path>
 				</p0:NodePath>
 				<p0:NodePath __ID="18" entry="0">
 					<path>
-						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="19">
+						<p1:String__2 xmlns:p1="typeinfo:java.lang" __ID="19">
 							<entries>
 								<p1:String __ID="20" content="itaxi"></p1:String>
 								<p1:String __ID="21" content="jadex"></p1:String>
-								<p1:String __ID="22" content="taxi"></p1:String>
-							</entries>
-						</p1:String__3>
-					</path>
-				</p0:NodePath>
-				<p0:NodePath __ID="23" entry="0">
-					<path>
-						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="24">
-							<entries>
-								<p1:String __ID="25" content="itaxi"></p1:String>
-								<p1:String __ID="26" content="jadex"></p1:String>
-								<p1:String __ID="27" content="customer"></p1:String>
-							</entries>
-						</p1:String__3>
-					</path>
-				</p0:NodePath>
-				<p0:NodePath __ID="28" entry="0">
-					<path>
-						<p1:String__2 xmlns:p1="typeinfo:java.lang" __ID="29">
-							<entries>
-								<p1:String __ID="30" content="itaxi"></p1:String>
-								<p1:String __ID="31" content="jadex"></p1:String>
 							</entries>
 						</p1:String__2>
+					</path>
+				</p0:NodePath>
+				<p0:NodePath __ID="22" entry="0">
+					<path>
+						<p1:String__1 xmlns:p1="typeinfo:java.lang" __ID="23">
+							<entries>
+								<p1:String __ID="24" content="itaxi"></p1:String>
+							</entries>
+						</p1:String__1>
+					</path>
+				</p0:NodePath>
+				<p0:NodePath __ID="25" entry="0">
+					<path>
+						<p1:String__0 xmlns:p1="typeinfo:java.lang" __ID="26"></p1:String__0>
+					</path>
+				</p0:NodePath>
+				<p0:NodePath __ID="27" entry="0">
+					<path>
+						<p1:String__3 xmlns:p1="typeinfo:java.lang" __ID="28">
+							<entries>
+								<p1:String __ID="29" content="itaxi"></p1:String>
+								<p1:String __ID="30" content="jadex"></p1:String>
+								<p1:String __ID="31" content="customer"></p1:String>
+							</entries>
+						</p1:String__3>
 					</path>
 				</p0:NodePath>
 			</entries>
@@ -107,23 +107,16 @@
 			<p0:property __ID="17" type="refresh">false</p0:property>
 		</p0:properties>
 		<p0:properties __ID="18" type="spanel">
-			<p0:property __ID="19" type="model"></p0:property>
-			<p0:property __ID="20" type="startsuspended">false</p0:property>
-			<p0:property __ID="21" type="autogenerate">false</p0:property>
-			<p0:property __ID="22" type="name"></p0:property>
+			<p0:property __ID="19" type="model">../../bin/itaxi/jadex/taxi/Taxi.agent.xml</p0:property>
+			<p0:property __ID="20" type="config">default</p0:property>
+			<p0:property __ID="21" type="startsuspended">false</p0:property>
+			<p0:property __ID="22" type="autogenerate">false</p0:property>
+			<p0:property __ID="23" type="name">Taxi</p0:property>
 		</p0:properties>
 	</p0:properties>
-	<p0:properties __ID="23" type="jadex.base.fipa.IDF">
-		<p0:properties __ID="24" type="jadex.base.fipa.IDF">
-			<p0:properties __ID="25" type="jadex.standalone.service.DirectoryFacilitatorService_#5">
-				<p0:property __ID="26" type="defrefresh">0</p0:property>
-				<p0:property __ID="27" type="dfremote">false</p0:property>
-			</p0:properties>
-		</p0:properties>
-	</p0:properties>
-	<p0:properties __ID="28" type="Conversation Center">
-		<p0:properties __ID="29" type="convcenter">
-			<p0:property __ID="30" type="lastmessage"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+	<p0:properties __ID="24" type="Conversation Center">
+		<p0:properties __ID="25" type="convcenter">
+			<p0:property __ID="26" type="lastmessage"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <p0:HashMap xmlns:p0="typeinfo:java.util" __ID="0">
 	<entries>
 		<entry __ID="1">
@@ -197,46 +190,46 @@
 				<p1:String xmlns:p1="typeinfo:java.lang" __ID="31" content="sender"></p1:String>
 			</key>
 			<value>
-				<p2:ComponentIdentifier xmlns:p2="typeinfo:jadex.bridge" __ID="32" name="jcc@Tiago-Freitass-MacBook-Air.local_3a2">
+				<p2:ComponentIdentifier xmlns:p2="typeinfo:jadex.bridge" __ID="32" name="jcc@Tiago-Freitass-MacBook-Air.local_90b">
 					<resolvers>
 						<p2:ComponentIdentifier__0 __ID="33"></p2:ComponentIdentifier__0>
 					</resolvers>
 					<addresses>
 						<p1:String__9 xmlns:p1="typeinfo:java.lang" __ID="34">
 							<entries>
-								<p1:String __IDREF="19"></p1:String>
-								<p1:String __IDREF="20"></p1:String>
-								<p1:String __IDREF="21"></p1:String>
-								<p1:String __IDREF="22"></p1:String>
-								<p1:String __IDREF="23"></p1:String>
-								<p1:String __IDREF="24"></p1:String>
-								<p1:String __IDREF="25"></p1:String>
-								<p1:String __IDREF="26"></p1:String>
-								<p1:String __IDREF="27"></p1:String>
+								<p1:String __ID="35" content="nio-mtp://fec0:0:0:feaa:0:0:0:1:59193"></p1:String>
+								<p1:String __ID="36" content="nio-mtp://10.211.55.2:59193"></p1:String>
+								<p1:String __ID="37" content="nio-mtp://fe80:0:0:0:21c:42ff:fe00:8%5:59193"></p1:String>
+								<p1:String __ID="38" content="nio-mtp://192.168.1.83:59193"></p1:String>
+								<p1:String __ID="39" content="nio-mtp://fec0:0:0:fea9:0:0:0:1:59193"></p1:String>
+								<p1:String __ID="40" content="nio-mtp://fe80:0:0:0:1293:e9ff:fe0c:1164%4:59193"></p1:String>
+								<p1:String __ID="41" content="nio-mtp://tiago-freitass-macbook-air.local:59193"></p1:String>
+								<p1:String __ID="42" content="nio-mtp://fe80:0:0:0:21c:42ff:fe00:9%6:59193"></p1:String>
+								<p1:String __ID="43" content="nio-mtp://10.37.129.2:59193"></p1:String>
 							</entries>
 						</p1:String__9>
 					</addresses>
 				</p2:ComponentIdentifier>
 			</value>
 		</entry>
-		<entry __ID="35">
+		<entry __ID="44">
 			<key>
-				<p1:String xmlns:p1="typeinfo:java.lang" __ID="36" content="reply_by"></p1:String>
+				<p1:String xmlns:p1="typeinfo:java.lang" __ID="45" content="reply_by"></p1:String>
 			</key>
 		</entry>
-		<entry __ID="37">
+		<entry __ID="46">
 			<key>
-				<p1:String xmlns:p1="typeinfo:java.lang" __ID="38" content="encoding"></p1:String>
+				<p1:String xmlns:p1="typeinfo:java.lang" __ID="47" content="encoding"></p1:String>
 			</key>
 		</entry>
-		<entry __ID="39">
+		<entry __ID="48">
 			<key>
-				<p1:String xmlns:p1="typeinfo:java.lang" __ID="40" content="language"></p1:String>
+				<p1:String xmlns:p1="typeinfo:java.lang" __ID="49" content="language"></p1:String>
 			</key>
 		</entry>
-		<entry __ID="41">
+		<entry __ID="50">
 			<key>
-				<p1:String xmlns:p1="typeinfo:java.lang" __ID="42" content="performative"></p1:String>
+				<p1:String xmlns:p1="typeinfo:java.lang" __ID="51" content="performative"></p1:String>
 			</key>
 		</entry>
 	</entries>
@@ -244,19 +237,19 @@
 ]]></p0:property>
 		</p0:properties>
 	</p0:properties>
-	<p0:properties __ID="31" type="Comanalyzer">
-		<p0:property __ID="32" type="Observe All New">false</p0:property>
-		<p0:property __ID="33" type="Enable Table">false</p0:property>
-		<p0:property __ID="34" type="Enable Diagram">false</p0:property>
-		<p0:property __ID="35" type="Enable Graph">false</p0:property>
-		<p0:property __ID="36" type="Enable Chart">false</p0:property>
+	<p0:properties __ID="27" type="Comanalyzer">
+		<p0:property __ID="28" type="Observe All New">false</p0:property>
+		<p0:property __ID="29" type="Enable Table">false</p0:property>
+		<p0:property __ID="30" type="Enable Diagram">false</p0:property>
+		<p0:property __ID="31" type="Enable Graph">false</p0:property>
+		<p0:property __ID="32" type="Enable Chart">false</p0:property>
 	</p0:properties>
-	<p0:properties __ID="37" type="Test Center">
-		<p0:property __ID="38" type="mainsplit_location">200</p0:property>
-		<p0:property __ID="39" type="tcsplit_location">300</p0:property>
-		<p0:property __ID="40" type="checking">true</p0:property>
-		<p0:properties __ID="41" type="modelpanel">
-			<p0:property __ID="42" type="tree"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
+	<p0:properties __ID="33" type="Test Center">
+		<p0:property __ID="34" type="mainsplit_location">200</p0:property>
+		<p0:property __ID="35" type="tcsplit_location">300</p0:property>
+		<p0:property __ID="36" type="checking">true</p0:property>
+		<p0:properties __ID="37" type="modelpanel">
+			<p0:property __ID="38" type="tree"><![CDATA[<?xml version="1.0" encoding="utf-8"?>
 <p0:ModelExplorerProperties xmlns:p0="typeinfo:jadex.tools.common.modeltree" __ID="0">
 	<expandedNodes>
 		<p0:NodePath__0 __ID="1"></p0:NodePath__0>
@@ -266,15 +259,15 @@
 	</rootPathEntries>
 </p0:ModelExplorerProperties>
 ]]></p0:property>
-			<p0:property __ID="43" type="refresh">false</p0:property>
+			<p0:property __ID="39" type="refresh">false</p0:property>
 		</p0:properties>
-		<p0:properties __ID="44" type="testspanel">
-			<p0:property __ID="45" type="timeout">20000</p0:property>
-			<p0:property __ID="46" type="concurrency">1</p0:property>
-			<p0:property __ID="47" type="allowduplicates">false</p0:property>
+		<p0:properties __ID="40" type="testspanel">
+			<p0:property __ID="41" type="timeout">20000</p0:property>
+			<p0:property __ID="42" type="concurrency">1</p0:property>
+			<p0:property __ID="43" type="allowduplicates">false</p0:property>
 		</p0:properties>
 	</p0:properties>
-	<p0:properties __ID="48" type="jadex.commons.service.library.ILibraryService">
-		<p0:properties __ID="49" type="jadex.commons.service.library.ILibraryService"></p0:properties>
+	<p0:properties __ID="44" type="jadex.commons.service.library.ILibraryService">
+		<p0:properties __ID="45" type="jadex.commons.service.library.ILibraryService"></p0:properties>
 	</p0:properties>
 </p0:properties>

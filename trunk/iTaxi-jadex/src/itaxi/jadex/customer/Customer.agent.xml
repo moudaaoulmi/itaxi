@@ -127,11 +127,6 @@
 			</trigger>
 		</plan>
 
-		<plan name="freeroam">
-			<body class="FreeRoamPlan">
-			</body>
-		</plan>
-
 	<plan name="die">
 		<body class="DiePlan">
 		</body>
@@ -181,7 +176,7 @@
 			<!--
 			fazer plano com sub-goals gotoDestination - lista de destinos -->
 			<plans>
-				<initialplan ref="freeroam" />
+				
 				<endplan ref="die" />
 			</plans>
 			
