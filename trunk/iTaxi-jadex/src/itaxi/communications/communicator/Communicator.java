@@ -107,6 +107,40 @@ public class Communicator extends Thread {
 			System.err.println(e.getMessage());
 		}
 	}
+	
+	//Send message to client
+	public static synchronized void staticSendMessage(String ip, int port, Message message) {
+		try {
+			Socket socket = new Socket(ip, port);
+			BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
+			String msg = new Gson().toJson(message);
+			writer.write(msg + "\n");
+			writer.flush();
+			System.out.println("Send Message: " + msg);
+			writer.close();
+			socket.close();
+		} catch (UnknownHostException e) {
+			System.err.println(e.getMessage() + " " + ip + " " + port);
+		} catch (IOException e) {
+			System.err.println(e.getMessage() + " " + ip + " " + port);
+		}
+	}
+	
+	//Send message to client
+	public static synchronized void staticSendMessage(BufferedWriter writer, Message message) {
+		try {
+			String msg = new Gson().toJson(message);
+			writer.write(msg + "\n");
+			writer.flush();
+			System.out.println("Send Message: " + msg);
+			writer.close();
+		} catch (UnknownHostException e) {
+			System.err.println(e.getMessage());
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+		}
+	}
+	
 
 	//Handle received message
 	public void handleMessage(BufferedWriter writer, Message message) {
