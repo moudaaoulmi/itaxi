@@ -3,6 +3,7 @@ package itaxi.jadex.centralserver;
 import itaxi.communications.communicator.Communicator;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
+import itaxi.jadex.PlanUtil;
 import jadex.bdi.runtime.Plan;
 
 public class DiePlan extends Plan {
@@ -12,20 +13,14 @@ public class DiePlan extends Plan {
 	@Override
 	public void body() {
 		
-		System.out.println("DIE PLAN");
+		//System.out.println("DIE PLAN");
 		
-		Communicator communicator = (Communicator) getBeliefbase().getBelief(
-		"monitorCom").getFact();
 
-		if (communicator == null) {
-			communicator = new Communicator(8001, this, null);
-			communicator.start();
-		}
-		Message message = new Message(MessageType.REMOVE_VEHICLE);
-		message.setContent(getScope().getAgentName());
+		//Message message = new Message(MessageType.REMOVE_VEHICLE);
+		//message.setContent(getScope().getAgentName());
 
-		communicator.sendMessage("localhost", 8002, message);
-		
-		communicator.stopThread();
+		//Communicator.sendMessage("localhost", 8002, message);
+		//Communicator communicator = PlanUtil.getCommunicator(this);
+		//communicator.stopThread();
 	}
 }
