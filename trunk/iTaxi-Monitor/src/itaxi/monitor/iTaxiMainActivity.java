@@ -23,7 +23,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.TreeMap;
+import java.util.HashMap;
 
 
 import org.apache.commons.net.telnet.TelnetClient;
@@ -70,9 +70,9 @@ public class iTaxiMainActivity extends MapActivity {
 	private Button mapChangeView;
 	private Button overallStatistics;
 	
-	private TreeMap<String,Vehicle> vehicles;
-	private TreeMap<String,Party> parties;
-	//private TreeMap<String,Socket> partiesComms;
+	private HashMap<String,Vehicle> vehicles  = new HashMap<String,Vehicle>();;
+	private HashMap<String,Party> parties  = new HashMap<String,Party>();;
+	private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();
 
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
@@ -110,9 +110,7 @@ public class iTaxiMainActivity extends MapActivity {
         setContentView(R.layout.maplayout);
 
         gson = new Gson();
-        
-        vehicles = new TreeMap<String,Vehicle>();
-        parties = new TreeMap<String,Party>();
+     
         statistics = new Statistics(0,0,0,0,0,null);
         
         //Get zoom out button
@@ -141,9 +139,8 @@ public class iTaxiMainActivity extends MapActivity {
         //stationItems = new MapItems(Elements.STATIONS, getResources().getDrawable(R.drawable.station), this);
         vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
         partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
-                
+          
        
-        
         //Init map information
         init();
 	}
@@ -234,10 +231,6 @@ public class iTaxiMainActivity extends MapActivity {
 		if(!parties.containsKey(part.getPartyID())){
 			insertOnMap(part);
 			parties.put(part.getPartyID(), part);
-			//TODO porto correcto
-			//Communicator communicator = new Communicator(8002, this, null);
-			//communicator.start();
-			//partiesComms.put(part.getPartyID(), communicator);
 		}
 		else{
 			parties.remove(part.getPartyID());
@@ -273,8 +266,10 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private void removeFromMap(Vehicle vec){
 		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
-    	vehicleItems.removeOverlay(vec.getVehicleID());
+    	
 	    mapOverlays.remove(vehicleItems);
+	    vehicleItems.removeOverlay(vec.getVehicleID());
+	    mapOverlays.add(vehicleItems); 
     	mapView.invalidate();
 	}
 	
@@ -296,9 +291,10 @@ public class iTaxiMainActivity extends MapActivity {
 	private void removeFromMap(Party par){
 		if(partyItems.containsOverlay(par.getPartyID()))
     		partyItems.removeOverlay(par.getPartyID());
-		
-		partyItems.removeOverlay(par.getPartyID());
+
     	mapOverlays.remove(partyItems);
+    	partyItems.removeOverlay(par.getPartyID());
+    	mapOverlays.add(partyItems); 
     	mapView.invalidate();
 	}
 	
@@ -348,7 +344,7 @@ public class iTaxiMainActivity extends MapActivity {
     
     private void updatePartyPosition(Party party) {
     	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
-    	if(partyItems.containsOverlay(party.getPartyID()))
+    	//if(partyItems.containsOverlay(party.getPartyID()))
     		partyItems.removeOverlay(party.getPartyID());
 		partyItems.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
     	mapOverlays.remove(partyItems);
@@ -416,29 +412,32 @@ public class iTaxiMainActivity extends MapActivity {
 		
     
 	//Handles incoming messages
-	private void handleMessage(Message message) {
+	private void handleMessage(Integer port, Message message) {
 		String ID;
 		switch (message.getType()) {
 			case UPDATEVEHICLE:
-				Log.d("Monitor", "RECEIVED UPDATEVEHICLE");
 				Vehicle vec = new Gson().fromJson(message.getContent(), Vehicle.class);
+				Log.d("Monitor", "RECEIVED UPDATEVEHICLE:"+vec.getVehicleID());
 				addVehicle(vec);
 				updateVehiclePosition(vec);
-				checkPositions(vec);
+				//if(roamingVehicles.contains(vec.getVehicleID()))
+					checkPositions(vec);
 				Log.d("Monitor", "UPDATED");
 				break;
 			
 			case UPDATEPARTY:
-				Log.d("Monitor", "RECEIVED UPDATEPARTY");
 				Party part = new Gson().fromJson(message.getContent(), Party.class);
+				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID());
 				addParty(part);
+				if(!partiesSocks.containsKey(part.getPartyID())) 
+					partiesSocks.put(part.getPartyID(),port);
 				updatePartyPosition(part);
 				Log.d("Monitor", "UPDATED");
 				break;
 				 
 			case REMOVE_VEHICLE:
 				ID = message.getContent();
-				Log.d("Monitor", "RECEIVED REMOVE VEHICLE " + ID);
+				Log.d("Monitor", "RECEIVED REMOVE VEHICLE:" + ID);
 				Vehicle v = vehicles.get(ID);
 				if(v!=null) {
 					removeFromMap(v);
@@ -447,19 +446,20 @@ public class iTaxiMainActivity extends MapActivity {
 				break;
 			case REMOVE_PARTY:
 				ID = message.getContent();
-				Log.d("Monitor", "RECEIVED REMOVE PARTY " + ID);
+				Log.d("Monitor", "RECEIVED REMOVE PARTY:" + ID);
 				Party p = parties.get(ID);
-				if(p!=null) {
-					removeFromMap(p);
-					parties.remove(ID);
-					//partiesComms.get(ID).stopThread();
-					//partiesComms.remove(ID);
-				}
+				removeFromMap(p);
+				parties.remove(ID);
+				waitingParties.remove(ID);
+				partiesSocks.remove(ID);				
 				break;
 			case PARTY_WAITING:
-				waitingParties.add(message.getContent());
+				ID = message.getContent();
+				Log.d("Monitor", "RECEIVED PARTY_WAITING:" + ID);
+				waitingParties.add(ID);
 				break;
 			case TAXI_ROAMING:
+				Log.d("Monitor", "RECEIVED TAXY_ROAMING:" + message.getContent());
 				roamingVehicles.add(message.getContent());
 				break;
 			default:
@@ -470,15 +470,13 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private void checkPositions(Vehicle v) {
 		for(String partyID : waitingParties) {
+			Log.d("Monitor", "wating party:"+partyID + ""+ parties.containsKey(partyID));
 			Party p = parties.get(partyID);
 			if(v.getPosition().distanceTo(p.getPosition()) < 5) {
-				//TODO ir buscar porto correcto da party
-				//Socket socket = partiesComms.get(partyID)
-				//TODO usar socket guardado ou porto
-				Log.d("Monitor","A mandar para 8000...mudar!");
+				Log.d("Monitor","A mandar para:" + p.getPartyID() );
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				message.setContent(v.getVehicleID());
-				sendMessage("localhost", 8000, message);
+				sendMessage("localhost", partiesSocks.get(p.getPartyID()), message);
 			}
 		}
 	}
@@ -503,7 +501,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	
 	//Receives messages from server in the background
-	private class ServerConnectionTask extends AsyncTask<Void, Message, Void> {
+	private class ServerConnectionTask extends AsyncTask<Void, Object, Void> {
 		
 		@Override
 		protected Void doInBackground(Void... params) {
@@ -512,7 +510,7 @@ public class iTaxiMainActivity extends MapActivity {
 					Socket socket = serverSocket.accept();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					String msg = reader.readLine();
-					publishProgress(gson.fromJson(msg, Message.class));
+					publishProgress(socket.getPort(), gson.fromJson(msg, Message.class) );
 					reader.close();
 					socket.close();
 				}
@@ -523,8 +521,8 @@ public class iTaxiMainActivity extends MapActivity {
 		}
 			
 		@Override
-		protected void onProgressUpdate(Message... messages) {
-			handleMessage(messages[0]);
+		protected void onProgressUpdate(Object... messages) {
+			handleMessage((Integer)messages[0], (Message)messages[1]);
 		}
 	}
 	
