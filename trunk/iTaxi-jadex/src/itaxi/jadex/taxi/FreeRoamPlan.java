@@ -35,8 +35,8 @@ public class FreeRoamPlan extends Plan
 		final int lon = -rand.nextInt(maxlon-minlon+1)+minlon;
 		
 		IGoal goal = createGoal("move");
-		goal.getParameter("latitude").setValue(38742369);
-		goal.getParameter("longitude").setValue(-9140110); //TODO lat lon
+		goal.getParameter("goalLatitude").setValue(38736645);
+		goal.getParameter("goalLongitude").setValue(-9138608); //TODO lat lon
 
 		try
 		{

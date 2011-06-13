@@ -1,6 +1,7 @@
 package itaxi.jadex.customer;
 
 import itaxi.communications.communicator.Communicator;
+import itaxi.communications.communicator.MessageHandler;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.jadex.PlanUtil;
