@@ -99,7 +99,7 @@ public class Coordinates {
 		
 		Coordinates nextCoord;
 		final double distance = distanceTo(startPointLatI, startPointLonI, endPointLatI, endPointLonI);
-		if(distance<step) {
+		if(distance<=step) {
 			nextCoord = new Coordinates(endPointLatI, endPointLonI);
 		} else 
 			nextCoord = extrapolate(startPointLat, startPointLon, course, stepRad);
@@ -153,7 +153,7 @@ public class Coordinates {
     	return	Math.atan2(Math.sin(lon1-lon2)*Math.cos(lat2) , 
     					Math.cos(lat1)*Math.sin(lat2)-Math.sin(lat1)*Math.cos(lat2)*Math.cos(lon1-lon2) )
     			%
-    			2*Math.PI;
+    			(2*Math.PI);
     }
     
 

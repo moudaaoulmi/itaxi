@@ -33,7 +33,7 @@ public class SubMoveToPlan extends Plan {
 		final int step = ((Integer) getBeliefbase().getBelief("velocity").getFact());
  
 		Coordinates nextCoord = Coordinates.nextCoord(latitude, longitude, 
-				(Integer)getParameter("nextLatitude").getValue(), (Integer)getParameter("nextLongitude").getValue(), step);
+				(Integer)getParameter("goalLatitude").getValue(), (Integer)getParameter("goalLongitude").getValue(), step);
 		
 		// faz set dos beliefs
 		getBeliefbase().getBelief("latitude").setFact(nextCoord.getLatitude());

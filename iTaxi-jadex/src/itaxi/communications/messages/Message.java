@@ -94,13 +94,13 @@ public class Message {
 	public Message(MessageType type) {
 		this.type = type;
 		this.content = "";
-		Cipher();
+		//Cipher();
 	}
 	
 	public Message(MessageType type, String content) {
 		this.type = type;
 		this.content = content;
-		Cipher();
+		//Cipher();
 	}
 	
 	public MessageType getType() {
@@ -113,15 +113,15 @@ public class Message {
 	
 	public String getContent() {
 		String result = "";
-		Decipher();
+		//Decipher();
 		result = content;
-		Cipher();
+		//Cipher();
 		return result;
 	}
 	
 	public void setContent(String content) {
 		this.content = content;
-		Cipher();
+		//Cipher();
 	}
 	
 }

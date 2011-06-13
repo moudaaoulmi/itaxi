@@ -28,8 +28,7 @@ public class CallTaxiManualPlan extends Plan {
 		
 		//Communicator communicator = PlanUtil.getCommunicator(this);
 		Message message = new Message(MessageType.PARTY_WAITING);
-		String newcontent = gson.toJson(getScope().getAgentName());
-		message.setContent(newcontent);
+		message.setContent(getScope().getAgentName());
 		
 		Communicator.sendMessage("localhost", 8002, message);	
 	}
