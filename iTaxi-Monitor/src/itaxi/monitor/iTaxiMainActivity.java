@@ -1,6 +1,5 @@
 package itaxi.monitor;
 
-import itaxi.communications.communicator.Communicator;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.messages.entities.Party;
@@ -8,6 +7,8 @@ import itaxi.messages.entities.Station;
 import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
 import itaxi.monitor.MapItems.Elements;
+
+import jadex.bridge.ComponentIdentifier;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -53,6 +54,13 @@ import com.google.gson.reflect.TypeToken;
 
 public class iTaxiMainActivity extends MapActivity {
 	
+	//distance between vehicle and party in meters
+	private static int NEARBY_DISTANCE = 5;
+	
+	//initial ports
+	private final static int CUSTOMER_PORTS = 6000;
+	private final static int TAXI_PORTS = 7000;
+	
 	private static int EMULATORPORT = 5554;
 	private static String EMULATORIP = "10.0.2.2";
 	private static int MONITORPORT = 8002;
@@ -72,7 +80,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private HashMap<String,Vehicle> vehicles  = new HashMap<String,Vehicle>();;
 	private HashMap<String,Party> parties  = new HashMap<String,Party>();;
-	private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();
+	//private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();
 
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
@@ -412,7 +420,7 @@ public class iTaxiMainActivity extends MapActivity {
 		
     
 	//Handles incoming messages
-	private void handleMessage(Integer port, Message message) {
+	private void handleMessage(Message message) {   //, Integer port) {
 		String ID;
 		switch (message.getType()) {
 			case UPDATEVEHICLE:
@@ -429,8 +437,8 @@ public class iTaxiMainActivity extends MapActivity {
 				Party part = new Gson().fromJson(message.getContent(), Party.class);
 				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID());
 				addParty(part);
-				if(!partiesSocks.containsKey(part.getPartyID())) 
-					partiesSocks.put(part.getPartyID(),port);
+				/*if(!partiesSocks.containsKey(part.getPartyID())) 
+					partiesSocks.put(part.getPartyID(),port);*/
 				updatePartyPosition(part);
 				Log.d("Monitor", "UPDATED");
 				break;
@@ -451,7 +459,7 @@ public class iTaxiMainActivity extends MapActivity {
 				removeFromMap(p);
 				parties.remove(ID);
 				waitingParties.remove(ID);
-				partiesSocks.remove(ID);				
+				//partiesSocks.remove(ID);				
 				break;
 			case PARTY_WAITING:
 				ID = message.getContent();
@@ -470,15 +478,34 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private void checkPositions(Vehicle v) {
 		for(String partyID : waitingParties) {
-			Log.d("Monitor", "wating party:"+partyID + ""+ parties.containsKey(partyID));
+			//Log.d("Monitor", "wating party:"+partyID + ""+ parties.containsKey(partyID));
 			Party p = parties.get(partyID);
-			if(v.getPosition().distanceTo(p.getPosition()) < 5) {
-				Log.d("Monitor","A mandar para:" + p.getPartyID() );
+			if(v.getPosition().distanceTo(p.getPosition()) < NEARBY_DISTANCE) {
 				Message message = new Message(MessageType.TAXI_ROAMING);
-				message.setContent(v.getVehicleID());
-				sendMessage("localhost", partiesSocks.get(p.getPartyID()), message);
+				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
+				message.setContent(gson.toJson(new ComponentIdentifier(v.get_agentID().getName(), null, v.get_agentID().getResolvers()) ,ComponentIdentifier.class));
+				sendMessage("localhost", getPort(p.getPartyID()), message);
 			}
 		}
+	}
+	
+	private static int getPort(String id){
+		String name;
+		int i_port=0;
+		int nid = 0;
+		if(id != null && id.length() > 0){
+			for(int i=0; i < id.length(); i++)
+				if(id.charAt(i) >= '0' && id.charAt(i) <= '9'){
+					name = id.substring(0, i);
+					if(name.equals("Customer")) i_port=CUSTOMER_PORTS;
+					else if(name.equals("Taxi")) i_port=TAXI_PORTS;
+		
+					nid = new Integer(id.substring(i));
+					System.out.println("NAME:"+name + "PORT:"+ (i_port+nid));
+					return i_port+nid ;
+				}
+		}
+		return -1;
 	}
 	
 	//Send message to client
@@ -510,7 +537,7 @@ public class iTaxiMainActivity extends MapActivity {
 					Socket socket = serverSocket.accept();
 					BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 					String msg = reader.readLine();
-					publishProgress(socket.getPort(), gson.fromJson(msg, Message.class) );
+					publishProgress(gson.fromJson(msg, Message.class));
 					reader.close();
 					socket.close();
 				}
@@ -522,7 +549,7 @@ public class iTaxiMainActivity extends MapActivity {
 			
 		@Override
 		protected void onProgressUpdate(Object... messages) {
-			handleMessage((Integer)messages[0], (Message)messages[1]);
+			handleMessage((Message)messages[0]);    //(Integer)messages[0]);   //, );
 		}
 	}
 	
