@@ -20,7 +20,8 @@ public class DiePlan extends Plan {
 		//message.setContent(getScope().getAgentName());
 
 		//Communicator.sendMessage("localhost", 8002, message);
-		//Communicator communicator = PlanUtil.getCommunicator(this);
-		//communicator.stopThread();
+
+		//Communicator communicator = (Communicator) getBeliefbase().getBelief("monitorCom").getFact();
+		//if(communicator!=null) communicator.stopThread();
 	}
 }

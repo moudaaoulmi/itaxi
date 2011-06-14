@@ -3,12 +3,15 @@ package itaxi.messages.entities;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.exceptions.PartySizeException;
 
-import java.util.Date;
+import jadex.bridge.IComponentIdentifier;
 
 public class Party {
 
 	//public enum PartyState{NOTBOOKED, BOOKED, FLYING};
 	//private int station;
+	
+	private IComponentIdentifier _agentID;
+
 	private String partyID;
 	private int size;
 	private Coordinates _position;
@@ -33,7 +36,17 @@ public class Party {
 //		//this.bookState = bookState;
 //	}
 	
-	public Party(int station, String partyID, int size, Coordinates position, Coordinates destination) {
+	public Party(String partyID, IComponentIdentifier agentID,  int size, Coordinates position, Coordinates destination) {
+		//this.station = station;
+		_agentID=agentID;
+		this.partyID = partyID;
+		this.size = size;
+		_position = position;
+		_destination = destination;
+		//this.setArrivalHour(new Date().getTime());
+	}
+	
+	public Party(String partyID,  int size, Coordinates position, Coordinates destination) {
 		//this.station = station;
 		this.partyID = partyID;
 		this.size = size;
@@ -42,17 +55,79 @@ public class Party {
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
-	public Party(int station, String partyID, int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
+	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
+		if(size < 0 || size > 4)
+			throw new PartySizeException();
+		//this.station = station;
+		_agentID=agentID;
+		this.partyID = partyID;
+		this.size = size;
+		setDestination(latitude, longitude);
+		//_position=new Coordinates(latitude, longitude);
+		//this.setArrivalHour(new Date().getTime());
+		//this.bookState = bookState;
+	}
+	
+	public Party(String partyID,  int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
 		if(size < 0 || size > 4)
 			throw new PartySizeException();
 		//this.station = station;
 		this.partyID = partyID;
 		this.size = size;
 		setDestination(latitude, longitude);
+		//_position=new Coordinates(latitude, longitude);
 		//this.setArrivalHour(new Date().getTime());
 		//this.bookState = bookState;
 	}
 
+	public Party(String partyID, int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) throws PartySizeException{
+		if(size < 0 || size > 4)
+			throw new PartySizeException();
+		//this.station = station;
+		this.partyID = partyID;
+		this.size = size;
+		setDestination(destLat, destLon);
+		_position=new Coordinates(latitude, longitude);
+		//this.setArrivalHour(new Date().getTime());
+		//this.bookState = bookState;
+	}
+	
+	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) throws PartySizeException{
+		if(size < 0 || size > 4)
+			throw new PartySizeException();
+		//this.station = station;
+		_agentID=agentID;
+		this.partyID = partyID;
+		this.size = size;
+		setDestination(destLat, destLon);
+		
+		//this.setArrivalHour(new Date().getTime());
+		//this.bookState = bookState;
+	}
+	public Coordinates get_destination() {
+		return _destination;
+	}
+
+	public void set_destination(Coordinates _destination) {
+		this._destination = _destination;
+	}
+	
+	public IComponentIdentifier get_agentID() {
+		return _agentID;
+	}
+
+	public void set_agentID(IComponentIdentifier _agentID) {
+		this._agentID = _agentID;
+	}
+
+	public Coordinates get_position() {
+		return _position;
+	}
+
+	public void set_position(Coordinates _position) {
+		this._position = _position;
+	}
+	
 	public String getPartyID() {
 		return partyID;
 	}

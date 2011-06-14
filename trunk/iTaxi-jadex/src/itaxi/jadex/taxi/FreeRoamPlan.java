@@ -1,9 +1,13 @@
 package itaxi.jadex.taxi;
 
+import itaxi.messages.entities.Party;
+
 import java.util.Random;
 
+import jadex.base.fipa.SFipa;
 import jadex.bdi.runtime.GoalFailureException;
 import jadex.bdi.runtime.IGoal;
+import jadex.bdi.runtime.IMessageEvent;
 import jadex.bdi.runtime.Plan;
 
 
@@ -32,11 +36,11 @@ public class FreeRoamPlan extends Plan
 		 
 		Random rand = new Random();
 		final int lat = rand.nextInt(maxlat-minlat+1)+minlat;
-		final int lon = -rand.nextInt(maxlon-minlon+1)+minlon;
+		final int lon = - (rand.nextInt(maxlon-minlon+1)+minlon);
 		
 		IGoal goal = createGoal("move");
-		goal.getParameter("goalLatitude").setValue(38736645);
-		goal.getParameter("goalLongitude").setValue(-9138608); //TODO lat lon
+		goal.getParameter("goalLatitude").setValue(38736645);  //38736645
+		goal.getParameter("goalLongitude").setValue(-9138608); //-9138608 //TODO lat lon
 
 		try
 		{
@@ -50,5 +54,17 @@ public class FreeRoamPlan extends Plan
 		  System.out.println("Couldn't dispatch goal move!");
 		};
 		
+		// TODO passar isto para um plano a parte com um trigger do event + inhibits do freeroam + e mandar um internal event para parar o freeroam
+		// Message receiving in the plan.
+		System.out.println("Waiting for request_trip");
+		IMessageEvent request = waitForMessageEvent("request_trip");
+		System.out.println("Received request_trip");
+		
+		Party party = (Party)request.getParameter(SFipa.CONTENT).getValue();
+		//if(party.get_destination() blabla) //TODO testes de aceitacao (gasolina etc)
+		IMessageEvent reply = getEventbase().createReply(request,"agree_trip");
+		//else IMessageEvent reply = getEventbase().createReply(request,"refuse_trip");
+		sendMessage(reply);
+		System.out.println("AGREED!!");
 	}
 }

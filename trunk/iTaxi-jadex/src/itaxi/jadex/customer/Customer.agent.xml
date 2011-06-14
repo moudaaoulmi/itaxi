@@ -13,7 +13,8 @@
 		<import>jadex.planlib.*</import>
 		<import>com.google.gson.Gson</import>
 		<import>jadex.bridge.IComponentIdentifier</import>
-		<import>itaxi.communications.communicator.Communicator</import>
+		<import>itaxi.communications.communicator.*</import>
+		<import>itaxi.communications.messages.Message</import>
 	</imports>
 
 	<capabilities>
@@ -25,13 +26,13 @@
 		<belief name="monitorCom" class="Communicator">
 			<fact>null</fact>
 		</belief>
-		
+
 		<belief name="latitude" class="int">
-			<fact>38742369</fact>
+			<fact>38736645</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9140110</fact>
+			<fact>-9138608</fact>
 		</belief>
 
 		<belief name="emotional_state" class="int">
@@ -54,8 +55,6 @@
 		<!-- Sub-Goals -->
 
 		<performgoal name="callTaxi" randomselection="true">
-			<parameter name="foundTaxi" class="IComponentIdentifier"
-				direction="out" />
 			<parameter name="destinationLatitude" class="int" />
 			<parameter name="destinationLongitude" class="int" />
 		</performgoal>
@@ -79,10 +78,10 @@
 
 	<plans>
 		<plan name="GotoDestinationPlan">
-			<parameter name="latitude" class="int">
+			<parameter name="destinationLatitude" class="int">
 				<goalmapping ref="gotoDestination.destinationLatitude" />
 			</parameter>
-			<parameter name="longitude" class="int">
+			<parameter name="destinationLongitude" class="int">
 				<goalmapping ref="gotoDestination.destinationLongitude" />
 			</parameter>
 
@@ -95,27 +94,15 @@
 
 		</plan>
 
-	<!--	<plan name="callTaxiCentral">
-			<parameter name="destinationLatitude" class="int">
-				<goalmapping ref="callTaxi.destinationLatitude" />
-			</parameter>
-			<parameter name="destinationLongitude" class="int">
-				<goalmapping ref="callTaxi.destinationLongitude" />
-			</parameter>
-
-			<body class="CallTaxiCentralPlan">
-			</body>
-
-			<trigger>
-				<goal ref="callTaxi">
-				</goal>
-			</trigger>
-		</plan> -->
+		<!-- <plan name="callTaxiCentral"> <parameter name="destinationLatitude" 
+			class="int"> <goalmapping ref="callTaxi.destinationLatitude" /> </parameter> 
+			<parameter name="destinationLongitude" class="int"> <goalmapping ref="callTaxi.destinationLongitude" 
+			/> </parameter> <body class="CallTaxiCentralPlan"> </body> <trigger> <goal 
+			ref="callTaxi"> </goal> </trigger> </plan> -->
 
 		<plan name="callTaxiManual">
 			<parameter name="foundTaxi" class="IComponentIdentifier"
 				direction="out">
-				<goalmapping ref="callTaxi.foundTaxi" />
 			</parameter>
 
 			<body class="CallTaxiManualPlan">
@@ -127,15 +114,41 @@
 			</trigger>
 		</plan>
 
-	<plan name="die">
-		<body class="DiePlan">
-		</body>
-	</plan>
+		<plan name="die">
+			<body class="DiePlan">
+			</body>
+		</plan>
 	</plans>
+
+	<events>
+		<internalevent name="taxi_nearby">
+			<parameter name="taxi" class="Message" />
+		</internalevent>
+
+		<!-- BEGIN callTaxiManual Messages -->
+		<messageevent name="request_trip" type="fipa" direction="send">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="conversation_id" class="String">
+				<value>SFipa.createUniqueId($scope.getAgentName())</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.JADEX_XML</value>
+			</parameter>
+		</messageevent>
+
+		<messageevent name="agree_trip" type="fipa" direction="receive">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+		</messageevent>
+		<!-- END callTaxiManual Messages -->
+	</events>
 
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
-		<property name="logging.level">Level.INFO</property>
+		<property name="logging.level">Level.WARNING</property>
 		<!-- The default parent handler prints out log messages on the console. -->
 		<property name="logging.useParentHandlers">true</property>
 		<!--<property name="debugging">true</property> -->
@@ -145,7 +158,7 @@
 
 	<configurations>
 		<configuration name="default">
-			
+
 			<goals>
 				<initialgoal ref="gotoDestination">
 					<parameter ref="destinationLatitude">
@@ -155,6 +168,7 @@
 						<value>-9138672</value>
 					</parameter>
 				</initialgoal>
+
 				<initialgoal ref="df_keep_registered">
 					<parameter ref="description">
 						<value>
@@ -172,15 +186,14 @@
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
 			</goals>
-			
-			<!--
-			fazer plano com sub-goals gotoDestination - lista de destinos -->
+
+			<!-- fazer plano com sub-goals gotoDestination - lista de destinos -->
 			<plans>
-				
+
 				<endplan ref="die" />
 			</plans>
-			
-			
+
+
 		</configuration>
 	</configurations>
 
