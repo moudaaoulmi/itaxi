@@ -2,11 +2,15 @@ package itaxi.messages.entities;
 
 import itaxi.messages.coordinates.Coordinates;
 
+import jadex.bridge.ComponentIdentifier;
+
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 
 public class Vehicle {
+	
+	private ComponentIdentifier _agentID;
 	
 	private double _gasLevel;
 	
@@ -31,6 +35,20 @@ public class Vehicle {
 	public Vehicle(){
 	}
 	
+	public Vehicle(String vehicleID,  ComponentIdentifier agentID, double gasLevel, Coordinates initialPosition, int altitude,
+			int parked, long infoAge, String otherVehicles) {
+		_agentID=(ComponentIdentifier)agentID;
+		_vehicleID = vehicleID;
+		_gasLevel = gasLevel;
+		_position = initialPosition;
+		this.infoAge = infoAge;
+		this.interactions = new TreeMap<Integer, Vehicle>();
+		this.otherVehicles = otherVehicles;
+		this.parties = new TreeMap<String, Party>();
+		this.destinations = new LinkedList<Coordinates>();
+		this.lastknownpath = "";
+	}
+	
 	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition, int altitude,
 			int parked, long infoAge, String otherVehicles) {
 		_vehicleID = vehicleID;
@@ -44,8 +62,16 @@ public class Vehicle {
 		this.lastknownpath = "";
 	}
 	
+	public Vehicle(String vehicleID, ComponentIdentifier agentID, double gasLevel, Coordinates initialPosition) {
+		_vehicleID = vehicleID;
+		_agentID=agentID;
+		_gasLevel = gasLevel;
+		_position = initialPosition;
+		this.parties = new TreeMap<String, Party>();
+		this.destinations = new LinkedList<Coordinates>();
+	}
+	
 	public Vehicle(String vehicleID, double gasLevel, Coordinates initialPosition) {
-		//_aid = aid;
 		_vehicleID = vehicleID;
 		_gasLevel = gasLevel;
 		_position = initialPosition;
@@ -56,12 +82,31 @@ public class Vehicle {
 	public String toString() {
 		return "[VEHICLE] name=" + _vehicleID + " gas=" + _gasLevel + " position=" + _position;
 	}
+
+	public double get_gasLevel() {
+		return _gasLevel;
+	}
+
+	public void set_gasLevel(double _gasLevel) {
+		this._gasLevel = _gasLevel;
+	}
+
+	public String get_vehicleID() {
+		return _vehicleID;
+	}
+
+	public void set_vehicleID(String _vehicleID) {
+		this._vehicleID = _vehicleID;
+	}
+
+	public Coordinates get_position() {
+		return _position;
+	}
+
+	public void set_position(Coordinates _position) {
+		this._position = _position;
+	}
 	
-//	public AID getAID() {
-//		return _aid;
-//	}
-
-
 	public String getLastknownpath() {
 		return lastknownpath;
 	}
@@ -156,5 +201,13 @@ public class Vehicle {
 
 	public void setOtherVehicles(String otherVehicles) {
 		this.otherVehicles = otherVehicles;
+	}
+
+	public void set_agentID(ComponentIdentifier _agentID) {
+		this._agentID = (ComponentIdentifier)_agentID;
+	}
+
+	public ComponentIdentifier get_agentID() {
+		return _agentID;
 	}
 }

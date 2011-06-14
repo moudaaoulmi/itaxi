@@ -13,6 +13,7 @@
 		<import>jadex.planlib.*</import>
 		<import>com.google.gson.Gson</import>
 		<import>itaxi.communications.communicator.Communicator</import>
+		<import>itaxi.messages.entities.Party</import>
 	</imports>
 
 	<capabilities>
@@ -21,10 +22,10 @@
 	</capabilities>
 
 	<beliefs>
-		<belief name="monitorCom" class="Communicator" >
+		<belief name="monitorCom" class="Communicator">
 			<fact>null</fact>
 		</belief>
-		
+
 		<belief name="latitude" class="int">
 			<fact>38742365</fact>
 		</belief>
@@ -49,7 +50,7 @@
 	</beliefs>
 
 	<goals>
-		
+
 		<!-- Sub-Goals -->
 		<achievegoal name="move" recur="true" recurdelay="1000">
 			<parameter name="goalLatitude" class="int" />
@@ -97,16 +98,42 @@
 
 		</plan>
 
-		<plan name="freeroam">
-			<body class="FreeRoamPlan">
-			</body>
+		<plan name="freeroam" priority="-1">
+			<parameter name="clientRequest" class="String">
+				<messageeventmapping ref="request_trip.content" />
+			</parameter>
+			<body class="FreeRoamPlan" />
 		</plan>
-		
+
 		<plan name="die">
 			<body class="DiePlan">
 			</body>
 		</plan>
 	</plans>
+
+	<events>
+		<!-- BEGIN FreeRoam Messages -->
+		<messageevent name="request_trip" type="fipa" direction="receive">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<match>$content instanceof Party
+					&amp;&amp;
+					$sender.getName().startsWith("Customer")
+			</match>
+		</messageevent>
+		<messageevent name="agree_trip" type="fipa" direction="send">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.AGREE</value>
+			</parameter>
+		</messageevent>
+		<messageevent name="refuse_trip" type="fipa" direction="send">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REFUSE</value>
+			</parameter>
+		</messageevent>
+		<!-- END FreeRoam Messages -->
+	</events>
 
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
@@ -120,7 +147,7 @@
 
 	<configurations>
 		<configuration name="default">
- 
+
 			<goals>
 				<initialgoal ref="df_keep_registered">
 					<parameter ref="description">

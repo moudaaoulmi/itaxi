@@ -26,8 +26,8 @@
 	<classpathentry kind="lib" path="lib/jadex/xpp3-1.1.4c.jar"/>
 	<classpathentry kind="lib" path="lib/monitor/commons-codec-1.3.jar"/>
 	<classpathentry kind="lib" path="lib/monitor/commons-net-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/monitor/gson-1.6.jar"/>
 	<classpathentry kind="lib" path="lib/monitor/http.jar"/>
 	<classpathentry kind="lib" path="lib/monitor/iiop.jar"/>
+	<classpathentry kind="lib" path="lib/monitor/gson-1.7.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

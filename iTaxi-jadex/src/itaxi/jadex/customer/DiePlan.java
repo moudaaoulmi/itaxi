@@ -1,10 +1,8 @@
 package itaxi.jadex.customer;
 
 import itaxi.communications.communicator.Communicator;
-import itaxi.communications.communicator.MessageHandler;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
-import itaxi.jadex.PlanUtil;
 import jadex.bdi.runtime.Plan;
 
 public class DiePlan extends Plan {
@@ -20,8 +18,9 @@ public class DiePlan extends Plan {
 		message.setContent(getScope().getAgentName());
 
 		Communicator.sendMessage("localhost", 8002, message);
-		Communicator communicator = PlanUtil.getCommunicator(this);
-		communicator.stopThread();
+
+		Communicator communicator = (Communicator) getBeliefbase().getBelief("monitorCom").getFact();
+		if(communicator!=null) communicator.stopThread();
 	}
 
 }

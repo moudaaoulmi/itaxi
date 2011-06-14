@@ -6,6 +6,8 @@ import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Vehicle;
 import jadex.bdi.runtime.Plan;
+import jadex.bridge.ComponentIdentifier;
+
 import com.google.gson.Gson;
 
 public class SubMoveToPlan extends Plan {
@@ -29,11 +31,17 @@ public class SubMoveToPlan extends Plan {
 				.getFact());
 		final int longitude = ((Integer) getBeliefbase().getBelief("longitude")
 				.getFact());
+
+		final int goalLatitude =  (Integer) (getParameter("goalLatitude").getValue());
+		final int goalLongitude =  (Integer) (getParameter("goalLongitude").getValue());
 		
 		final int step = ((Integer) getBeliefbase().getBelief("velocity").getFact());
  
 		Coordinates nextCoord = Coordinates.nextCoord(latitude, longitude, 
-				(Integer)getParameter("goalLatitude").getValue(), (Integer)getParameter("goalLongitude").getValue(), step);
+				 							goalLatitude, goalLongitude, step);
+		
+		//System.err.println("!!!!!! latitude:"+latitude+"longitude"+longitude+" goalLatitude:"+goalLatitude + " goalLongitude:"+ goalLongitude +" step:"+step);
+		//System.err.println("!!!!!! nextLatitude:"+nextCoord.getLatitude()+"nextLongitude"+nextCoord.getLongitude());
 		
 		// faz set dos beliefs
 		getBeliefbase().getBelief("latitude").setFact(nextCoord.getLatitude());
@@ -49,8 +57,7 @@ public class SubMoveToPlan extends Plan {
 		// gera as coordenadas
 		Coordinates coords = new Coordinates(latitude, longitude);
 		Message message = new Message(MessageType.UPDATEVEHICLE);
-		String newcontent = gson.toJson(new Vehicle(getScope().getAgentName(),
-				50, coords, 0, 0, 0, ""));
+		String newcontent = gson.toJson(new Vehicle(getScope().getAgentName(),(ComponentIdentifier)(getScope().getComponentIdentifier()),100,coords),Vehicle.class);
 		message.setContent(newcontent);
  
 		Communicator.sendMessage("localhost", 8002, message);

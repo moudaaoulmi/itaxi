@@ -2,6 +2,14 @@ package itaxi.communications.communicator;
 
 import itaxi.communications.messages.Message;
 
+import jadex.bdi.runtime.IBDIInternalAccess;
+import jadex.bdi.runtime.IGoal;
+import jadex.bdi.runtime.IInternalEvent;
+import jadex.bridge.IComponentIdentifier;
+import jadex.bridge.IComponentStep;
+import jadex.bridge.IExternalAccess;
+import jadex.bridge.IInternalAccess;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -24,9 +32,24 @@ public class Communicator extends Thread {
 	//Serializes and deserializes json objects
 	private final Gson gson = new Gson();
 	
-	public MessageHandler handler;
-		
-	//Start thread execution
+	private MessageHandler handler;
+	
+	//IExternalAccess used to notify Jadex agents of a new message
+	private IExternalAccess agent;
+	
+	//IExternalAccess used to notify Jadex agents of a new message
+	public Communicator(int serverPort, IExternalAccess agent) {
+		try {
+			serverSocket = new ServerSocket(serverPort);
+			stop = false;
+			this.agent=agent;
+		} catch (IOException e) {
+			//System.err.println(e.getMessage());
+			System.out.println("Communicator couldn't stablish connection");
+		}
+	}
+	
+	//MessageHandler for assynchronous communication
 	public Communicator(int serverPort, MessageHandler hand) {
 		try {
 			handler = hand;
@@ -37,7 +60,7 @@ public class Communicator extends Thread {
 			System.out.println("Communicator couldn't stablish connection");
 		}
 	}
-	
+		
 	public void run() {
 		
 		if(handler!=null)
@@ -55,10 +78,27 @@ public class Communicator extends Thread {
 
 				if (handler != null) {
 					// Read incoming messages
-					Message msg = gson.fromJson(reader.readLine(),
-							Message.class);
+					final Message msg = gson.fromJson(reader.readLine(), Message.class);
 					System.out.println("Received Message: " + gson.toJson(msg));
-					handleMessage(writer, msg);
+					
+					if(agent!=null) {
+						agent.scheduleStep(new IComponentStep()
+						  {
+						    public Object execute(IInternalAccess ia)
+						    {
+						      IBDIInternalAccess scope = (IBDIInternalAccess)ia;
+						      
+						      IInternalEvent event = scope.getEventbase().createInternalEvent("taxi_nearby");
+						      
+						      event.getParameter("content").setValue( (Object)msg );
+						      scope.getEventbase().dispatchInternalEvent(event);
+
+						      return null;
+						    }
+						  });
+					}
+					else handleMessage(writer, msg);
+					
 					reader.close();
 				}
 				else

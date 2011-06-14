@@ -33,20 +33,20 @@ public class GotoDestinationPlan extends Plan {
 		
 		
 		IGoal goal = createGoal("callTaxi");
-		//TODO devia mandar a party..
-		//goal.getParameter("destinationLatitude").setValue(getParameter("destinationLatitude"));
-		//goal.getParameter("destinationLongitude").setValue(getParameter("destinationLongitude"));
+		//TODO devia mandar a party..?
+		goal.getParameter("destinationLatitude").setValue(getParameter("destinationLatitude").getValue());
+		goal.getParameter("destinationLongitude").setValue(getParameter("destinationLongitude").getValue());
 
 		try
 		{
 		  dispatchSubgoalAndWait(goal);
-		  System.out.println("Dispatch move goal!");
+		  System.out.println("Dispatch callTaxi goal!");
 		  //getLogger().info("Translated from "+goal+" "+
 		  //word+" - "+goal.getParameter("result").getValue());
 		}
 		catch(GoalFailureException e)
 		{
-		  System.out.println("Couldn't dispatch goal move!");
+		  System.out.println("Couldn't dispatch goal callTaxi!");
 		}
 			
 	}
@@ -57,7 +57,7 @@ public class GotoDestinationPlan extends Plan {
 		// gera as coordenadas
 		Coordinates coords = new Coordinates(latitude, longitude);
 		Message message = new Message(MessageType.UPDATEPARTY);
-		String newcontent = gson.toJson(new Party(0,getScope().getAgentName(),1,coords,new Coordinates(0,0)));
+		String newcontent = gson.toJson(new Party(getScope().getAgentName(), 1,coords,null),Party.class);
 		message.setContent(newcontent);
 
 		Communicator.sendMessage("localhost", 8002, message);
