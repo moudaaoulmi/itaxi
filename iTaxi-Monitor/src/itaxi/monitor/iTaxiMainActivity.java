@@ -58,8 +58,8 @@ public class iTaxiMainActivity extends MapActivity {
 	private static int NEARBY_DISTANCE = 5;
 	
 	//initial ports
-	private final static int CUSTOMER_PORTS = 6000;
-	private final static int TAXI_PORTS = 7000;
+	private final static int CUSTOMER_PORTS = 55000;
+	private final static int TAXI_PORTS = 57000;
 	
 	private static int EMULATORPORT = 5554;
 	private static String EMULATORIP = "10.0.2.2";
@@ -483,8 +483,9 @@ public class iTaxiMainActivity extends MapActivity {
 			if(v.getPosition().distanceTo(p.getPosition()) < NEARBY_DISTANCE) {
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
+				//TODO Json bug ip
 				message.setContent(gson.toJson(new ComponentIdentifier(v.get_agentID().getName(), null, v.get_agentID().getResolvers()) ,ComponentIdentifier.class));
-				sendMessage("localhost", getPort(p.getPartyID()), message);
+				sendMessage("10.0.2.2", getPort(p.getPartyID()), message); //10.0.2.2: localhost outside android emulator
 			}
 		}
 	}
