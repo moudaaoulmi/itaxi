@@ -100,14 +100,9 @@
 			/> </parameter> <body class="CallTaxiCentralPlan"> </body> <trigger> <goal 
 			ref="callTaxi"> </goal> </trigger> </plan> -->
 
-		<plan name="callTaxiManual">
-			<parameter name="foundTaxi" class="IComponentIdentifier"
-				direction="out">
-			</parameter>
-
+		<plan name="callTaxiManual">			
 			<body class="CallTaxiManualPlan">
 			</body>
-
 			<trigger>
 				<goal ref="callTaxi">
 				</goal>

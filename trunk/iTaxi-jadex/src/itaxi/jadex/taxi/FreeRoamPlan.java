@@ -52,19 +52,6 @@ public class FreeRoamPlan extends Plan
 		catch(GoalFailureException e)
 		{
 		  System.out.println("Couldn't dispatch goal move!");
-		};
-		
-		// TODO passar isto para um plano a parte com um trigger do event + inhibits do freeroam + e mandar um internal event para parar o freeroam
-		// Message receiving in the plan.
-		System.out.println("Waiting for request_trip");
-		IMessageEvent request = waitForMessageEvent("request_trip");
-		System.out.println("Received request_trip");
-		
-		Party party = (Party)request.getParameter(SFipa.CONTENT).getValue();
-		//if(party.get_destination() blabla) //TODO testes de aceitacao (gasolina etc)
-		IMessageEvent reply = getEventbase().createReply(request,"agree_trip");
-		//else IMessageEvent reply = getEventbase().createReply(request,"refuse_trip");
-		sendMessage(reply);
-		System.out.println("AGREED!!");
+		};	
 	}
 }

@@ -18,8 +18,8 @@ public class PlanUtil {
 		return communicator;
 	}
 	
-	private final static int CUSTOMER_PORTS = 6000;
-	private final static int TAXI_PORTS = 7000;
+	private final static int CUSTOMER_PORTS = 55000;
+	private final static int TAXI_PORTS = 57000;
 	private static int getPort(String id){
 		String name;
 		int i_port=0;
