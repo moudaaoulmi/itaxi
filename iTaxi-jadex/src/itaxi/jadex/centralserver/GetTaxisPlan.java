@@ -23,9 +23,11 @@ public class GetTaxisPlan extends Plan {
 	public void body() {
 		System.out.println("GetTaxisPlan body");
 		IComponentIdentifier[] ta = getTaxis();
-		for(IComponentIdentifier ici : ta ) {
-			System.out.println("Found taxi:" + ici);
-		}
+//		for(IComponentIdentifier ici : ta ) {
+//			System.out.println("Found taxi:" + ici);
+//		}
+		
+		getParameter("taxis").setValue(ta);
 	}
 
 	public IComponentIdentifier[] getTaxis() {

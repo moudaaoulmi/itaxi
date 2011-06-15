@@ -11,11 +11,17 @@
 		<import>jadex.planlib.*</import>
 		<import>java.util.logging.*</import>
 		<import>itaxi.communications.communicator.Communicator</import>
+		<import>jadex.bridge.IComponentIdentifier</import>
+		<import>jadex.bdi.planlib.protocols.ParticipantProposal</import>
+		<import>jadex.bdi.planlib.protocols.NegotiationRecord</import>
+		<import>itaxi.messages.entities.Party</import>
+		<import>itaxi.messages.coordinates.Coordinates</import>
 	</imports> 
 
 	<capabilities>
 		<!-- Include the directory facilitator capability under the name dfcap. -->
 		<capability name="dfcap" file="jadex.bdi.planlib.df.DF" />
+		<capability name="procap" file="jadex.bdi.planlib.protocols.contractnet.ContractNet"/>
 	</capabilities>
 
 	<beliefs>
@@ -26,6 +32,15 @@
 	</beliefs>
 	
 	<goals>
+	
+		<performgoal name="getTaxis">
+			<parameter name="taxis" class="IComponentIdentifier[]" direction="out"/>
+		</performgoal>
+		
+		<performgoal name="assignParty">
+			<parameter name="party" class="Party" direction="in"/>
+		</performgoal>
+		
 
 		<!-- Imported DF-Goals -->
 
@@ -42,17 +57,70 @@
 			<concrete ref="dfcap.df_deregister"/>
 		</achievegoalref>
 		
+		
+		<!-- Contract Network Goals -->
+		 <achievegoalref name="cnp_initiate">
+        	<concrete ref="procap.cnp_initiate"/>
+    	 </achievegoalref>
+    	 <querygoalref name="cnp_evaluate_proposals">
+        	<concrete ref="procap.cnp_evaluate_proposals"/>
+    	 </querygoalref>	
 	</goals>
 
 	<plans>
-		<plan name="getTaxis">
+	
+		<plan name="assignPartyPlan">
+			<parameter name="party" class="Party">
+				<goalmapping ref="assignParty.party"/>
+			</parameter>
+			<body class="AssignPartyPlan"/>
+			<trigger>
+				<goal ref="assignParty"/>
+			</trigger>
+		</plan>
+	
+		<plan name="getTaxisPlan">
+			<parameter name="taxis" class="IComponentIdentifier[]">
+				<goalmapping ref="getTaxis.taxis" />
+			</parameter>
 			<body class="GetTaxisPlan"></body>
+			<trigger>
+				<goal ref="getTaxis">
+				</goal>
+			</trigger>
 		</plan>
 		
 		<plan name="die">
 			<body class="DiePlan">
 			</body>
 		</plan>
+		
+		<!-- Contract Network Plans -->
+		
+		<plan name="evaluateProposalsPlan">
+	        <parameter name="cfp" class="Object">
+	            <goalmapping ref="cnp_evaluate_proposals.cfp"/>
+	        </parameter>
+	        <parameter name="cfp_info" class="Object" direction="inout" optional="true">
+	            <goalmapping ref="cnp_evaluate_proposals.cfp_info"/>
+	        </parameter>
+	        <parameterset name="proposals" class="ParticipantProposal">
+	            <goalmapping ref="cnp_evaluate_proposals.proposals"/>
+	        </parameterset>
+	        <parameterset name="history" class="NegotiationRecord" optional="true">
+	            <goalmapping ref="cnp_evaluate_proposals.history"/>
+	        </parameterset>
+	        <parameterset name="acceptables" class="ParticipantProposal" direction="out">
+	            <goalmapping ref="cnp_evaluate_proposals.acceptables"/>
+	        </parameterset>
+	        <body class="EvaluateProposalsPlan">
+				</body>
+	        <trigger>
+	            <goal ref="cnp_evaluate_proposals"/>
+	        </trigger>
+    </plan>
+		
+		
 	</plans>
   
 	<properties>
@@ -79,6 +147,15 @@
 						<value>20000</value>
 					</parameter>
 				</initialgoal>
+				
+				
+				<initialgoal ref="assignParty">
+					<parameter ref="party">
+						<value>
+							new Party("party",2,new Coordinates(10000,1000), new Coordinates(10000,1000))
+ 						</value>
+					</parameter>
+				</initialgoal>
 
 
 				<!-- End goal to deregister the agent at shutdown. -->
@@ -86,7 +163,7 @@
 			</goals>
 			
 			<plans>
-				<initialplan ref="getTaxis" />
+				<!--  initialplan ref="getTaxis" /-->
 				<endplan ref="die" />
 			</plans>
 		</configuration>
