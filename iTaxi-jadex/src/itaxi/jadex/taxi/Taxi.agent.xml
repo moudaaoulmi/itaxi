@@ -46,12 +46,24 @@
 		<belief name="maxgas" class="int">
 			<fact>100</fact>
 		</belief>
+		
+		<belief name="customerAccepted" class="boolean">
+			<fact>false</fact>
+		</belief>
 
 	</beliefs>
 
 	<goals>
+		<performgoal name="serviceCustomer" recur="true">
+		</performgoal>
 
 		<!-- Sub-Goals -->
+		<achievegoal name="findCustomer" recur="true">
+			<targetcondition>
+				$beliefbase.customerAccepted
+			</targetcondition>
+		</achievegoal>
+
 		<achievegoal name="move" recur="true" recurdelay="1000">
 			<parameter name="goalLatitude" class="int" />
 			<parameter name="goalLongitude" class="int" />
@@ -80,6 +92,32 @@
 	</goals>
 
 	<plans>
+		<plan name="ServiceCustomerPlan">
+			<body class="ServiceCustomerPlan">
+			</body>
+			<trigger>
+				<goal ref="serviceCustomer">
+				</goal>
+			</trigger>
+		</plan>
+		
+		<!-- Receives requests from nearby customers and agrees/refuses the service -->
+		<plan name="ReceiveRequestPlan">
+			<body class="ReceiveRequestPlan">
+			</body>
+			<trigger>
+				<messageevent ref="request_trip" />
+			</trigger>
+		</plan>
+		
+		<plan name="freeroam" priority="-1">
+			<body class="FreeRoamPlan" />
+			<trigger>
+				<goal ref="findCustomer">
+				</goal>
+			</trigger>
+		</plan>
+		
 		<plan name="submoveto">
 			<parameter name="goalLatitude" class="int">
 				<goalmapping ref="move.goalLatitude" />
@@ -95,14 +133,6 @@
 				<goal ref="move">
 				</goal>
 			</trigger>
-
-		</plan>
-
-		<plan name="freeroam" priority="-1">
-			<parameter name="clientRequest" class="String">
-				<messageeventmapping ref="request_trip.content" />
-			</parameter>
-			<body class="FreeRoamPlan" />
 		</plan>
 
 		<plan name="die">
@@ -118,8 +148,8 @@
 				<value>SFipa.REQUEST</value>
 			</parameter>
 			<match>$content instanceof Party
-					&amp;&amp;
-					$sender.getName().startsWith("Customer")
+				&amp;&amp;
+				$sender.getName().startsWith("Customer")
 			</match>
 		</messageevent>
 		<messageevent name="agree_trip" type="fipa" direction="send">
@@ -156,11 +186,14 @@
 							.createDFComponentDescription(null,
 							$propertybase.getProperty("dfservice")
 							.createDFServiceDescription("service_taxi", "taxi", "IST"))
- 						</value>
+						</value>
 					</parameter>
 					<parameter ref="leasetime">
 						<value>20000</value>
 					</parameter>
+				</initialgoal>
+
+				<initialgoal ref="serviceCustomer">
 				</initialgoal>
 
 				<!-- End goal to deregister the agent at shutdown. -->
@@ -168,7 +201,6 @@
 			</goals>
 
 			<plans>
-				<initialplan ref="freeroam" />
 				<endplan ref="die" />
 			</plans>
 		</configuration>

@@ -7,9 +7,15 @@ import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Party;
+import itaxi.messages.exceptions.PartySizeException;
+import jadex.base.fipa.SFipa;
 import jadex.bdi.runtime.GoalFailureException;
 import jadex.bdi.runtime.IGoal;
+import jadex.bdi.runtime.IInternalEvent;
+import jadex.bdi.runtime.IMessageEvent;
 import jadex.bdi.runtime.Plan;
+import jadex.bridge.ComponentIdentifier;
+import jadex.bridge.IComponentIdentifier;
 
 public class GotoDestinationPlan extends Plan {
 
@@ -40,7 +46,7 @@ public class GotoDestinationPlan extends Plan {
 		try
 		{
 		  dispatchSubgoalAndWait(goal);
-		  System.out.println("Dispatch callTaxi goal!");
+		  System.out.println("Dispatched callTaxi goal!");
 		  //getLogger().info("Translated from "+goal+" "+
 		  //word+" - "+goal.getParameter("result").getValue());
 		}
@@ -48,6 +54,41 @@ public class GotoDestinationPlan extends Plan {
 		{
 		  System.out.println("Couldn't dispatch goal callTaxi!");
 		}
+		
+		
+		// ---------    EnterTaxiPlan
+		IInternalEvent event = waitForInternalEvent("taxi_nearby"); // TODO TIMEOUT
+		Message taximsg = (Message) event.getParameter("taxi").getValue();
+
+		if (taximsg.getType() == MessageType.TAXI_ROAMING) {
+
+			// Customer is near a Taxi
+			IComponentIdentifier taxi = (IComponentIdentifier) new Gson().fromJson(taximsg.getContent(),
+					ComponentIdentifier.class);
+
+			Party party = null;
+			try {
+				party = new Party(getScope().getAgentName(), 1, 
+						(Integer) getBeliefbase().getBelief("latitude").getFact(), 
+						(Integer) getBeliefbase().getBelief("longitude").getFact(), 
+						(Integer) getParameter("destinationLatitude").getValue(), 
+						(Integer) getParameter("destinationLongitude").getValue());
+			} catch (PartySizeException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+
+			IMessageEvent me = createMessageEvent("request_trip");
+			me.getParameterSet(SFipa.RECEIVERS).addValue(taxi);
+			me.getParameter(SFipa.CONTENT).setValue(party);
+
+			IMessageEvent reply = sendMessageAndWait(me); // TODO add timeout
+			if (reply.getMessageType().equals(SFipa.AGREE)) {
+
+			} else
+				fail();
+		} else
+			fail();
 			
 	}
 	
