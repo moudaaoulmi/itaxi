@@ -15,6 +15,7 @@
 		<import>jadex.bridge.IComponentIdentifier</import>
 		<import>itaxi.communications.communicator.*</import>
 		<import>itaxi.communications.messages.Message</import>
+		<import>java.util.Date</import>
 	</imports>
 
 	<capabilities>
@@ -35,13 +36,27 @@
 			<fact>-9138608</fact>
 		</belief>
 
-		<belief name="emotional_state" class="int">
-			<fact>1000</fact>
+		<belief name="emotional_state" class="CustomerState">
+			<fact>CustomerState.HAPPY</fact>
+		</belief>
+		
+		<belief name="taxi_call_time" class="Date">
+			<fact>null</fact>
 		</belief>
 
 	</beliefs>
 
 	<goals>
+		<performgoal name="updateEmotionsGoal">
+			 <creationcondition language="jcl">
+   	 			($beliefbase.emotional_state == CustomerState.HAPPY &amp;&amp;
+   	 			$beliefbase.taxi_call_time.getMinutes() - UpdateEmotionsPlan.getDate().getMinutes() > 5) ||
+   	 			($beliefbase.emotional_state == CustomerState.IMPACIENT &amp;&amp;
+   	 			$beliefbase.taxi_call_time.getMinutes() - UpdateEmotionsPlan.getDate().getMinutes() > 10)
+  			</creationcondition>
+			
+		</performgoal>
+	
 		<achievegoal name="gotoDestination">
 			<parameter name="destinationLatitude" class="int" />
 			<parameter name="destinationLongitude" class="int" />
@@ -77,6 +92,13 @@
 	</goals>
 
 	<plans>
+		<plan name="UpdateEmotionsPlan">
+			<body class="UpdateEmotionsPlan"></body>
+			<trigger>
+				<goal ref="updateEmotionsGoal"/>
+			</trigger>
+		</plan>
+	
 		<plan name="GotoDestinationPlan">
 			<parameter name="destinationLatitude" class="int">
 				<goalmapping ref="gotoDestination.destinationLatitude" />
