@@ -49,7 +49,7 @@ import com.google.gson.Gson;
 public class iTaxiMainActivity extends MapActivity {
 	
 	//distance between vehicle and party in meters
-	private static int NEARBY_DISTANCE = 5;
+	private static int NEARBY_DISTANCE = 10;
 	
 	//initial ports
 	private final static int CUSTOMER_PORTS = 55000;
@@ -528,10 +528,12 @@ public class iTaxiMainActivity extends MapActivity {
 				ID = message.getContent();
 				Log.d("Monitor", "RECEIVED REMOVE PARTY:" + ID);
 				Party p = parties.get(ID);
-				removeFromMap(p);
-				parties.remove(ID);
-				waitingParties.remove(ID);
-				//partiesSocks.remove(ID);				
+				if(p!=null) {
+					removeFromMap(p);
+					parties.remove(ID);
+					waitingParties.remove(ID);
+				//partiesSocks.remove(ID);		
+				}
 				break;
 			case PARTY_WAITING:
 				ID = message.getContent();
@@ -550,8 +552,8 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private void checkPositions(Vehicle v) {
 		for(String partyID : waitingParties) {
-			//Log.d("Monitor", "wating party:"+partyID + ""+ parties.containsKey(partyID));
 			Party p = parties.get(partyID);
+			Log.d("Monitor", "wating party:"+partyID + "distance:" + v.getPosition().distanceTo(p.getPosition()));
 			if(v.getPosition().distanceTo(p.getPosition()) < NEARBY_DISTANCE) {
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
