@@ -23,7 +23,7 @@ public class ReceiveRequestPlan extends Plan {
 		Party party = (Party)request.getParameter(SFipa.CONTENT).getValue();
 		
 		party.set_agentID((IComponentIdentifier) request.getParameter(SFipa.SENDER).getValue());
-		
+		 
 		IMessageEvent reply;
 		//testes de aceitacao TODO adicionar (gasolina etc)
 		if(party.getSize() > 

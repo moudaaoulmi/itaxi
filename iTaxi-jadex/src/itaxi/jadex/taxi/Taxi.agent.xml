@@ -30,16 +30,16 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38741499</fact>
+			<fact>38742168</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9144959</fact>
+			<fact>-9134204</fact>
 		</belief>
 
-		<!-- for now, step in meters for each recurdelay in the move sub-goal -->
+		<!-- velocity in m/s -->
 		<belief name="velocity" class="int">
-			<fact>100</fact>
+			<fact>15</fact>
 		</belief>
 
 		<belief name="gas" class="int">
@@ -70,13 +70,20 @@
 		</performgoal>
 
 		<!-- Sub-Goals -->
-		<achievegoal name="findCustomer" retry="true" exclude="never">
+		<achievegoal name="findCustomer" retry="true" exclude="never" retrydelay="100">
 			<targetcondition>
 				$beliefbase.customerAccepted != null
 			</targetcondition>
 		</achievegoal>
-
-		<achievegoal name="move" recur="true" recurdelay="1000">
+		
+		<!-- Go to destination -->
+		<performgoal name="gotodestination">
+			<parameter name="goalLatitude" class="int" />
+			<parameter name="goalLongitude" class="int" />
+		</performgoal>
+		
+		<!-- Sub-goal of gotodestination -->
+		<achievegoal name="submove" recur="true" recurdelay="1000">
 			<parameter name="goalLatitude" class="int" />
 			<parameter name="goalLongitude" class="int" />
 			<targetcondition>
@@ -148,6 +155,23 @@
 			</trigger>
 		</plan>
 
+		<plan name="GotoDestination">
+			<parameter name="goalLatitude" class="int">
+				<goalmapping ref="move.goalLatitude" />
+			</parameter>
+			<parameter name="goalLongitude" class="int">
+				<goalmapping ref="move.goalLongitude" />
+			</parameter>
+
+			<body class="GotoDestinationPlan">
+			</body>
+
+			<trigger>
+				<goal ref="gotodestination">
+				</goal>
+			</trigger>
+		</plan>
+		
 		<plan name="submoveto">
 			<parameter name="goalLatitude" class="int">
 				<goalmapping ref="move.goalLatitude" />
@@ -160,7 +184,7 @@
 			</body>
 
 			<trigger>
-				<goal ref="move">
+				<goal ref="submove">
 				</goal>
 			</trigger>
 		</plan>
