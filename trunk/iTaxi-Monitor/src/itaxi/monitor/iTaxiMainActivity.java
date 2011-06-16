@@ -3,11 +3,9 @@ package itaxi.monitor;
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.Station;
 import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
 import itaxi.monitor.MapItems.Elements;
-
 import jadex.bridge.ComponentIdentifier;
 
 import java.io.BufferedReader;
@@ -15,17 +13,13 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.HashMap;
-
+import java.util.HashSet;
+import java.util.List;
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -50,7 +44,6 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class iTaxiMainActivity extends MapActivity {
 	
