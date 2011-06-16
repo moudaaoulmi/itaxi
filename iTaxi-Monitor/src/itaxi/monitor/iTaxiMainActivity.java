@@ -148,8 +148,8 @@ public class iTaxiMainActivity extends MapActivity {
         //partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
         
         partyHappyItems = new MapItems(Elements.PARTIESHAPPY, getResources().getDrawable(R.drawable.partyhappy), this);
-        partyImpacientItems = new MapItems(Elements.PARTIESIMPACIENT, getResources().getDrawable(R.drawable.partyhappy), this);
-        partyAngryItems = new MapItems(Elements.PARTIESANGRY, getResources().getDrawable(R.drawable.partyhappy), this);
+        partyImpacientItems = new MapItems(Elements.PARTIESIMPACIENT, getResources().getDrawable(R.drawable.partyimpacient), this);
+        partyAngryItems = new MapItems(Elements.PARTIESANGRY, getResources().getDrawable(R.drawable.partyangry), this);
         
         //Init map information
         init();
@@ -312,12 +312,19 @@ public class iTaxiMainActivity extends MapActivity {
 		switch(state){
 		case HAPPY:
 			items = partyHappyItems;
+			Log.d("Update", "insertOnMap HAPPY");
+			break;
+		case INIT:
+			items = partyHappyItems;
+			Log.d("Update", "insertOnMap HAPPY");
 			break;
 		case IMPACIENT:
 			items = partyImpacientItems;
+			Log.d("Update", "insertOnMap IMPACIENT");
 			break;
 		case ANGRY:
 			items = partyAngryItems;
+			Log.d("Update", "insertOnMap ANGRY");
 			break;
 		default:
 			Log.d("Monitor", "Party with no state!");	
@@ -389,6 +396,7 @@ public class iTaxiMainActivity extends MapActivity {
     
     private void updatePartyPosition(Party party) {
     	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
+    	Log.d("Update", "updatePartyPosition " + party.getState());
     	/*
     	//if(partyItems.containsOverlay(party.getPartyID()))
     		partyItems.removeOverlay(party.getPartyID());
@@ -412,6 +420,10 @@ public class iTaxiMainActivity extends MapActivity {
 			break;
 		case ANGRY:
 			items = partyAngryItems;
+			break;
+		case INIT:
+			items = partyHappyItems;
+			Log.d("Update", "insertOnMap HAPPY");
 			break;
 		default:
 			Log.d("Monitor", "Party with no state!");	
@@ -499,6 +511,7 @@ public class iTaxiMainActivity extends MapActivity {
 			case UPDATEPARTY:
 				Party part = new Gson().fromJson(message.getContent(), Party.class);
 				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID());
+				Log.d("Update", "RECEIVED UPDATEPARTY:" + part.getPartyID() + " " + part.getState());
 				addParty(part);
 				/*if(!partiesSocks.containsKey(part.getPartyID())) 
 					partiesSocks.put(part.getPartyID(),port);*/
