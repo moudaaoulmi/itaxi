@@ -39,7 +39,7 @@
 		<belief name="emotional_state" class="CustomerState">
 			<fact>CustomerState.HAPPY</fact>
 		</belief>
-		
+
 		<belief name="taxi_call_time" class="Date">
 			<fact>null</fact>
 		</belief>
@@ -47,13 +47,18 @@
 	</beliefs>
 
 	<goals>
+
+		<performgoal name="getCentralServerGoal">
+			<parameter name="centralServer" class="IComponentIdentifier[]" direction="out" />
+		</performgoal>
+
 		<performgoal name="updateEmotionsGoal">
 			 <creationcondition language="jcl">
    	 			UpdateEmotionsPlan.isUpdate($beliefbase.emotional_state,$beliefbase.taxi_call_time)
   			</creationcondition>
-			
+
 		</performgoal>
-	
+
 		<achievegoal name="gotoDestination">
 			<parameter name="destinationLatitude" class="int" />
 			<parameter name="destinationLongitude" class="int" />
@@ -89,13 +94,24 @@
 	</goals>
 
 	<plans>
+
+		<plan name="getCentralServerPlan">
+			<parameter name="centralServer" class="IComponentIdentifier[]" direction="out">
+				<goalmapping ref="getCentralServerGoal.centralServer"/>
+			</parameter>
+			<body class="GetCentralServerPlan"></body>
+			<trigger>
+				<goal ref="getCentralServerGoal"/>
+			</trigger>
+		</plan>
+
 		<plan name="UpdateEmotionsPlan">
 			<body class="UpdateEmotionsPlan"></body>
 			<trigger>
-				<goal ref="updateEmotionsGoal"/>
+				<goal ref="updateEmotionsGoal" />
 			</trigger>
 		</plan>
-	
+
 		<plan name="GotoDestinationPlan">
 			<parameter name="destinationLatitude" class="int">
 				<goalmapping ref="gotoDestination.destinationLatitude" />
@@ -113,13 +129,23 @@
 
 		</plan>
 
-		<!-- <plan name="callTaxiCentral"> <parameter name="destinationLatitude" 
-			class="int"> <goalmapping ref="callTaxi.destinationLatitude" /> </parameter> 
-			<parameter name="destinationLongitude" class="int"> <goalmapping ref="callTaxi.destinationLongitude" 
-			/> </parameter> <body class="CallTaxiCentralPlan"> </body> <trigger> <goal 
-			ref="callTaxi"> </goal> </trigger> </plan> -->
+		<plan name="callTaxiCentral">
+			<parameter name="destinationLatitude" class="int">
+				<goalmapping ref="callTaxi.destinationLatitude" />
+			</parameter>
+			<parameter name="destinationLongitude" class="int">
+				<goalmapping ref="callTaxi.destinationLongitude" />
+			</parameter>
+			<body class="CallTaxiCentralPlan">
+			</body>
+			<trigger>
+				<goal ref="callTaxi">
+				</goal>
+			</trigger>
+		</plan>
 
-		<plan name="callTaxiManual">			
+		<!-- 
+		<plan name="callTaxiManual">
 			<body class="CallTaxiManualPlan">
 			</body>
 			<trigger>
@@ -127,6 +153,7 @@
 				</goal>
 			</trigger>
 		</plan>
+		 -->
 
 		<plan name="die">
 			<body class="DiePlan">
@@ -138,6 +165,16 @@
 		<internalevent name="taxi_nearby">
 			<parameter name="taxi" class="Message" />
 		</internalevent>
+		
+		
+		<messageevent name="requestTaxi" type="fipa" direction="send">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.JADEX_XML</value>
+			</parameter>
+		</messageevent>
 
 		<messageevent name="request_trip" type="fipa" direction="send">
 			<parameter name="performative" class="String" direction="fixed">
