@@ -9,7 +9,6 @@ import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.jadex.PlanUtil;
 import itaxi.messages.entities.Party;
-import itaxi.messages.exceptions.PartySizeException;
 import jadex.base.fipa.SFipa;
 import jadex.bdi.runtime.IInternalEvent;
 import jadex.bdi.runtime.IMessageEvent;

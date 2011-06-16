@@ -2,7 +2,6 @@ package itaxi.messages.entities;
 
 import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.coordinates.Coordinates;
-import itaxi.messages.exceptions.PartySizeException;
 
 import jadex.bridge.IComponentIdentifier;
 
@@ -68,9 +67,7 @@ public class Party {
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
-	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
-		if(size < 0 || size > 4)
-			throw new PartySizeException();
+	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude/*, PartyState bookState*/) {
 		//this.station = station;
 		_agentID=agentID;
 		this.partyID = partyID;
@@ -81,9 +78,7 @@ public class Party {
 		//this.bookState = bookState;
 	}
 	
-	public Party(String partyID,  int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
-		if(size < 0 || size > 4)
-			throw new PartySizeException();
+	public Party(String partyID,  int size, int latitude, int longitude/*, PartyState bookState*/) {
 		//this.station = station;
 		this.partyID = partyID;
 		this.size = size;
@@ -93,9 +88,7 @@ public class Party {
 		//this.bookState = bookState;
 	}
 
-	public Party(String partyID, int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) throws PartySizeException{
-		if(size < 0 || size > 4)
-			throw new PartySizeException();
+	public Party(String partyID, int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) {
 		//this.station = station;
 		this.partyID = partyID;
 		this.size = size;
@@ -105,9 +98,7 @@ public class Party {
 		//this.bookState = bookState;
 	}
 	
-	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) throws PartySizeException{
-		if(size < 0 || size > 4)
-			throw new PartySizeException();
+	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude, int destLat, int destLon/*, PartyState bookState*/) {
 		//this.station = station;
 		_agentID=agentID;
 		this.partyID = partyID;

@@ -30,11 +30,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38742365</fact>
+			<fact>38741499</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9140106</fact>
+			<fact>-9144959</fact>
 		</belief>
 
 		<!-- for now, step in meters for each recurdelay in the move sub-goal -->
@@ -54,21 +54,25 @@
 		<beliefref name="cnp_filter">
         	<concrete ref="procap.cnp_filter"/>
         </beliefref>
-		
-		<belief name="customerAccepted" class="boolean">
-			<fact>false</fact>
+
+		<belief name="party_capacity" class="int">
+			<fact>4</fact>
+		</belief>
+
+		<belief name="customerAccepted" class="Party">
+			<fact>null</fact>
 		</belief>
 
 	</beliefs>
 
 	<goals>
-		<performgoal name="serviceCustomer" recur="true">
+		<performgoal name="serviceCustomer" recur="true"> <!-- recur="true"> -->
 		</performgoal>
 
 		<!-- Sub-Goals -->
-		<achievegoal name="findCustomer" recur="true">
+		<achievegoal name="findCustomer" retry="true" exclude="never">
 			<targetcondition>
-				$beliefbase.customerAccepted
+				$beliefbase.customerAccepted != null
 			</targetcondition>
 		</achievegoal>
 
@@ -126,7 +130,7 @@
 				</goal>
 			</trigger>
 		</plan>
-		
+
 		<!-- Receives requests from nearby customers and agrees/refuses the service -->
 		<plan name="ReceiveRequestPlan">
 			<body class="ReceiveRequestPlan">
@@ -135,7 +139,7 @@
 				<messageevent ref="request_trip" />
 			</trigger>
 		</plan>
-		
+
 		<plan name="freeroam" priority="-1">
 			<body class="FreeRoamPlan" />
 			<trigger>
@@ -143,7 +147,7 @@
 				</goal>
 			</trigger>
 		</plan>
-		
+
 		<plan name="submoveto">
 			<parameter name="goalLatitude" class="int">
 				<goalmapping ref="move.goalLatitude" />
@@ -205,7 +209,6 @@
 	</plans>
 
 	<events>
-		<!-- BEGIN FreeRoam Messages -->
 		<messageevent name="request_trip" type="fipa" direction="receive">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
@@ -215,6 +218,7 @@
 				$sender.getName().startsWith("Customer")
 			</match>
 		</messageevent>
+
 		<messageevent name="agree_trip" type="fipa" direction="send">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.AGREE</value>
@@ -225,7 +229,12 @@
 				<value>SFipa.REFUSE</value>
 			</parameter>
 		</messageevent>
-		<!-- END FreeRoam Messages -->
+
+		<messageevent name="reached_destination" type="fipa" direction="send">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.INFORM</value>
+			</parameter>
+		</messageevent>
 	</events>
 
 	<properties>

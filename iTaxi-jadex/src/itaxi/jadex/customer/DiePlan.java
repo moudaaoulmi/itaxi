@@ -16,7 +16,6 @@ public class DiePlan extends Plan {
 		
 		Message message = new Message(MessageType.REMOVE_PARTY);
 		message.setContent(getScope().getAgentName());
-
 		Communicator.sendMessage("localhost", 8002, message);
 
 		Communicator communicator = (Communicator) getBeliefbase().getBelief("monitorCom").getFact();
