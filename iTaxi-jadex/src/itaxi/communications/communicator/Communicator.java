@@ -119,7 +119,7 @@ public class Communicator extends Thread {
 			String msg = new Gson().toJson(message);
 			writer.write(msg + "\n");
 			writer.flush();
-			System.out.println("Send Message: " + msg);
+			//System.out.println("Send Message: " + msg);
 			writer.close();
 			socket.close();
 		} catch (UnknownHostException e) {

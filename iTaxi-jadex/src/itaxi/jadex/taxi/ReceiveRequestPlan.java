@@ -35,6 +35,7 @@ public class ReceiveRequestPlan extends Plan {
 			reply = getEventbase().createReply(request,"agree_trip");
 			System.out.println("AGREED party!!");
 			getBeliefbase().getBelief("customerAccepted").setFact(party);
+			getBeliefbase().getBelief("pickingCustomer").setFact(false);
 		}
 		
 		sendMessage(reply);

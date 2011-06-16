@@ -14,12 +14,17 @@ public class PickPartyPlan extends Plan{
 		
 		System.out.println("PickPartyPlan will move to party=" + party.getPartyID() + " at " + party.get_position());
 		
-		IGoal moveToParty = createGoal("move");
+		getBeliefbase().getBelief("customerAccepted").setFact(party);
+		getBeliefbase().getBelief("pickingCustomer").setFact(true);
+		
+		IGoal moveToParty = createGoal("gotodestination");
 		moveToParty.getParameter("goalLatitude").setValue(party.getPosition().getLatitude());
 		moveToParty.getParameter("goalLongitude").setValue(party.getPosition().getLongitude());
-		dispatchSubgoal(moveToParty);
+		dispatchTopLevelGoal(moveToParty);
 		
-		System.out.println(getScope().getAgentName());
+		System.out.println(getScope().getAgentName() + " dispatched move goal to (" +
+				(Integer) moveToParty.getParameter("goalLatitude").getValue() + "," +
+				(Integer) moveToParty.getParameter("goalLongitude").getValue() + ")");
 		
 		getParameter("result").setValue(getScope().getAgentName());
 	}

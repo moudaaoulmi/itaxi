@@ -62,6 +62,10 @@
 		<belief name="customerAccepted" class="Party">
 			<fact>null</fact>
 		</belief>
+		
+		<belief name="pickingCustomer" class="boolean">
+			<fact>false</fact>
+		</belief>
 
 	</beliefs>
 
@@ -71,6 +75,9 @@
 
 		<!-- Sub-Goals -->
 		<achievegoal name="findCustomer" retry="true" exclude="never" retrydelay="100">
+			<dropcondition>
+				$beliefbase.pickingCustomer == true
+			</dropcondition>
 			<targetcondition>
 				$beliefbase.customerAccepted != null
 			</targetcondition>
