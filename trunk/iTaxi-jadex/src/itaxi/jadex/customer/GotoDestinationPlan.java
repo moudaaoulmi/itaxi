@@ -94,6 +94,7 @@ public class GotoDestinationPlan extends Plan {
 				getBeliefbase().getBelief("latitude").setFact(destinationLatitude);
 				getBeliefbase().getBelief("longitude").setFact(destinationLongitude);
 				updateGUIcoordinates(destinationLatitude, destinationLongitude);
+				getBeliefbase().getBelief("taxi_call_time").setFact(null);
 				System.out.println("Customer: Reached destination!!");
 				
 			} else {
