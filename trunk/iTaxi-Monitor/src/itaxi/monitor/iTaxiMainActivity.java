@@ -4,9 +4,11 @@ import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.entities.Party;
+import itaxi.messages.entities.Station;
 import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
 import itaxi.monitor.MapItems.Elements;
+
 import jadex.bridge.ComponentIdentifier;
 
 import java.io.BufferedReader;
@@ -14,13 +16,17 @@ import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.lang.reflect.Type;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.HashMap;
+
 
 import org.apache.commons.net.telnet.TelnetClient;
 
@@ -45,11 +51,12 @@ import com.google.android.maps.MapController;
 import com.google.android.maps.MapView;
 import com.google.android.maps.Overlay;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class iTaxiMainActivity extends MapActivity {
 	
 	//distance between vehicle and party in meters
-	private static int NEARBY_DISTANCE = 10;
+	private static int NEARBY_DISTANCE = 5;
 	
 	//initial ports
 	private final static int CUSTOMER_PORTS = 55000;
@@ -65,6 +72,8 @@ public class iTaxiMainActivity extends MapActivity {
 	private List<Overlay> mapOverlays;
 	
 	private MapItems vehicleItems;
+	//private MapItems partyItems;
+	
 	private MapItems partyHappyItems;
 	private MapItems partyImpacientItems; 
 	private MapItems partyAngryItems;
@@ -77,8 +86,7 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private HashMap<String,Vehicle> vehicles  = new HashMap<String,Vehicle>();;
 	private HashMap<String,Party> parties  = new HashMap<String,Party>();;
-	//private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();   
-	
+	//private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();
 
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
@@ -144,10 +152,12 @@ public class iTaxiMainActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         //stationItems = new MapItems(Elements.STATIONS, getResources().getDrawable(R.drawable.station), this);
         vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
+        //partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
+        
         partyHappyItems = new MapItems(Elements.PARTIESHAPPY, getResources().getDrawable(R.drawable.partyhappy), this);
         partyImpacientItems = new MapItems(Elements.PARTIESIMPACIENT, getResources().getDrawable(R.drawable.partyhappy), this);
         partyAngryItems = new MapItems(Elements.PARTIESANGRY, getResources().getDrawable(R.drawable.partyhappy), this);
-       
+        
         //Init map information
         init();
 	}
@@ -280,9 +290,28 @@ public class iTaxiMainActivity extends MapActivity {
     	mapView.invalidate();
 	}
 	
+	private void removePartyFromMapItems(Party party){
+		removePartyFromMapItem(party,partyHappyItems);
+		removePartyFromMapItem(party,partyImpacientItems);
+		removePartyFromMapItem(party,partyAngryItems);
+    }
+    
+    private void removePartyFromMapItem(Party party, MapItems items){  
+    	if(items.containsOverlay(party.getPartyID())){
+	    	mapOverlays.remove(items);
+	    	items.removeOverlay(party.getPartyID());
+	    	mapOverlays.add(items); 
+	    	mapView.invalidate();
+    	}
+    }
 	
 	private void insertOnMap(Party part){
 		GeoPoint p = new GeoPoint(part.getPosition().getLatitude(), part.getPosition().getLongitude());
+		
+		removePartyFromMapItems(part);
+		
+		/*if(partyItems.containsOverlay(part.getPartyID()))
+    		partyItems.removeOverlay(part.getPartyID());*/
 		
 		CustomerState state = part.getState();
 		MapItems items = null;
@@ -301,10 +330,6 @@ public class iTaxiMainActivity extends MapActivity {
 			Log.d("Monitor", "Party with no state!");	
 		}
 		
-		/*if(items.containsOverlay(part.getPartyID()))
-			items.removeOverlay(part.getPartyID());*/
-		removePartyFromMapItems(part);
-		
 		items.addOverlay(new MapOverlayItem(part.getPartyID(), p, "Party " + part.getPartyID(), "Welcome to iTaxi services!"));
 		
     	mapOverlays.remove(items);
@@ -314,34 +339,15 @@ public class iTaxiMainActivity extends MapActivity {
 	}
 	
 	private void removeFromMap(Party par){
-		
-		CustomerState state = par.getState();
-		MapItems items = null;
-		
-		switch(state){
-		case HAPPY:
-			items = partyHappyItems;
-			break;
-		case IMPACIENT:
-			items = partyImpacientItems;
-			break;
-		case ANGRY:
-			items = partyAngryItems;
-			break;
-		default:
-			Log.d("Monitor", "Party with no state!");	
-		}
-		
-		/*if(items.containsOverlay(par.getPartyID()))
-			items.removeOverlay(par.getPartyID());
+		/*if(partyItems.containsOverlay(par.getPartyID()))
+    		partyItems.removeOverlay(par.getPartyID());*/
 
-    	mapOverlays.remove(items);
-    	items.removeOverlay(par.getPartyID());*/
+    	/*mapOverlays.remove(partyItems);
+    	partyItems.removeOverlay(par.getPartyID());
+    	mapOverlays.add(partyItems); 
+    	mapView.invalidate();*/
 		
 		removePartyFromMapItems(par);
-		
-    	mapOverlays.add(items); 
-    	mapView.invalidate();
 	}
 	
 	//Sets the map properties
@@ -388,22 +394,19 @@ public class iTaxiMainActivity extends MapActivity {
     	mapView.invalidate();
     }
     
-    private void removePartyFromMapItems(Party party){
-		removePartyFromMapItem(party,partyHappyItems);
-		removePartyFromMapItem(party,partyImpacientItems);
-		removePartyFromMapItem(party,partyAngryItems);
-    }
-    
-    private void removePartyFromMapItem(Party party, MapItems items){
-    	if(items.containsOverlay(party.getPartyID()))    	
-    		items.removeOverlay(party.getPartyID());
-    	mapOverlays.remove(items);
-    	mapOverlays.add(items); 
-    	mapView.invalidate();
-    }
-    
     private void updatePartyPosition(Party party) {
     	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
+    	/*
+    	//if(partyItems.containsOverlay(party.getPartyID()))
+    		partyItems.removeOverlay(party.getPartyID());
+    		
+		partyItems.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
+    	mapOverlays.remove(partyItems);
+    	mapOverlays.add(partyItems); 
+    	mapView.invalidate();*/
+    	
+    	removePartyFromMapItems(party);
+    	
     	CustomerState state = party.getState();
 		MapItems items = null;
 		
@@ -420,18 +423,13 @@ public class iTaxiMainActivity extends MapActivity {
 		default:
 			Log.d("Monitor", "Party with no state!");	
 		}
-		
-    	/*if(items.containsOverlay(party.getPartyID()))    	
-    		items.removeOverlay(party.getPartyID());
-    	mapOverlays.remove(items);*/
-		
-		removePartyFromMapItems(party);
-		items.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
-		
+    	
+    	items.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
     	mapOverlays.add(items); 
     	mapView.invalidate();
     }
     
+       
     
 	/*//Show connect to server dialog
 	private void showConnectionDialog() {
@@ -528,11 +526,11 @@ public class iTaxiMainActivity extends MapActivity {
 				ID = message.getContent();
 				Log.d("Monitor", "RECEIVED REMOVE PARTY:" + ID);
 				Party p = parties.get(ID);
-				if(p!=null) {
+				if(p!=null){
 					removeFromMap(p);
 					parties.remove(ID);
 					waitingParties.remove(ID);
-				//partiesSocks.remove(ID);		
+					//partiesSocks.remove(ID);
 				}
 				break;
 			case PARTY_WAITING:
@@ -553,7 +551,7 @@ public class iTaxiMainActivity extends MapActivity {
 	private void checkPositions(Vehicle v) {
 		for(String partyID : waitingParties) {
 			Party p = parties.get(partyID);
-			Log.d("Monitor", "wating party:"+partyID + "distance:" + v.getPosition().distanceTo(p.getPosition()));
+			Log.d("Monitor", "wating party:"+partyID + " "+ v.getPosition().distanceTo(p.getPosition()));
 			if(v.getPosition().distanceTo(p.getPosition()) < NEARBY_DISTANCE) {
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
