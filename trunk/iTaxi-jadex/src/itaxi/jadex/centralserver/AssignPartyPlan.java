@@ -12,13 +12,27 @@ public class AssignPartyPlan extends Plan {
 
 	public void body() {
 		
-		// find available taxi agents
-		IGoal getTaxis = createGoal("getTaxis");
-		dispatchSubgoalAndWait(getTaxis);
-		IComponentIdentifier[] taxis = (IComponentIdentifier[]) getTaxis.getParameter("taxis").getValue();
+		System.out.println("AssignPartyPlan");
 		
+		// find available taxi agents
+		IGoal getTaxisGoal = createGoal("getTaxisGoal");
+		dispatchSubgoalAndWait(getTaxisGoal);
+		IComponentIdentifier[] taxis = (IComponentIdentifier[]) getTaxisGoal.getParameter("taxis").getValue();
+		
+		System.out.println("finnished finding taxis");
+		
+		if(taxis == null) {
+			System.out.println("no taxis available");
+			return;
+		}	
 		
 		Party party = (Party) getParameter("party").getValue();
+		if(party == null)
+			System.out.println("ta null");
+		else
+			System.out.println("nao ta null");
+		
+		System.out.println("Party name=" + party.getPartyID());
 		
 		// Initiate a call-for-proposal.
 		IGoal cnp = createGoal("cnp_initiate");
@@ -28,9 +42,8 @@ public class AssignPartyPlan extends Plan {
 		
 		dispatchSubgoalAndWait(cnp);
 		
-		PartyBid winningBid = (PartyBid) cnp.getParameter("result");
+		String winningBidder = (String) cnp.getParameterSet("result").getValues()[0];
 		
-		System.out.println("winingBidder: " + winningBid.getVehicleID() + 
-				" bid: " + winningBid.getBid());
+		System.out.println("winingBidder= " + winningBidder);
 	}
 }
