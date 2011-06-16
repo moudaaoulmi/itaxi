@@ -27,9 +27,7 @@ public class FreeRoamPlan extends Plan {
 	 * Execute a plan.
 	 */
 	public void body() {
-		
-		//while (true) {
-			
+					
 			if((Boolean)getBeliefbase().getBelief("pickingCustomer").getFact()) {
 				System.out.println("FreeRoamPlan: Waiting for pickedCustomer.");
 				waitForInternalEvent("pickedCustomer");
@@ -47,6 +45,5 @@ public class FreeRoamPlan extends Plan {
 																	// //TODO
 																	// lat lon
 			dispatchSubgoalAndWait(goal);
-		//}
 	}
 }
