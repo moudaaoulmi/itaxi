@@ -17,9 +17,14 @@ public class UpdateEmotionsPlan extends Plan{
 
 	private static final long serialVersionUID = -157047142458487574L;
 	
-	public static Date getDate()
-	{
-	  return new Date();
+	public static boolean isUpdate(CustomerState state, Date date){
+		
+		if(state == CustomerState.HAPPY && (new Date()).getTime() - date.getTime() > 50000)
+			return true;
+		if(state == CustomerState.IMPACIENT && (new Date()).getTime() - date.getTime() > 100000)
+			return true;
+		
+		return false;
 	}
 
 	@Override

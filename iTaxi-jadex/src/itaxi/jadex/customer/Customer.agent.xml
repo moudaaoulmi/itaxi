@@ -49,10 +49,7 @@
 	<goals>
 		<performgoal name="updateEmotionsGoal">
 			 <creationcondition language="jcl">
-   	 			($beliefbase.emotional_state == CustomerState.HAPPY &amp;&amp;
-   	 			$beliefbase.taxi_call_time.getMinutes() - UpdateEmotionsPlan.getDate().getMinutes() > 5) ||
-   	 			($beliefbase.emotional_state == CustomerState.IMPACIENT &amp;&amp;
-   	 			$beliefbase.taxi_call_time.getMinutes() - UpdateEmotionsPlan.getDate().getMinutes() > 10)
+   	 			UpdateEmotionsPlan.isUpdate()
   			</creationcondition>
 			
 		</performgoal>
