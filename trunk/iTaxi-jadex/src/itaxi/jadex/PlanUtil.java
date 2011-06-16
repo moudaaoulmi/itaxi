@@ -7,7 +7,11 @@ import jadex.bdi.runtime.Plan;
 public class PlanUtil {
 
 	public final static int MONITOR_PORT = 8002;
-	
+	/**
+	 * Gas spent rate per meter
+	 */
+	static double GAS_RATE = 0.00025;
+	//static double GAS_RATE = 0.1;
 	
 	public static Communicator getCommunicator(Plan plan) {
 		Communicator communicator = (Communicator) plan.getBeliefbase().

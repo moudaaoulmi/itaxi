@@ -28,17 +28,20 @@ public class ServiceCustomerPlan extends Plan {
 		// take customer to destination
 		final Coordinates destination = party.get_destination();
 		
+		System.out.println("ServiceCustomerPlan: Take customer " + party.getPartyID() + " to destination:"+ destination.getLatitude());
+		
 		IGoal gotodestination = createGoal("gotodestination");
 		gotodestination.getParameter("goalLatitude").setValue(destination.getLatitude());
 		gotodestination.getParameter("goalLongitude").setValue(destination.getLongitude());
 
 		dispatchSubgoalAndWait(gotodestination);
 
-		//TODO mandar mensagem ao customer a dizer q chegou ao destino
+		// mandar mensagem ao customer a dizer q chegou ao destino
 		IMessageEvent me = createMessageEvent("reached_destination");
 		me.getParameterSet(SFipa.RECEIVERS).addValue(party.get_agentID());
 		sendMessage(me);
-		
+		System.out.println("ServiceCustomerPlan: Reached destination.");
+
 		getBeliefbase().getBelief("customerAccepted").setFact(null);
 	}
 

@@ -23,7 +23,7 @@ public class ChargeGasPlan extends Plan {
 		
 		System.out.println(getScope().getAgentName() + " filled tank!");
 
-		//IGoal
+		getBeliefbase().getBelief("gas").setFact(getBeliefbase().getBelief("maxgas").getFact());
 		
 	}
 }
