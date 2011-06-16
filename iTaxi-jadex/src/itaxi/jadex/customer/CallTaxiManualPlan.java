@@ -1,6 +1,6 @@
 package itaxi.jadex.customer;
 
-import java.sql.Date;
+import java.util.Date;
 
 import com.google.gson.Gson;
 
@@ -37,10 +37,9 @@ public class CallTaxiManualPlan extends Plan {
 		message.setContent(getScope().getAgentName());
 		
 		PlanUtil.getCommunicator(this); // ready to accept messages from the monitor
-		//Date date;
-		//date.getMinutes()
 		Communicator.sendMessage("localhost", PlanUtil.MONITOR_PORT, message);
-
+		
+		getBeliefbase().getBelief("taxi_call_time").setFact(new Date());
 	}
 
 }
