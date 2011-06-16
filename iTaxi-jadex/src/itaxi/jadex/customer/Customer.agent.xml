@@ -49,7 +49,7 @@
 	<goals>
 		<performgoal name="updateEmotionsGoal">
 			 <creationcondition language="jcl">
-   	 			UpdateEmotionsPlan.isUpdate()
+   	 			UpdateEmotionsPlan.isUpdate($beliefbase.emotional_state,$beliefbase.taxi_call_time)
   			</creationcondition>
 			
 		</performgoal>
