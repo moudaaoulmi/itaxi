@@ -2,6 +2,7 @@ package itaxi.jadex.centralserver;
 
 import itaxi.messages.entities.Party;
 import itaxi.messages.entities.PartyBid;
+import jadex.bdi.runtime.GoalFailureException;
 import jadex.bdi.runtime.IGoal;
 import jadex.bdi.runtime.Plan;
 import jadex.bridge.IComponentIdentifier;
@@ -40,7 +41,12 @@ public class AssignPartyPlan extends Plan {
 		//cnp.getParameter("cfp_info").setValue(new Integer(acceptable_price));
 		cnp.getParameterSet("receivers").addValues(taxis);
 		
-		dispatchSubgoalAndWait(cnp);
+		try {
+			dispatchSubgoalAndWait(cnp);
+		} catch(GoalFailureException e) {
+			System.out.println("No available taxis.");
+			//throw e;
+		}
 		
 		String winningBidder = (String) cnp.getParameterSet("result").getValues()[0];
 		

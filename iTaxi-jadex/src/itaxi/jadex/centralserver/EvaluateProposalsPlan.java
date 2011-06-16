@@ -16,7 +16,7 @@ public class EvaluateProposalsPlan extends Plan {
 
 		for(ParticipantProposal pp : proposals) {
 			Double bid = (Double) pp.getProposal(); 
-			if(bid < minDistance) {
+			if(bid <= minDistance) {
 				minDistance = bid;
 				bestProposal = pp;
 			}

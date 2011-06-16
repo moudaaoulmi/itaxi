@@ -16,6 +16,7 @@
 		<import>itaxi.messages.entities.Party</import>
 		<import>jadex.commons.IFilter</import>
 		<import>itaxi.messages.entities.PartyBid</import>
+		<import>itaxi.jadex.PlanUtil</import>
 	</imports>
 
 	<capabilities>
@@ -39,7 +40,7 @@
 
 		<!-- velocity in m/s -->
 		<belief name="velocity" class="int">
-			<fact>15</fact>
+			<fact>30</fact>
 		</belief>
 
 		<belief name="gas" class="int">
@@ -70,14 +71,14 @@
 	</beliefs>
 
 	<goals>
-		<performgoal name="serviceCustomer" recur="true"> <!-- recur="true"> -->
+		<performgoal name="serviceCustomer" retry="true" exclude="never"> <!-- recur="true"> -->
 		</performgoal>
 
 		<!-- Sub-Goals -->
-		<achievegoal name="findCustomer" retry="true" exclude="never" retrydelay="100">
-			<dropcondition>
+		<achievegoal name="findCustomer" recur="true" recurdelay="50">
+			<!--<dropcondition>
 				$beliefbase.pickingCustomer == true
-			</dropcondition>
+			</dropcondition> -->
 			<targetcondition>
 				$beliefbase.customerAccepted != null
 			</targetcondition>
@@ -89,8 +90,18 @@
 			<parameter name="goalLongitude" class="int" />
 		</performgoal>
 		
+		<achievegoal name="roamArround">
+			<parameter name="goalLatitude" class="int" />
+			<parameter name="goalLongitude" class="int" />
+			<targetcondition>
+				$beliefbase.pickingCustomer == true 
+				|| PlanUtil.inRange($beliefbase.latitude , $beliefbase.longitude, $goal.goalLatitude, $goal.goalLongitude, 10) == true
+			</targetcondition>
+		</achievegoal>
+		
+		
 		<!-- Sub-goal of gotodestination -->
-		<achievegoal name="submove" recur="true" recurdelay="1000">
+		<achievegoal name="submove"  recur="true" recurdelay="1000">
 			<parameter name="goalLatitude" class="int" />
 			<parameter name="goalLongitude" class="int" />
 			<targetcondition>
@@ -99,7 +110,7 @@
 				$beliefbase.longitude == $goal.goalLongitude
 			</targetcondition>
 		</achievegoal>
-
+				
 		<!-- Imported DF-Goals -->
 
 		<!-- Make the keep registered goal available. -->
@@ -174,8 +185,8 @@
 			</body>
 
 			<trigger>
-				<goal ref="gotodestination">
-				</goal>
+				<goal ref="gotodestination"/>
+				<goal ref="roamArround"/>
 			</trigger>
 		</plan>
 		
@@ -237,9 +248,13 @@
 			</trigger>
 		</plan>
 		
+		
+		
 	</plans>
 
 	<events>
+		<internalevent name="pickedCustomer"/>
+	
 		<messageevent name="request_trip" type="fipa" direction="receive">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>

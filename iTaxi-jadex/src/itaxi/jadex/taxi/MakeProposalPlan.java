@@ -18,17 +18,19 @@ public class MakeProposalPlan extends Plan {
 		Party party = (Party) getParameter("cfp").getValue();
 		Coordinates partyDestination = party.getPosition();
 
-double distance;
+		Double distance=null;
 
 		if(getBeliefbase().getBelief("customerAccepted").getFact() == null &&
 				!(Boolean)getBeliefbase().getBelief("pickingCustomer").getFact())
 			distance = taxiPosition.distanceTo(partyDestination);
-		else
-			distance = Double.MAX_VALUE;
-
+		else {
+			
+			//distance = Double.MAX_VALUE;
+		}
+		
 		System.out.println("bid=" + distance);
 
-		getParameter("proposal").setValue(new Double(distance));
+		getParameter("proposal").setValue(distance);
 		getParameter("proposal_info").setValue(party);
 	}
 

@@ -43,7 +43,6 @@ public class GotoDestinationPlan extends Plan {
 		
 		updateGUIcoordinates(latitude, longitude);
 		
-		
 		IGoal goal = createGoal("callTaxi");
 		//TODO devia mandar a party..?
 		goal.getParameter("destinationLatitude").setValue(destinationLatitude);

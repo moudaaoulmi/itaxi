@@ -1,5 +1,11 @@
 package itaxi.jadex.customer;
 
+import java.util.Date;
+
+import itaxi.communications.communicator.Communicator;
+import itaxi.communications.messages.Message;
+import itaxi.communications.messages.MessageType;
+import itaxi.jadex.PlanUtil;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Party;
 import jadex.base.fipa.SFipa;
@@ -16,6 +22,8 @@ public class CallTaxiCentralPlan extends Plan {
 	public void body() {
 		
 		System.out.println("CallTaxiCentralPlan");
+		
+		party_waiting();
 		
 		int positionLatitude = (Integer) getBeliefbase().getBelief("latitude").getFact();
 		int positionLongitude = (Integer) getBeliefbase().getBelief("longitude").getFact();
@@ -52,4 +60,16 @@ public class CallTaxiCentralPlan extends Plan {
 		
 		System.out.println("message sent");
 	}
+	
+	
+	private void party_waiting() {
+		Message message = new Message(MessageType.PARTY_WAITING);
+		message.setContent(getScope().getAgentName());
+		PlanUtil.getCommunicator(this); // ready to accept messages from the monitor
+		Communicator.sendMessage("localhost", PlanUtil.MONITOR_PORT, message);
+		getBeliefbase().getBelief("taxi_call_time").setFact(new Date());
+	}
 }
+
+
+
