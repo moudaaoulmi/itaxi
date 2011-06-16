@@ -98,7 +98,7 @@ public class GotoDestinationPlan extends Plan {
 		// gera as coordenadas
 		Coordinates coords = new Coordinates(latitude, longitude);
 		Message message = new Message(MessageType.UPDATEPARTY);
-		String newcontent = gson.toJson(new Party(getScope().getAgentName(), 1,coords,null),Party.class);
+		String newcontent = gson.toJson(new Party(getScope().getAgentName(), 1,coords,null,(CustomerState) getBeliefbase().getBelief("emotional_state").getFact()),Party.class);
 		message.setContent(newcontent);
 
 		Communicator.sendMessage("localhost", 8002, message);

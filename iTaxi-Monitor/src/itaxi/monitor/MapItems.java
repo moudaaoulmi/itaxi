@@ -9,7 +9,7 @@ import com.google.android.maps.ItemizedOverlay;
 
 public class MapItems extends ItemizedOverlay<MapOverlayItem>{
 	
-	public enum Elements{STATIONS,VEHICLES, PARTIES};
+	public enum Elements{STATIONS,VEHICLES, PARTIESHAPPY, PARTIESANGRY, PARTIESIMPACIENT};
 	private ArrayList<MapOverlayItem> mOverlays = new ArrayList<MapOverlayItem>();
 	private iTaxiMainActivity monitor;
 	private Elements elements;
@@ -63,7 +63,8 @@ public class MapItems extends ItemizedOverlay<MapOverlayItem>{
 					monitor.sendMessage(new Message(MessageType.GETSTATIONDETAILS, "" + item.getId()), true);
 			} else*/ 
 			//monitor.sendMessage(new Message(MessageType.GETVEHICLEDETAILS, "" + item.getId()), true);
-			monitor.showVehicleDetails(item.getId());
+			if(elements == Elements.VEHICLES)
+				monitor.showVehicleDetails(item.getId());
 		} catch (SecurityException e) {
 			Log.d("Monitor", e.getMessage());
 		}
