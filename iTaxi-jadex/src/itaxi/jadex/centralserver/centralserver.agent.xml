@@ -33,7 +33,7 @@
 	
 	<goals>
 	
-		<performgoal name="getTaxis">
+		<performgoal name="getTaxisGoal">
 			<parameter name="taxis" class="IComponentIdentifier[]" direction="out"/>
 		</performgoal>
 		
@@ -80,12 +80,12 @@
 		</plan>
 	
 		<plan name="getTaxisPlan">
-			<parameter name="taxis" class="IComponentIdentifier[]">
-				<goalmapping ref="getTaxis.taxis" />
+			<parameter name="taxis" class="IComponentIdentifier[]" direction="out">
+				<goalmapping ref="getTaxisGoal.taxis"/>
 			</parameter>
 			<body class="GetTaxisPlan"></body>
 			<trigger>
-				<goal ref="getTaxis">
+				<goal ref="getTaxisGoal">
 				</goal>
 			</trigger>
 		</plan>
@@ -114,7 +114,7 @@
 	            <goalmapping ref="cnp_evaluate_proposals.acceptables"/>
 	        </parameterset>
 	        <body class="EvaluateProposalsPlan">
-				</body>
+			</body>
 	        <trigger>
 	            <goal ref="cnp_evaluate_proposals"/>
 	        </trigger>
@@ -149,6 +149,7 @@
 				</initialgoal>
 				
 				
+				<!--  TEST: delete -->
 				<initialgoal ref="assignParty">
 					<parameter ref="party">
 						<value>

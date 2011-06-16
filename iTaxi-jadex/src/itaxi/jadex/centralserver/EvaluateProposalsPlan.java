@@ -1,6 +1,6 @@
 package itaxi.jadex.centralserver;
 
-import itaxi.messages.entities.PartyBid;
+import jadex.bdi.planlib.protocols.ParticipantProposal;
 import jadex.bdi.runtime.Plan;
 
 public class EvaluateProposalsPlan extends Plan {
@@ -10,16 +10,20 @@ public class EvaluateProposalsPlan extends Plan {
 	public void body() {
 
 		double minDistance = Double.MAX_VALUE;
-		PartyBid bestBid = null;
+		ParticipantProposal bestProposal = null;
 
-		PartyBid[] proposals = (PartyBid[])getParameterSet("proposals").getValues();
+		ParticipantProposal[] proposals = (ParticipantProposal[]) getParameterSet("proposals").getValues();
 
-		for(PartyBid pb : proposals)
-			if(pb.getBid() < minDistance) {
-				minDistance = pb.getBid();
-				bestBid = pb;
+		for(ParticipantProposal pp : proposals) {
+			Double bid = (Double) pp.getProposal(); 
+			if(bid < minDistance) {
+				minDistance = bid;
+				bestProposal = pp;
 			}
+		}
 		
-		getParameterSet("acceptables").addValue(bestBid);
+		System.out.println("best bid=" + (Double) bestProposal.getProposal());
+		
+		getParameterSet("acceptables").addValue(bestProposal);
 	}
 }
