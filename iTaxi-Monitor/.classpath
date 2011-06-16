@@ -7,8 +7,8 @@
 	<classpathentry kind="lib" path="lib/iiop.jar"/>
 	<classpathentry kind="lib" path="lib/commons-codec/commons-codec-1.3.jar"/>
 	<classpathentry kind="src" path="gen"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/iTaxi-jadex"/>
 	<classpathentry kind="lib" path="lib/jadex/jadex-bridge-2.0-rc6.jar"/>
 	<classpathentry kind="lib" path="lib/gson-1.7.1.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/iTaxi-jadex"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

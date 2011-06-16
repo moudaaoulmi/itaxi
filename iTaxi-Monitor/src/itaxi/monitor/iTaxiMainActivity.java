@@ -49,7 +49,7 @@ import com.google.gson.Gson;
 public class iTaxiMainActivity extends MapActivity {
 	
 	//distance between vehicle and party in meters
-	private static int NEARBY_DISTANCE = 10;
+	private static int NEARBY_DISTANCE = 25;
 	 
 	//initial ports
 	private final static int CUSTOMER_PORTS = 55000;
