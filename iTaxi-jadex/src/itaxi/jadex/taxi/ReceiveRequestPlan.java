@@ -25,10 +25,20 @@ public class ReceiveRequestPlan extends Plan {
 		party.set_agentID((IComponentIdentifier) request.getParameter(SFipa.SENDER).getValue());
 		 
 		IMessageEvent reply;
-		//testes de aceitacao TODO adicionar (gasolina etc)
+		//testes de aceitacao
+		
+		final double gas = ((Double) getBeliefbase().getBelief("gas").getFact());
+		final double comsumption = (Double)(getBeliefbase().getBelief("consumption").getFact());
+		
+		final double distance = party.get_destination().distanceTo(party.get_position());
+		
 		if(party.getSize() > 
 			(Integer)getBeliefbase().getBelief("party_capacity").getFact()) {
-			System.out.println("REFUSED party!!");
+			System.out.println("REFUSED party! : party capacity exceeded");
+			reply = getEventbase().createReply(request,"refuse_trip");
+			
+		} else if ((gas-10) < (distance * comsumption)) {
+			System.out.println("REFUSED party! : not enough gas for trip");
 			reply = getEventbase().createReply(request,"refuse_trip");
 		}
 		else {

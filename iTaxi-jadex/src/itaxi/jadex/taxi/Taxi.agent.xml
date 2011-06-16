@@ -52,11 +52,15 @@
 		</belief>
 
 		<belief name="gas" class="double">
-			<fact>100</fact>
+			<fact>25</fact>
 		</belief>
 
 		<belief name="maxgas" class="double">
 			<fact>100</fact>
+		</belief>
+		
+		<belief name="consumption" class="double">
+			<fact>0.00025</fact>
 		</belief>
 		
 		<!-- Contract network beliefs -->
@@ -92,13 +96,13 @@
 				$beliefbase.gas > 20.0
 			</maintaincondition>
 			<targetcondition language="jcl">
-				$beliefbase.gas == 100.0
+				$beliefbase.gas == $beliefbase.maxgas
 			</targetcondition>
 		</maintaingoal>
 	
 	
 		
-		<performgoal name="serviceCustomer" retry="true" exclude="never"> <!-- recur="true"> -->
+		<performgoal name="serviceCustomer" retry="true" exclude="never"> 
 		</performgoal>
 
 		<!-- Sub-Goals -->
@@ -346,8 +350,8 @@
 					</parameter>
 				</initialgoal>
 
-				<initialgoal ref="serviceCustomer">
-				</initialgoal>
+				<initialgoal ref="serviceCustomer"/>
+				<initialgoal ref="keepGasLevelGoal"/>
 
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
