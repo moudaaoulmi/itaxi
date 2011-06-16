@@ -29,6 +29,14 @@
 		<belief name="monitorCom" class="Communicator">
 			<fact>null</fact>
 		</belief>
+		
+		<belief name="gasStationLatitude" class="int">
+			<fact>38742170</fact>
+		</belief>
+
+		<belief name="gasStationLongitude" class="int">
+			<fact>-9134210</fact>
+		</belief>
 
 		<belief name="latitude" class="int">
 			<fact>38742168</fact>
@@ -43,11 +51,11 @@
 			<fact>30</fact>
 		</belief>
 
-		<belief name="gas" class="int">
+		<belief name="gas" class="double">
 			<fact>100</fact>
 		</belief>
 
-		<belief name="maxgas" class="int">
+		<belief name="maxgas" class="double">
 			<fact>100</fact>
 		</belief>
 		
@@ -71,6 +79,25 @@
 	</beliefs>
 
 	<goals>
+	
+		<maintaingoal name="keepGasLevelGoal">
+			<deliberation>
+				<inhibits ref="serviceCustomer" inhibit="when_in_process"/>
+				<inhibits ref="submove" inhibit="when_in_process"/>
+				<inhibits ref="gotodestination" inhibit="when_in_process"/>
+				<inhibits ref="roamArround" inhibit="when_in_process"/>
+				
+			</deliberation>
+			<maintaincondition language="jcl">
+				$beliefbase.gas > 20.0
+			</maintaincondition>
+			<targetcondition language="jcl">
+				$beliefbase.gas == 100.0
+			</targetcondition>
+		</maintaingoal>
+	
+	
+		
 		<performgoal name="serviceCustomer" retry="true" exclude="never"> <!-- recur="true"> -->
 		</performgoal>
 
@@ -155,6 +182,14 @@
 				</goal>
 			</trigger>
 		</plan>
+		
+		<plan name="chargeGasPlan">
+			<body class="ChargeGasPlan"/>
+			<trigger>
+				<goal ref="keepGasLevelGoal"/>
+			</trigger>
+		</plan>
+		
 
 		<!-- Receives requests from nearby customers and agrees/refuses the service -->
 		<plan name="ReceiveRequestPlan">
