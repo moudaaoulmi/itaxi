@@ -7,6 +7,7 @@ public class PlanUtil {
 
 	public final static int MONITOR_PORT = 8002;
 	
+	
 	public static Communicator getCommunicator(Plan plan) {
 		Communicator communicator = (Communicator) plan.getBeliefbase().
 											getBelief("monitorCom").getFact();

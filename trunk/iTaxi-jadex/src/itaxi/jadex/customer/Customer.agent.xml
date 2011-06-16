@@ -29,11 +29,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38736645</fact>
+			<fact>38740662</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9138608</fact>
+			<fact>-9135561</fact>
 		</belief>
 
 		<belief name="emotional_state" class="CustomerState">
@@ -139,7 +139,6 @@
 			<parameter name="taxi" class="Message" />
 		</internalevent>
 
-		<!-- BEGIN callTaxiManual Messages -->
 		<messageevent name="request_trip" type="fipa" direction="send">
 			<parameter name="performative" class="String" direction="fixed">
 				<value>SFipa.REQUEST</value>
@@ -152,12 +151,22 @@
 			</parameter>
 		</messageevent>
 
-		<messageevent name="agree_trip" type="fipa" direction="receive">
+	<messageevent name="agree_trip" type="fipa" direction="receive">
+		<parameter name="performative" class="String" direction="fixed">
+			<value>SFipa.AGREE</value>
+		</parameter>
+	</messageevent>
+	<messageevent name="refuse_trip" type="fipa" direction="receive">
+		<parameter name="performative" class="String" direction="fixed">
+			<value>SFipa.REFUSE</value>
+		</parameter>
+	</messageevent>
+		
+		<messageevent name="reached_destination" type="fipa" direction="receive">
 			<parameter name="performative" class="String" direction="fixed">
-				<value>SFipa.AGREE</value>
+				<value>SFipa.INFORM</value>
 			</parameter>
 		</messageevent>
-		<!-- END callTaxiManual Messages -->
 	</events>
 
 	<properties>
@@ -176,10 +185,10 @@
 			<goals>
 				<initialgoal ref="gotoDestination">
 					<parameter ref="destinationLatitude">
-						<value>38736980</value>
+						<value>38736645</value>
 					</parameter>
 					<parameter ref="destinationLongitude">
-						<value>-9138672</value>
+						<value>-9138608</value>
 					</parameter>
 				</initialgoal>
 

@@ -15,17 +15,10 @@ public class SubMoveToPlan extends Plan {
 	private static final long serialVersionUID = -4734256815117513268L;
 
 	/**
-	 * Create a new plan.
-	 */
-	public SubMoveToPlan() {
-		System.out.println("SubMovePlan!");
-	}
-
-	/**
 	 * The plan body.
 	 */
 	public void body() {
-		System.out.println("SubMovePlan body!");
+		System.out.println("SubMovePlan!");
 
 		final int latitude = ((Integer) getBeliefbase().getBelief("latitude")
 				.getFact());
