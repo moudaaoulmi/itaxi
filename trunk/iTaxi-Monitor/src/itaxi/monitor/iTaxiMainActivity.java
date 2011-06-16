@@ -2,6 +2,7 @@ package itaxi.monitor;
 
 import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
+import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.entities.Party;
 import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
@@ -62,8 +63,11 @@ public class iTaxiMainActivity extends MapActivity {
 	private MapView mapView;	
 	private MapController mapController;
 	private List<Overlay> mapOverlays;
+	
 	private MapItems vehicleItems;
-	private MapItems partyItems;
+	private MapItems partyHappyItems;
+	private MapItems partyImpacientItems; 
+	private MapItems partyAngryItems;
 
 	//private MapItems stationItems;
 	private ImageButton zoomOut;
@@ -73,7 +77,8 @@ public class iTaxiMainActivity extends MapActivity {
 	
 	private HashMap<String,Vehicle> vehicles  = new HashMap<String,Vehicle>();;
 	private HashMap<String,Party> parties  = new HashMap<String,Party>();;
-	//private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();
+	//private HashMap<String,Integer> partiesSocks  = new HashMap<String,Integer>();   
+	
 
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
@@ -139,8 +144,9 @@ public class iTaxiMainActivity extends MapActivity {
         mapOverlays = mapView.getOverlays();
         //stationItems = new MapItems(Elements.STATIONS, getResources().getDrawable(R.drawable.station), this);
         vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
-        partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
-          
+        partyHappyItems = new MapItems(Elements.PARTIESHAPPY, getResources().getDrawable(R.drawable.partyhappy), this);
+        partyImpacientItems = new MapItems(Elements.PARTIESIMPACIENT, getResources().getDrawable(R.drawable.partyhappy), this);
+        partyAngryItems = new MapItems(Elements.PARTIESANGRY, getResources().getDrawable(R.drawable.partyhappy), this);
        
         //Init map information
         init();
@@ -278,24 +284,63 @@ public class iTaxiMainActivity extends MapActivity {
 	private void insertOnMap(Party part){
 		GeoPoint p = new GeoPoint(part.getPosition().getLatitude(), part.getPosition().getLongitude());
 		
-		if(partyItems.containsOverlay(part.getPartyID()))
-    		partyItems.removeOverlay(part.getPartyID());
+		CustomerState state = part.getState();
+		MapItems items = null;
 		
-		partyItems.addOverlay(new MapOverlayItem(part.getPartyID(), p, "Party " + part.getPartyID(), "Welcome to iTaxi services!"));
+		switch(state){
+		case HAPPY:
+			items = partyHappyItems;
+			break;
+		case IMPACIENT:
+			items = partyImpacientItems;
+			break;
+		case ANGRY:
+			items = partyAngryItems;
+			break;
+		default:
+			Log.d("Monitor", "Party with no state!");	
+		}
 		
-    	mapOverlays.remove(partyItems);
-    	mapOverlays.add(partyItems); 
+		/*if(items.containsOverlay(part.getPartyID()))
+			items.removeOverlay(part.getPartyID());*/
+		removePartyFromMapItems(part);
+		
+		items.addOverlay(new MapOverlayItem(part.getPartyID(), p, "Party " + part.getPartyID(), "Welcome to iTaxi services!"));
+		
+    	mapOverlays.remove(items);
+    	mapOverlays.add(items); 
     	mapView.invalidate();
         
 	}
 	
 	private void removeFromMap(Party par){
-		if(partyItems.containsOverlay(par.getPartyID()))
-    		partyItems.removeOverlay(par.getPartyID());
+		
+		CustomerState state = par.getState();
+		MapItems items = null;
+		
+		switch(state){
+		case HAPPY:
+			items = partyHappyItems;
+			break;
+		case IMPACIENT:
+			items = partyImpacientItems;
+			break;
+		case ANGRY:
+			items = partyAngryItems;
+			break;
+		default:
+			Log.d("Monitor", "Party with no state!");	
+		}
+		
+		/*if(items.containsOverlay(par.getPartyID()))
+			items.removeOverlay(par.getPartyID());
 
-    	mapOverlays.remove(partyItems);
-    	partyItems.removeOverlay(par.getPartyID());
-    	mapOverlays.add(partyItems); 
+    	mapOverlays.remove(items);
+    	items.removeOverlay(par.getPartyID());*/
+		
+		removePartyFromMapItems(par);
+		
+    	mapOverlays.add(items); 
     	mapView.invalidate();
 	}
 	
@@ -343,13 +388,47 @@ public class iTaxiMainActivity extends MapActivity {
     	mapView.invalidate();
     }
     
+    private void removePartyFromMapItems(Party party){
+		removePartyFromMapItem(party,partyHappyItems);
+		removePartyFromMapItem(party,partyImpacientItems);
+		removePartyFromMapItem(party,partyAngryItems);
+    }
+    
+    private void removePartyFromMapItem(Party party, MapItems items){
+    	if(items.containsOverlay(party.getPartyID()))    	
+    		items.removeOverlay(party.getPartyID());
+    	mapOverlays.remove(items);
+    	mapOverlays.add(items); 
+    	mapView.invalidate();
+    }
+    
     private void updatePartyPosition(Party party) {
     	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
-    	//if(partyItems.containsOverlay(party.getPartyID()))
-    		partyItems.removeOverlay(party.getPartyID());
-		partyItems.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
-    	mapOverlays.remove(partyItems);
-    	mapOverlays.add(partyItems); 
+    	CustomerState state = party.getState();
+		MapItems items = null;
+		
+		switch(state){
+		case HAPPY:
+			items = partyHappyItems;
+			break;
+		case IMPACIENT:
+			items = partyImpacientItems;
+			break;
+		case ANGRY:
+			items = partyAngryItems;
+			break;
+		default:
+			Log.d("Monitor", "Party with no state!");	
+		}
+		
+    	/*if(items.containsOverlay(party.getPartyID()))    	
+    		items.removeOverlay(party.getPartyID());
+    	mapOverlays.remove(items);*/
+		
+		removePartyFromMapItems(party);
+		items.addOverlay(new MapOverlayItem(party.getPartyID(), gp, "", ""));
+		
+    	mapOverlays.add(items); 
     	mapView.invalidate();
     }
     

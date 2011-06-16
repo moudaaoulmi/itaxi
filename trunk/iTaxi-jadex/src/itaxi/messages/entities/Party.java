@@ -1,5 +1,6 @@
 package itaxi.messages.entities;
 
+import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.exceptions.PartySizeException;
 
@@ -18,6 +19,8 @@ public class Party {
 	private Coordinates _destination;
 	//private long arrivalHour;
 	//private PartyState bookState;
+	
+	private CustomerState _state;
 
 	public Party(){
 		
@@ -46,12 +49,13 @@ public class Party {
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
-	public Party(String partyID,  int size, Coordinates position, Coordinates destination) {
+	public Party(String partyID,  int size, Coordinates position, Coordinates destination,CustomerState state) {
 		//this.station = station;
 		this.partyID = partyID;
 		this.size = size;
 		_position = position;
 		_destination = destination;
+		_state = state;
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
@@ -183,6 +187,14 @@ public class Party {
 	public void setStation(int station) {
 		this.station = station;
 	}*/
+
+	public void setState(CustomerState _state) {
+		this._state = _state;
+	}
+
+	public CustomerState getState() {
+		return _state;
+	}
 
 //	public PartyState getBookState() {
 //		return bookState;
