@@ -64,7 +64,8 @@ public class iTaxiMainActivity extends MapActivity {
 	private MapController mapController;
 	private List<Overlay> mapOverlays;
 	
-	private MapItems vehicleItems;
+	private MapItems vehicleRedItems;
+	private MapItems vehicleGreenItems;
 	//private MapItems partyItems;
 	
 	private MapItems partyHappyItems;
@@ -144,7 +145,8 @@ public class iTaxiMainActivity extends MapActivity {
         //Get the station and vehicle icons
         mapOverlays = mapView.getOverlays();
         //stationItems = new MapItems(Elements.STATIONS, getResources().getDrawable(R.drawable.station), this);
-        vehicleItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle), this);
+        vehicleGreenItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle_green), this);
+        vehicleRedItems = new MapItems(Elements.VEHICLES, getResources().getDrawable(R.drawable.vehicle_red), this);
         //partyItems = new MapItems(Elements.PARTIES, getResources().getDrawable(R.drawable.party), this);
         
         partyHappyItems = new MapItems(Elements.PARTIESHAPPY, getResources().getDrawable(R.drawable.partyhappy), this);
@@ -260,27 +262,51 @@ public class iTaxiMainActivity extends MapActivity {
 		return null;
 	}
 	
+	private void removeVehicleFromMaps(Vehicle vec){
+		removeVehicleFromMapItem(vehicleGreenItems, vec);
+		removeVehicleFromMapItem(vehicleRedItems, vec);
+	}
+	
+	private void removeVehicleFromMapItem(MapItems items, Vehicle vec){
+		if(items.containsOverlay(vec.getVehicleID())){
+	    	mapOverlays.remove(items);
+	    	items.removeOverlay(vec.getVehicleID());
+	    	mapOverlays.add(items); 
+	    	mapView.invalidate();
+    	}
+		
+	}
+	
 	private void insertOnMap(Vehicle vec){
 		GeoPoint p = new GeoPoint(vec.getPosition().getLatitude(), vec.getPosition().getLongitude());
+		MapItems items;
+		
+		removeVehicleFromMaps(vec);
 		
 		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
-    		vehicleItems.removeOverlay(vec.getVehicleID());
+    		//vehicleItems.removeOverlay(vec.getVehicleID());
 		
-		vehicleItems.addOverlay(new MapOverlayItem(vec.getVehicleID(), p, "Vehicle " + vec.getVehicleID(), "Welcome to iTaxi services!"));
+		if(vec.getNparties()>0)
+			items = vehicleRedItems;
+		else
+			items = vehicleGreenItems;
 		
-    	mapOverlays.remove(vehicleItems);
-    	mapOverlays.add(vehicleItems); 
+		items.addOverlay(new MapOverlayItem(vec.getVehicleID(), p, "Vehicle " + vec.getVehicleID(), "Welcome to iTaxi services!"));
+    	//mapOverlays.remove(vehicleItems);
+    	mapOverlays.add(items); 
     	mapView.invalidate();
         
 	}
 	
 	private void removeFromMap(Vehicle vec){
 		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
-    	
-	    mapOverlays.remove(vehicleItems);
+		
+		removeVehicleFromMaps(vec);
+		
+	    /*mapOverlays.remove(vehicleItems);
 	    vehicleItems.removeOverlay(vec.getVehicleID());
 	    mapOverlays.add(vehicleItems); 
-    	mapView.invalidate();
+    	mapView.invalidate();*/
 	}
 	
 	private void removePartyFromMapItems(Party party){
@@ -387,10 +413,22 @@ public class iTaxiMainActivity extends MapActivity {
     private void updateVehiclePosition(Vehicle vehicle) {
     	GeoPoint gp = new GeoPoint(vehicle.getPosition().getLatitude(), vehicle.getPosition().getLongitude());
     	//if(vehicleItems.containsOverlay(vehicle.getVehicleID()))
-    		vehicleItems.removeOverlay(vehicle.getVehicleID());
-		vehicleItems.addOverlay(new MapOverlayItem(vehicle.getVehicleID(), gp, "", ""));
-    	mapOverlays.remove(vehicleItems);
-    	mapOverlays.add(vehicleItems); 
+    	
+    	MapItems items;
+		
+		removeVehicleFromMaps(vehicle);
+		
+		//if(vehicleItems.containsOverlay(vec.getVehicleID()))
+    		//vehicleItems.removeOverlay(vec.getVehicleID());
+		
+		if(vehicle.getNparties() > 0)
+			items = vehicleRedItems;
+		else
+			items = vehicleGreenItems;
+    	
+    	
+		items.addOverlay(new MapOverlayItem(vehicle.getVehicleID(), gp, "", ""));
+    	mapOverlays.add(items); 
     	mapView.invalidate();
     }
     
@@ -755,7 +793,7 @@ public class iTaxiMainActivity extends MapActivity {
 
 		//Set last known number of passengers
 		TextView numberPassengers = (TextView) layout.findViewById(R.id.numberPassengersVehicleText);
-		numberPassengers.setText("Passengers Transporting: " + vehicle.getPassengers());
+		numberPassengers.setText("Passengers Transporting: " + vehicle.getNparties());
 		ImageView image = (ImageView) layout.findViewById(R.id.numberPassengersVehicleImage);
 		image.setImageResource(R.drawable.people);
 		
@@ -778,28 +816,6 @@ public class iTaxiMainActivity extends MapActivity {
 			image2.setImageResource(R.drawable.battery_discharging_100);
 		if(batteryLevel == 0)
 			image2.setImageResource(R.drawable.nocharge);
-		
-		//Set last known travel path
-		TextView travelPath = (TextView) layout.findViewById(R.id.travelPathText);
-		travelPath.setText("Travel Path: " + vehicle.getLastknownpath());
-		ImageView image3 = (ImageView) layout.findViewById(R.id.travelPathImage);
-		image3.setImageResource(R.drawable.travelpath);
-		
-		//Set last known interactions
-		TextView interactions = (TextView) layout.findViewById(R.id.interactionsText);
-		interactions.setText("Interactions: " + vehicle.getOtherVehicles());
-		ImageView image4 = (ImageView) layout.findViewById(R.id.interactionsImage);
-		image4.setImageResource(R.drawable.interactions);
-		
-		//Set information age
-		TextView infoAge = (TextView) layout.findViewById(R.id.informationAgeText);
-		double age = (new Date().getTime() - vehicle.getInfoAge())/1000;
-		int h = (int)age/3600;
-		int min = (int)age/60;
-		int sec = (int)age%60;
-		infoAge.setText("Information Age: " + h + "h:" + min + "m:" + sec + "s");
-		ImageView image5 = (ImageView) layout.findViewById(R.id.informationAgeImage);
-		image5.setImageResource(R.drawable.infoage);
 		
 		//Show alert dialog
 		builder = new AlertDialog.Builder(this);
