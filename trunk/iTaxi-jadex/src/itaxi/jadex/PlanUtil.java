@@ -1,6 +1,7 @@
 package itaxi.jadex;
 
 import itaxi.communications.communicator.Communicator;
+import itaxi.messages.coordinates.Coordinates;
 import jadex.bdi.runtime.Plan;
 
 public class PlanUtil {
@@ -39,4 +40,10 @@ public class PlanUtil {
 		}
 		return -1;
 	}
+	
+	public static boolean inRange( int startPointLatI,  int startPointLonI,
+			 int endPointLatI,  int endPointLonI,  double range) {
+		return Coordinates.distanceTo(startPointLatI, startPointLonI, endPointLatI, endPointLonI)<range;
+	}
+	
 }

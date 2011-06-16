@@ -17,6 +17,7 @@ public class ServiceCustomerPlan extends Plan {
 		
 		//IMGoalbase gb = (IMGoalbase)getFlyweight(getGoalbase());
 		//gb.getGoal("goal");
+		System.out.println("ServiceCustomerPlan!!");
 		
 		IGoal findCustomerGoal = createGoal("findCustomer");
 		
@@ -25,7 +26,6 @@ public class ServiceCustomerPlan extends Plan {
 		Party party = (Party) getBeliefbase().getBelief("customerAccepted").getFact();
 		
 		// take customer to destination
-		
 		final Coordinates destination = party.get_destination();
 		
 		IGoal gotodestination = createGoal("gotodestination");
