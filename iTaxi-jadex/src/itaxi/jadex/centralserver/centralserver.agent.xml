@@ -71,11 +71,13 @@
 	
 		<plan name="assignPartyPlan">
 			<parameter name="party" class="Party">
-				<goalmapping ref="assignParty.party"/>
+				<!--  goalmapping ref="assignParty.party"/-->
+				<messageeventmapping ref="requestTaxi.content"/>
 			</parameter>
 			<body class="AssignPartyPlan"/>
 			<trigger>
-				<goal ref="assignParty"/>
+				<messageevent ref="requestTaxi"/>
+				<!-- goal ref="assignParty"/-->
 			</trigger>
 		</plan>
 	
@@ -122,6 +124,21 @@
 		
 		
 	</plans>
+	
+	<events>
+		<messageevent name="requestTaxi" type="fipa" direction="receive">
+			<parameter name="performative" class="String" direction="fixed">
+				<value>SFipa.REQUEST</value>
+			</parameter>
+			<parameter name="language" class="String" direction="fixed">
+				<value>SFipa.JADEX_XML</value>
+			</parameter>
+			<!-- <match>$content instanceof Party
+				&amp;&amp;
+				$sender.getName().startsWith("Customer")
+			</match> -->
+		</messageevent>
+	</events>
   
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
@@ -148,16 +165,15 @@
 					</parameter>
 				</initialgoal>
 				
-				
 				<!--  TEST: delete -->
-				<initialgoal ref="assignParty">
+				<!-- initialgoal ref="assignParty">
 					<parameter ref="party">
 						<value>
-							new Party("party",2,new Coordinates(10000,1000), new Coordinates(10000,1000))
+							new Party("party",2,new Coordinates(10000,1000), new Coordinates(10000,1000), null)
  						</value>
 					</parameter>
 				</initialgoal>
-
+ 				-->
 
 				<!-- End goal to deregister the agent at shutdown. -->
 				<endgoal ref="df_deregister" />
