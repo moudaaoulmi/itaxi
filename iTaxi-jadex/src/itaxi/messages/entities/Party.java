@@ -59,6 +59,15 @@ public class Party {
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
+	public Party(String partyID,  int size, Coordinates position, Coordinates destination) {
+		//this.station = station;
+		this.partyID = partyID;
+		this.size = size;
+		_position = position;
+		_destination = destination;
+		//this.setArrivalHour(new Date().getTime());
+	}
+	
 	public Party(String partyID, IComponentIdentifier agentID,  int size, int latitude, int longitude/*, PartyState bookState*/) throws PartySizeException{
 		if(size < 0 || size > 4)
 			throw new PartySizeException();
