@@ -41,6 +41,8 @@ public class GotoDestinationPlan extends Plan implements IDirectionsListener {
 			this
 		);
 		
+		if(route!=null) {
+		
 		// RoutePathSmoothness.FINE;
 		List<GeoPoint> geoPoints = route.getGeoPointPath(RoutePathSmoothness.ROUGH);
 
@@ -51,6 +53,13 @@ public class GotoDestinationPlan extends Plan implements IDirectionsListener {
 
 			dispatchSubgoalAndWait(goal);
 			  //System.out.println("Dispatch move goal!");			
+		}
+		} else {
+			System.out.println("Directions not available! Going straight");
+			IGoal goal = createGoal("submove");
+			goal.getParameter("goalLatitude").setValue(destLat);  //38740662
+			goal.getParameter("goalLongitude").setValue(destLon); //-9135561 //TODO lat lon
+			dispatchSubgoalAndWait(goal);
 		}
 	}
 	
