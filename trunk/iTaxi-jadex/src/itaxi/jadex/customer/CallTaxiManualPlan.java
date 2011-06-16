@@ -40,6 +40,7 @@ public class CallTaxiManualPlan extends Plan {
 		Communicator.sendMessage("localhost", PlanUtil.MONITOR_PORT, message);
 		
 		getBeliefbase().getBelief("taxi_call_time").setFact(new Date());
+		System.out.println("Setting call time!");
 	}
 
 }

@@ -37,7 +37,7 @@
 		</belief>
 
 		<belief name="emotional_state" class="CustomerState">
-			<fact>CustomerState.HAPPY</fact>
+			<fact>CustomerState.INIT</fact>
 		</belief>
 
 		<belief name="taxi_call_time" class="Date">
@@ -52,11 +52,15 @@
 			<parameter name="centralServer" class="IComponentIdentifier[]" direction="out" />
 		</performgoal>
 
-		<performgoal name="updateEmotionsGoal">
+		<performgoal name="updateEmotionsGoal" retry="true" retrydelay="60000" exclude="never">
+			 <unique/>
 			 <creationcondition language="jcl">
    	 			UpdateEmotionsPlan.isUpdate($beliefbase.emotional_state,$beliefbase.taxi_call_time)
   			</creationcondition>
-
+			<dropcondition language="jcl">
+    			$beliefbase.emotional_state == CustomerState.ANGRY
+  			</dropcondition>
+			
 		</performgoal>
 
 		<achievegoal name="gotoDestination">
