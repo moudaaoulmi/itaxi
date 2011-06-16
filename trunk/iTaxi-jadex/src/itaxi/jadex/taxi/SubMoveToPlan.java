@@ -17,8 +17,24 @@ public class SubMoveToPlan extends Plan {
 	/**
 	 * The plan body.
 	 */
+	
+	/**
+	 * Gas spent rate per meter
+	 */
+	//static double GAS_RATE = 0.00025;
+	static double GAS_RATE = 0.1;
+	
 	public void body() {
 		System.out.println("SubMovePlan!");
+		
+
+		Double gas = (Double) getBeliefbase().getBelief("gas").getFact();
+		
+		if(gas <= 0) {
+			gas = 0.0;
+			System.out.println("ran out of battery");
+			return;
+		}
 
 		final int latitude = ((Integer) getBeliefbase().getBelief("latitude")
 				.getFact());
@@ -32,6 +48,9 @@ public class SubMoveToPlan extends Plan {
  
 		Coordinates nextCoord = Coordinates.nextCoord(latitude, longitude, 
 				 							goalLatitude, goalLongitude, step);
+		
+		spendGas(new Coordinates(latitude,longitude), nextCoord);
+		System.out.println("Gas level = " + (Double) getBeliefbase().getBelief("gas").getFact());
 		
 		//System.err.println("!!!!!! latitude:"+latitude+"longitude"+longitude+" goalLatitude:"+goalLatitude + " goalLongitude:"+ goalLongitude +" step:"+step);
 		//System.err.println("!!!!!! nextLatitude:"+nextCoord.getLatitude()+"nextLongitude"+nextCoord.getLongitude());
@@ -55,6 +74,16 @@ public class SubMoveToPlan extends Plan {
  
 		Communicator.sendMessage("localhost", 8002, message);
 
+	}
+	
+	private void spendGas(Coordinates currentPosition, Coordinates nextPosition) {
+		double gas = ((Double) getBeliefbase().getBelief("gas").getFact());
+		
+		double distance = currentPosition.distanceTo(nextPosition);
+		
+		gas -= distance * GAS_RATE;
+		
+		getBeliefbase().getBelief("gas").setFact(gas);
 	}
 
 }

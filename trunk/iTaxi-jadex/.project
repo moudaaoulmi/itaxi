@@ -23,7 +23,7 @@
 	</buildSpec>
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
-		<nature>jadex.editor.adf.plugin.jadexNature</nature>
 		<nature>org.eclipse.wst.common.project.facet.core.nature</nature>
+		<nature>jadex.editor.adf.plugin.jadexNature</nature>
 	</natures>
 </projectDescription>
