@@ -232,7 +232,7 @@
 			</trigger>
 		</plan>
 		
-		<plan name="execute_order">
+		<plan name="pick_party">
 			<parameter name="proposal" class="Object">
 				<goalmapping ref="cnp_execute_task.proposal"/>
 			</parameter>
