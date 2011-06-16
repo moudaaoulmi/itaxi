@@ -28,11 +28,11 @@ public class ServiceCustomerPlan extends Plan {
 		
 		final Coordinates destination = party.get_destination();
 		
-		IGoal moveGoal = createGoal("move");
-		moveGoal.getParameter("goalLatitude").setValue(destination.getLatitude());
-		moveGoal.getParameter("goalLongitude").setValue(destination.getLongitude());
+		IGoal gotodestination = createGoal("gotodestination");
+		gotodestination.getParameter("goalLatitude").setValue(destination.getLatitude());
+		gotodestination.getParameter("goalLongitude").setValue(destination.getLongitude());
 
-		dispatchSubgoalAndWait(moveGoal);
+		dispatchSubgoalAndWait(gotodestination);
 
 		//TODO mandar mensagem ao customer a dizer q chegou ao destino
 		IMessageEvent me = createMessageEvent("reached_destination");
