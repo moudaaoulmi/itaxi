@@ -45,6 +45,9 @@
 			<fact>null</fact>
 		</belief>
 
+		<belief name="inTaxi" class="boolean">
+			<fact>false</fact>
+		</belief>
 	</beliefs>
 
 	<goals>

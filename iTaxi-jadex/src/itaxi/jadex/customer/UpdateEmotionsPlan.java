@@ -37,6 +37,10 @@ public class UpdateEmotionsPlan extends Plan {
 			return true;
 		}
 
+		if (state == CustomerState.ANGRY) {
+			return false;
+		}
+
 		return true;
 	}
 
@@ -45,10 +49,9 @@ public class UpdateEmotionsPlan extends Plan {
 		CustomerState state = (CustomerState) getBeliefbase().getBelief("emotional_state")
 				.getFact();
 		Date date = (Date) getBeliefbase().getBelief("taxi_call_time").getFact();
-
+		System.out.println("Running updateEmotionsPlan!");
 		if (date != null && (new Date()).getTime() - date.getTime() > 50) {
 
-			System.out.println("Running updateEmotionsPlan!");
 			switch (state) {
 			case HAPPY:
 				state = CustomerState.IMPACIENT;
@@ -84,12 +87,12 @@ public class UpdateEmotionsPlan extends Plan {
 		// gera as coordenadas
 		Coordinates coords = new Coordinates(latitude, longitude);
 		Message message = new Message(MessageType.UPDATEPARTY);
-		Party p = (Party) getBeliefbase().getBelief("customerAccepted").getFact();
 		CustomerState state = (CustomerState) getBeliefbase().getBelief("emotional_state")
 				.getFact();
 		
-		if (p == null) {
-			p = new Party(getScope().getAgentName(), 1, coords, null, state);
+		Boolean inTaxi = (Boolean) getBeliefbase().getBelief("inTaxi").getFact();
+		if (!inTaxi) {
+			Party p = new Party(getScope().getAgentName(), 1, coords, null, state);
 
 			String newcontent = gson.toJson(p, Party.class);
 			message.setContent(newcontent);
