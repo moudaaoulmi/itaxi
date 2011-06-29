@@ -16,6 +16,7 @@
 		<import>itaxi.communications.communicator.*</import>
 		<import>itaxi.communications.messages.Message</import>
 		<import>java.util.Date</import>
+		<import>java.util.Random</import>
 	</imports>
 
 	<capabilities>
@@ -29,11 +30,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38737013</fact>
+			<fact>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</fact>  <!-- 38737013 -->
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9133909</fact>
+			<fact>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</fact> <!-- -9133909  -->
 		</belief>
 
 		<belief name="emotional_state" class="CustomerState">
@@ -52,7 +53,7 @@
 			<parameter name="centralServer" class="IComponentIdentifier[]" direction="out" />
 		</performgoal>
 
-		<performgoal name="updateEmotionsGoal" retry="true" retrydelay="60000" exclude="never">
+		<performgoal name="updateEmotionsGoal" retry="true" retrydelay="10000" exclude="never">
 			 <unique/>
 			 <creationcondition language="jcl">
    	 			UpdateEmotionsPlan.isUpdate($beliefbase.emotional_state,$beliefbase.taxi_call_time)
@@ -63,7 +64,7 @@
 			
 		</performgoal>
 
-		<achievegoal name="gotoDestination">
+		<achievegoal name="gotoDestination" retry="true" retrydelay="1000">
 			<parameter name="destinationLatitude" class="int" />
 			<parameter name="destinationLongitude" class="int" />
 			<targetcondition>
@@ -148,7 +149,7 @@
 			</trigger>
 		</plan>
 
-		<!-- 
+		
 		<plan name="callTaxiManual">
 			<body class="CallTaxiManualPlan">
 			</body>
@@ -157,7 +158,7 @@
 				</goal>
 			</trigger>
 		</plan>
-		 -->
+		 
 
 		<plan name="die">
 			<body class="DiePlan">
@@ -226,10 +227,10 @@
 			<goals>
 				<initialgoal ref="gotoDestination">
 					<parameter ref="destinationLatitude">
-						<value>38736645</value>
+						<value>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</value>  <!-- 38736645-->
 					</parameter>
 					<parameter ref="destinationLongitude">
-						<value>-9138608</value>
+						<value>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</value> <!-- -9138608 -->  
 					</parameter>
 				</initialgoal>
 

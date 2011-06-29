@@ -28,11 +28,11 @@ public class FreeRoamPlan extends Plan {
 	 */
 	public void body() {
 					
-			if((Boolean)getBeliefbase().getBelief("pickingCustomer").getFact()) {
+		/*	if((Boolean)getBeliefbase().getBelief("pickingCustomer").getFact()) {
 				System.out.println("FreeRoamPlan: Waiting for pickedCustomer.");
 				waitForInternalEvent("pickedCustomer");
 				return;
-			}
+			} */
 
 			Random rand = new Random();
 			final int destLat = rand.nextInt(maxlat - minlat + 1) + minlat;

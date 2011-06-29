@@ -92,9 +92,12 @@ public class GotoDestinationPlan extends Plan {
 				waitForMessageEvent("reached_destination"); //TODO timeout?
 				getBeliefbase().getBelief("latitude").setFact(destinationLatitude);
 				getBeliefbase().getBelief("longitude").setFact(destinationLongitude);
-				updateGUIcoordinates(destinationLatitude, destinationLongitude);
+				
 				System.out.println("CustomerSate stop state!");
 				getBeliefbase().getBelief("taxi_call_time").setFact(null);
+				getBeliefbase().getBelief("emotional_state").setFact(CustomerState.INIT);
+				updateGUIcoordinates(destinationLatitude, destinationLongitude);
+
 				System.out.println("Customer: Reached destination!!");
 				
 			} else {

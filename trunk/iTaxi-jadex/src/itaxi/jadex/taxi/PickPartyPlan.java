@@ -10,7 +10,7 @@ public class PickPartyPlan extends Plan{
 	private static final long serialVersionUID = 8215196765644992892L;
 
 	public void body() {
-		
+				
 		Party party = (Party) getParameter("proposal_info").getValue();
 		
 		System.out.println("PickPartyPlan will move to party=" + party.getPartyID() + " at " + party.get_position());
@@ -20,7 +20,7 @@ public class PickPartyPlan extends Plan{
 		//contract net inform
 		getParameter("result").setValue(getScope().getAgentName());
 		
-		IGoal moveToParty = createGoal("gotodestination");
+		IGoal moveToParty = createGoal("movetoparty");
 		moveToParty.getParameter("goalLatitude").setValue(party.getPosition().getLatitude());
 		moveToParty.getParameter("goalLongitude").setValue(party.getPosition().getLongitude());
 		
@@ -28,10 +28,12 @@ public class PickPartyPlan extends Plan{
 				(Integer) moveToParty.getParameter("goalLatitude").getValue() + "," +
 				(Integer) moveToParty.getParameter("goalLongitude").getValue() + ")");
 		
+		//Top Level por causa do timeout do contract-net
 		dispatchTopLevelGoal(moveToParty);
 		
-		IInternalEvent event = getScope().getEventbase().createInternalEvent("pickedCustomer");
-		getScope().getEventbase().dispatchInternalEvent(event);
+		//IInternalEvent event = getScope().getEventbase().createInternalEvent("pickedCustomer");
+		//getScope().getEventbase().dispatchInternalEvent(event);
+		
 		
 	}
 }
