@@ -4,7 +4,6 @@ import itaxi.communications.messages.Message;
 import itaxi.communications.messages.MessageType;
 import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.Statistics;
 import itaxi.messages.entities.Vehicle;
 import itaxi.monitor.MapItems.Elements;
 import jadex.bridge.ComponentIdentifier;
@@ -85,7 +84,7 @@ public class iTaxiMainActivity extends MapActivity {
 	private HashSet<String> waitingParties = new HashSet<String>();
 	private HashSet<String> roamingVehicles = new HashSet<String>();
 	
-	private Statistics statistics;
+	//private Statistics statistics;
 	
 	//Save connection to server
 	//private Dialog connectServerDialog;
@@ -119,7 +118,7 @@ public class iTaxiMainActivity extends MapActivity {
 
         gson = new Gson();
      
-        statistics = new Statistics(0,0,0,0,0,null);
+        //statistics = new Statistics(0,0,0,0,0,null);
         
         //Get zoom out button
         zoomOut = (ImageButton) findViewById(R.id.mapZoomOut);
@@ -132,10 +131,6 @@ public class iTaxiMainActivity extends MapActivity {
         //Get change view button
         mapChangeView = (Button) findViewById(R.id.mapChangeView);
         mapChangeView.setOnClickListener(new ChangeViewClick());
-        
-        //Get overall statistics button
-        overallStatistics = (Button) findViewById(R.id.overallStatistics);
-        overallStatistics.setOnClickListener(new OverallStatisticsClick());
         
         //Controls map configurations
         mapView = (MapView) findViewById(R.id.mapView);
@@ -472,66 +467,7 @@ public class iTaxiMainActivity extends MapActivity {
     	mapView.invalidate();
     }
     
-       
-    
-	/*//Show connect to server dialog
-	private void showConnectionDialog() {
-		
-		//Show dialog
-		connectServerDialog = new Dialog(this);
-		connectServerDialog.setContentView(R.layout.connectserver);
-		connectServerDialog.setTitle("Connect To Server");
-		connectServerDialog.show();
-		
-		//Add click event
-		Button connect = (Button) connectServerDialog.findViewById(R.id.connectButton);
-		connect.setOnClickListener(new ConnectServerClick());
-	}
-	
-	//Connect to server button was clicked
-	private class ConnectServerClick implements OnClickListener {
-		@Override
-		public void onClick(View view) {
-			
-			try {
-				//Get server ip address
-				EditText ip = (EditText) connectServerDialog.findViewById(R.id.serverIpAdress);
-				serverIp = ip.getText().toString();
-				
-				//Get server port
-				EditText port = (EditText) connectServerDialog.findViewById(R.id.serverPort);
-				serverPort =  Integer.parseInt(port.getText().toString());
-				
-				
-				//Get android emulator port
-				EditText emuport = (EditText) connectServerDialog.findViewById(R.id.emulatorPort);
-				MonitorUtil.redirEmulatorPort(Integer.parseInt(emuport.getText().toString()), serverPort+1);
-				
-							
-				//Get initial station and vehicles from server
-				Message message = new Message(MessageType.MONITORMAP);
-				sendMessage(message, true);				
-				
-				//Server connection parameters
-				connectServerDialog.dismiss();
-				serverSocket = new ServerSocket(serverPort+1);
-				connectionTask = new ServerConnectionTask();
-				connectionTask.execute();
-			} catch (UnknownHostException e) {				
-				Toast.makeText(view.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-				Log.d("Monitor", e.getMessage());
-			} catch (IOException e) {
-				Toast.makeText(view.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-				Log.d("Monitor", e.getMessage());
-			} catch (SecurityException e) {				
-				Toast.makeText(view.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-				Log.d("Monitor", e.getMessage());
-			}
-		}
-	}
-	*/
-		
-    
+           
 	//Handles incoming messages
 	private void handleMessage(Message message) {   //, Integer port) {
 		String ID;
@@ -550,6 +486,7 @@ public class iTaxiMainActivity extends MapActivity {
 				Party part = new Gson().fromJson(message.getContent(), Party.class);
 				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID());
 				Log.d("Update", "RECEIVED UPDATEPARTY:" + part.getPartyID() + " " + part.getState());
+				
 				addParty(part);
 				/*if(!partiesSocks.containsKey(part.getPartyID())) 
 					partiesSocks.put(part.getPartyID(),port);*/
@@ -675,13 +612,6 @@ public class iTaxiMainActivity extends MapActivity {
         return false;
     }
     
-    //Overall statistics click listener
-    private class OverallStatisticsClick implements OnClickListener {
-		@Override
-		public void onClick(View view) {
-			showOverallStatistics();
-		}
-    }
     
     //Zoom Out click listener
     private class ZoomOutClick implements OnClickListener {
@@ -714,65 +644,6 @@ public class iTaxiMainActivity extends MapActivity {
 		}
     }
     
-    //Show overall statistics dialog
-    private void showOverallStatistics() {
-    	AlertDialog.Builder builder;
-		AlertDialog alertDialog;
-
-		//Create layout
-		LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
-		View layout = inflater.inflate(R.layout.statistics,
-		                               (ViewGroup) findViewById(R.id.statistics_root));
-
-		//Set number of passengers transported
-		TextView numberPassengers = (TextView) layout.findViewById(R.id.numberPassengersStatisticsText);
-		numberPassengers.setText("Passengers Transported: " + statistics.getPassengersTransported());
-		ImageView image = (ImageView) layout.findViewById(R.id.numberPassengersStatisticsImage);
-		image.setImageResource(R.drawable.people);
-		
-		//Set total traveled km
-		TextView traveledKm = (TextView) layout.findViewById(R.id.traveledKmText);
-		traveledKm.setText("Traveled Km: " + statistics.getTraveledKm());
-		ImageView image2 = (ImageView) layout.findViewById(R.id.traveledKmImage);
-		image2.setImageResource(R.drawable.kilometer);
-		
-		//Set sum of straight line distance
-		TextView straightDistance = (TextView) layout.findViewById(R.id.straightLineText);
-		straightDistance.setText("Straight Line Distance: " + statistics.getDistanceSum());
-		ImageView image3 = (ImageView) layout.findViewById(R.id.straightLineImage);
-		image3.setImageResource(R.drawable.kilometer);
-		
-		//Set used energy
-		TextView usedEnergy = (TextView) layout.findViewById(R.id.usedEnergyText);
-		usedEnergy.setText("Used Energy: " + statistics.getUsedEnergy());
-		ImageView image4 = (ImageView) layout.findViewById(R.id.usedEnergyImage);
-		image4.setImageResource(R.drawable.power);
-		
-		//Set average travel time
-		TextView averageTravel = (TextView) layout.findViewById(R.id.averageTravelText);
-		averageTravel.setText("Average Travel Time: " + statistics.getAverageTravelTime());
-		ImageView image5 = (ImageView) layout.findViewById(R.id.averageTravelImage);
-		image5.setImageResource(R.drawable.timer);
-		
-		/*
-		//Set missing vehicles
-		TextView missingVehicles = (TextView) layout.findViewById(R.id.missingVehiclesText);
-		String mVehicles = statistics.getMissingVehicles().keySet().toString();
-		if(mVehicles.equals("[]"))
-			mVehicles = "";
-		else mVehicles = mVehicles.substring(1,mVehicles.length()-1);
-		missingVehicles.setText("Missing Vehicles: " + mVehicles);
-		ImageView image6 = (ImageView) layout.findViewById(R.id.missingVehiclesImage);
-		image6.setImageResource(R.drawable.vehiclelow);
-		*/
-		
-		//Show alert dialog
-		builder = new AlertDialog.Builder(this);
-		builder.setTitle("Overall Statistics");
-		builder.setView(layout);
-		alertDialog = builder.create();
-		alertDialog.show();
-    }
     
     //Show station details dialog
     public void showVehicleDetails(String vehicleId) {
