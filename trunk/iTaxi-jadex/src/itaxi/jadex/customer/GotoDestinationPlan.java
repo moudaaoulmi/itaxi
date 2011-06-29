@@ -96,8 +96,9 @@ public class GotoDestinationPlan extends Plan {
 				System.out.println("CustomerSate stop state!");
 				getBeliefbase().getBelief("taxi_call_time").setFact(null);
 				getBeliefbase().getBelief("emotional_state").setFact(CustomerState.INIT);
+				getBeliefbase().getBelief("inTaxi").setFact(false);
 				updateGUIcoordinates(destinationLatitude, destinationLongitude);
-
+				
 				System.out.println("Customer: Reached destination!!");
 				
 			} else {
@@ -119,6 +120,7 @@ public class GotoDestinationPlan extends Plan {
 	}
 	
 	private void disappearGUI() {
+		getBeliefbase().getBelief("inTaxi").setFact(true);
 		Message message = new Message(MessageType.REMOVE_PARTY);
 		message.setContent(getScope().getAgentName());
 		Communicator.sendMessage("localhost", 8002, message);
