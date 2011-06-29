@@ -17,6 +17,7 @@
 		<import>jadex.commons.IFilter</import>
 		<import>itaxi.messages.entities.PartyBid</import>
 		<import>itaxi.jadex.PlanUtil</import>
+		<import>java.util.Random</import>
 	</imports>
 
 	<capabilities>
@@ -39,11 +40,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38742168</fact>
+			<fact>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9134204</fact>
+			<fact>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</fact>
 		</belief>
 
 		<!-- velocity in m/s -->
@@ -52,7 +53,7 @@
 		</belief>
 
 		<belief name="gas" class="double">
-			<fact>25</fact>
+			<fact>50</fact>
 		</belief>
 
 		<belief name="maxgas" class="double">
@@ -83,14 +84,14 @@
 	</beliefs>
 
 	<goals>
-	
+		
+		<performgoal name="serviceCustomer" retry="true" exclude="never"> 
+		</performgoal>
+			
 		<maintaingoal name="keepGasLevelGoal">
 			<deliberation>
 				<inhibits ref="serviceCustomer" inhibit="when_in_process"/>
-				<inhibits ref="submove" inhibit="when_in_process"/>
-				<inhibits ref="gotodestination" inhibit="when_in_process"/>
 				<inhibits ref="roamArround" inhibit="when_in_process"/>
-				
 			</deliberation>
 			<maintaincondition language="jcl">
 				$beliefbase.gas > 20.0
@@ -99,11 +100,6 @@
 				$beliefbase.gas == $beliefbase.maxgas
 			</targetcondition>
 		</maintaingoal>
-	
-	
-		
-		<performgoal name="serviceCustomer" retry="true" exclude="never"> 
-		</performgoal>
 
 		<!-- Sub-Goals -->
 		<achievegoal name="findCustomer" recur="true" recurdelay="50">
@@ -121,12 +117,23 @@
 			<parameter name="goalLongitude" class="int" />
 		</performgoal>
 		
+		<!-- Go to party -->
+		<performgoal name="movetoparty">
+			<parameter name="goalLatitude" class="int" />
+			<parameter name="goalLongitude" class="int" />
+			<deliberation>
+				<inhibits ref="gotodestination"/>
+				<inhibits ref="roamArround"/>
+			</deliberation>
+		</performgoal>
+		
+		<!-- $beliefbase.pickingCustomer == true || PlanUtil.inRange( -->
+		
 		<achievegoal name="roamArround">
 			<parameter name="goalLatitude" class="int" />
 			<parameter name="goalLongitude" class="int" />
 			<targetcondition>
-				$beliefbase.pickingCustomer == true 
-				|| PlanUtil.inRange($beliefbase.latitude , $beliefbase.longitude, $goal.goalLatitude, $goal.goalLongitude, 10) == true
+				PlanUtil.inRange($beliefbase.latitude , $beliefbase.longitude, $goal.goalLatitude, $goal.goalLongitude, 10) == true
 			</targetcondition>
 		</achievegoal>
 		
@@ -225,6 +232,7 @@
 
 			<trigger>
 				<goal ref="gotodestination"/>
+				<goal ref="movetoparty"/>
 				<goal ref="roamArround"/>
 			</trigger>
 		</plan>
@@ -261,7 +269,7 @@
 			<parameter name="proposal" class="Object" direction="out">
 				<goalmapping ref="cnp_make_proposal.proposal"/>
 			</parameter>
-			<parameter name="proposal_info" class="PartyBid" direction="out">
+			<parameter name="proposal_info" class="Party" direction="out">
 				<goalmapping ref="cnp_make_proposal.proposal_info"/>
 			</parameter>
 
@@ -286,8 +294,6 @@
 				<goal ref="cnp_execute_task"/>
 			</trigger>
 		</plan>
-		
-		
 		
 	</plans>
 

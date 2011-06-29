@@ -40,7 +40,7 @@ public class SubMoveToPlan extends Plan {
 				 							goalLatitude, goalLongitude, step);
 		
 		spendGas(new Coordinates(latitude,longitude), nextCoord);
-		System.out.println(getScope().getAgentName() + ": Gas level = " + (Double) getBeliefbase().getBelief("gas").getFact());
+		//System.out.println(getScope().getAgentName() + ": Gas level = " + (Double) getBeliefbase().getBelief("gas").getFact());
 		
 		//System.err.println("!!!!!! latitude:"+latitude+"longitude"+longitude+" goalLatitude:"+goalLatitude + " goalLongitude:"+ goalLongitude +" step:"+step);
 		//System.err.println("!!!!!! nextLatitude:"+nextCoord.getLatitude()+"nextLongitude"+nextCoord.getLongitude());

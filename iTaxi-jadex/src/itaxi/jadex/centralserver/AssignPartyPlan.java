@@ -1,7 +1,6 @@
 package itaxi.jadex.centralserver;
 
 import itaxi.messages.entities.Party;
-import itaxi.messages.entities.PartyBid;
 import jadex.bdi.runtime.GoalFailureException;
 import jadex.bdi.runtime.IGoal;
 import jadex.bdi.runtime.Plan;
