@@ -159,10 +159,12 @@ public class iTaxiMainActivity extends MapActivity {
     	mapController.setZoom(16);
         mapController.animateTo(new GeoPoint((int)38742369, (int)-9140110));
         
+        addStations();
+        
 		//serverSocket = choosePort();
         
 		try {
-			redirEmulatorPort(MONITORPORT);
+			//redirEmulatorPort(MONITORPORT);
 			serverSocket = new ServerSocket(MONITORPORT);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -291,6 +293,17 @@ public class iTaxiMainActivity extends MapActivity {
     	mapOverlays.add(items); 
     	mapView.invalidate();
         
+	}
+	
+	private void addStations(){
+		GeoPoint p = new GeoPoint(38742170,-9134210);
+		MapItems items = new MapItems(Elements.STATIONS,getResources().getDrawable(R.drawable.gas), this);
+		
+		items.addOverlay(new MapOverlayItem("Gas station", p, "Gas Station ", "Welcome to iTaxi services!"));
+
+    	mapOverlays.add(items); 
+    	mapView.invalidate();
+		
 	}
 	
 	private void removeFromMap(Vehicle vec){
