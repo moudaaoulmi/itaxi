@@ -43,10 +43,10 @@ public class Communicator extends Thread {
 			serverSocket = new ServerSocket(serverPort);
 			stop = false;
 			this.agent = agent;
-			System.out.println("Communicator created");
+			//System.out.println("Communicator created");
 		} catch (IOException e) {
 			// System.err.println(e.getMessage());
-			System.out.println("Communicator couldn't stablish connection");
+			System.out.println("Communicator couldn't establish connection");
 		}
 	}
 
@@ -56,10 +56,10 @@ public class Communicator extends Thread {
 			handler = hand;
 			serverSocket = new ServerSocket(serverPort);
 			stop = false;
-			System.out.println("Communicator created");
+			//System.out.println("Communicator created");
 		} catch (IOException e) {
 			// System.err.println(e.getMessage());
-			System.out.println("Communicator couldn't stablish connection");
+			System.out.println("Communicator couldn't establish connection");
 		}
 	}
 
@@ -81,7 +81,7 @@ public class Communicator extends Thread {
 
 				// Read incoming messages
 				final Message msg = gson.fromJson(reader.readLine(), Message.class);
-				System.out.println("Received Message: " + gson.toJson(msg));
+				//System.out.println("Received Message: " + gson.toJson(msg));
 
 				if (agent != null) {
 					agent.scheduleStep(new IComponentStep() {
@@ -135,7 +135,7 @@ public class Communicator extends Thread {
 			String msg = new Gson().toJson(message);
 			writer.write(msg + "\n");
 			writer.flush();
-			System.out.println("Send Message: " + msg);
+			//System.out.println("Send Message: " + msg);
 			writer.close();
 		} catch (UnknownHostException e) {
 			System.err.println(e.getMessage());

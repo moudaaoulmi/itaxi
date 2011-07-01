@@ -12,7 +12,7 @@ public class DiePlan extends Plan {
 	@Override
 	public void body() {
 		
-		System.out.println("CUSTOMER DIE PLAN");
+		//System.out.println("CUSTOMER DIE PLAN");
 		
 		Message message = new Message(MessageType.REMOVE_PARTY);
 		message.setContent(getScope().getAgentName());

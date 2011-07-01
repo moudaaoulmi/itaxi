@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3>Customer-manual!</H3> taxi-o-matic -->
+<!-- <H3>Customer_manual!</H3> taxi-o-matic -->
 <agent xmlns="http://jadex.sourceforge.net/jadex-bdi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
 	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
-	name="Customer-manual" package="itaxi.jadex.customer">
+	name="Customer_manual" package="itaxi.jadex.customer">
 
 	<imports>
 		<import>jadex.commons.*</import>
@@ -31,11 +31,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</fact>  <!-- 38737013 -->
+			<fact>38737281</fact>  <!-- 38737013 --> 
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</fact> <!-- -9133909  -->
+			<fact>-9133903</fact> <!-- -9133909  -->
 		</belief>
 
 		<belief name="emotional_state" class="CustomerState">
@@ -235,10 +235,10 @@
 			<goals>
 				<initialgoal ref="gotoDestination">
 					<parameter ref="destinationLatitude">
-						<value>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</value>  <!-- 38736645-->
+						<value>38736645</value>  <!-- 38736645--> 
 					</parameter>
 					<parameter ref="destinationLongitude">
-						<value>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</value> <!-- -9138608 -->  
+						<value>-9138608</value> <!-- -9138608 -->  
 					</parameter>
 				</initialgoal>
 

@@ -27,12 +27,12 @@ public class AssignPartyPlan extends Plan {
 		}	
 		
 		Party party = (Party) getParameter("party").getValue();
-		if(party == null)
-			System.out.println("ta null");
-		else
-			System.out.println("nao ta null");
+		//if(party == null)
+			//System.out.println("ta null");
+		//else
+			//System.out.println("nao ta null");
 		
-		System.out.println("Party name=" + party.getPartyID());
+		System.out.println("Assign Party name=" + party.getPartyID());
 		
 		// Initiate a call-for-proposal.
 		IGoal cnp = createGoal("cnp_initiate");
