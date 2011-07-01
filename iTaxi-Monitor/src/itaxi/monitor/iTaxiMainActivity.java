@@ -48,7 +48,7 @@ import com.google.gson.Gson;
 public class iTaxiMainActivity extends MapActivity {
 	
 	//distance between vehicle and party in meters
-	private static int NEARBY_DISTANCE = 25;
+	private static int NEARBY_DISTANCE = 30;
 	 
 	//initial ports
 	private final static int CUSTOMER_PORTS = 55000;
@@ -164,7 +164,7 @@ public class iTaxiMainActivity extends MapActivity {
 		//serverSocket = choosePort();
         
 		try {
-			//redirEmulatorPort(MONITORPORT);
+			redirEmulatorPort(MONITORPORT); //TODO redir
 			serverSocket = new ServerSocket(MONITORPORT);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -340,7 +340,7 @@ public class iTaxiMainActivity extends MapActivity {
 		/*if(partyItems.containsOverlay(part.getPartyID()))
     		partyItems.removeOverlay(part.getPartyID());*/
 		
-		CustomerState state = part.getState();
+		CustomerState state = part.customerState();
 		MapItems items = null;
 		
 		switch(state){
@@ -442,7 +442,7 @@ public class iTaxiMainActivity extends MapActivity {
     
     private void updatePartyPosition(Party party) {
     	GeoPoint gp = new GeoPoint(party.getPosition().getLatitude(), party.getPosition().getLongitude());
-    	Log.d("Update", "updatePartyPosition " + party.getState());
+    	Log.d("Update", "updatePartyPosition " + party.customerState());
     	/*
     	//if(partyItems.containsOverlay(party.getPartyID()))
     		partyItems.removeOverlay(party.getPartyID());
@@ -454,7 +454,7 @@ public class iTaxiMainActivity extends MapActivity {
     	
     	removePartyFromMapItems(party);
     	
-    	CustomerState state = party.getState();
+    	CustomerState state = party.customerState();
 		MapItems items = null;
 		
 		switch(state){
@@ -487,7 +487,7 @@ public class iTaxiMainActivity extends MapActivity {
 		switch (message.getType()) {
 			case UPDATEVEHICLE:
 				Vehicle vec = new Gson().fromJson(message.getContent(), Vehicle.class);
-				Log.d("Monitor", "RECEIVED UPDATEVEHICLE:"+vec.getVehicleID());
+				Log.d("Monitor", "RECEIVED UPDATEVEHICLE:"+vec.getVehicleID()+" "+vec.get_position().getLatitude()+":"+vec.getPosition().getLongitude());
 				addVehicle(vec);
 				updateVehiclePosition(vec);
 				//if(roamingVehicles.contains(vec.getVehicleID()))
@@ -497,8 +497,7 @@ public class iTaxiMainActivity extends MapActivity {
 			
 			case UPDATEPARTY:
 				Party part = new Gson().fromJson(message.getContent(), Party.class);
-				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID());
-				Log.d("Update", "RECEIVED UPDATEPARTY:" + part.getPartyID() + " " + part.getState());
+				Log.d("Monitor", "RECEIVED UPDATEPARTY:" + part.getPartyID() + " " + part.customerState());
 				
 				addParty(part);
 				/*if(!partiesSocks.containsKey(part.getPartyID())) 
@@ -545,7 +544,7 @@ public class iTaxiMainActivity extends MapActivity {
 	private void checkPositions(Vehicle v) {
 		for(String partyID : waitingParties) {
 			Party p = parties.get(partyID);
-			Log.d("Monitor", "wating party:"+partyID + " "+ v.getPosition().distanceTo(p.getPosition()));
+			Log.d("Monitor", "waiting party:"+partyID + " "+ v.getPosition().distanceTo(p.getPosition()));
 			if(v.getPosition().distanceTo(p.getPosition()) < NEARBY_DISTANCE) {
 				Message message = new Message(MessageType.TAXI_ROAMING);
 				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
