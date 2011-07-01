@@ -112,7 +112,7 @@ public class GotoDestinationPlan extends Plan {
 				killAgent();
 				
 			} else {
-				System.out.println("Customer: Taxi refused trip:");
+				System.out.println("Customer:" +  getScope().getAgentName() + " Taxi refused trip:");
 				fail();
 			}	
 		} else

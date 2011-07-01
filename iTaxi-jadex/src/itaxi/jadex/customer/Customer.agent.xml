@@ -221,7 +221,7 @@
 
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
-		<property name="logging.level">Level.WARNING</property>
+		<property name="logging.level">Level.OFF</property>
 		<!-- The default parent handler prints out log messages on the console. -->
 		<property name="logging.useParentHandlers">true</property>
 		<!--<property name="debugging">true</property> -->

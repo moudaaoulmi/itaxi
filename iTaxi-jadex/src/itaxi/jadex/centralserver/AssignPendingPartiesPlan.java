@@ -15,13 +15,13 @@ public class AssignPendingPartiesPlan extends Plan{
 
 	@Override
 	public void body() {
-		System.out.println("#################Superb AssignPendingPartiesPlan!");
+		//System.out.println("#################Superb AssignPendingPartiesPlan!");
 
 		ArrayList<Party> pendingParties = (ArrayList<Party>) getBeliefbase().getBelief("pendingParties").getFact();
 		ArrayList<Party> resultParties;
 		
 		if(pendingParties.size() == 0){
-			System.out.println("No pending parties!");
+			//System.out.println("No pending parties!");
 			return;
 		}
 		

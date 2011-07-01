@@ -93,7 +93,7 @@
 				<inhibits ref="roamArround" inhibit="when_in_process"/>
 			</deliberation>
 			<maintaincondition language="jcl">
-				$beliefbase.gas > 20.0
+				$beliefbase.gas > 25.0
 			</maintaincondition>
 			<targetcondition language="jcl">
 				$beliefbase.gas == $beliefbase.maxgas
@@ -325,7 +325,7 @@
 
 	<properties>
 		<!-- Only log outputs >= level are printed. -->
-		<property name="logging.level">Level.INFO</property>
+		<property name="logging.level">Level.OFF</property>
 		<!-- The default parent handler prints out log messages on the console. -->
 		<property name="logging.useParentHandlers">true</property>
 		<!--<property name="debugging">true</property> -->
