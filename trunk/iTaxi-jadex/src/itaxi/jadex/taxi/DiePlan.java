@@ -13,7 +13,7 @@ public class DiePlan extends Plan {
 	@Override
 	public void body() {
 		
-		System.out.println("DIE PLAN");
+		//System.out.println("TAXI DIE PLAN");
 		
 		Message message = new Message(MessageType.REMOVE_VEHICLE);
 		message.setContent(getScope().getAgentName());

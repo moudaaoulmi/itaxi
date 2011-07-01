@@ -34,8 +34,8 @@ public class PlanUtil {
 			for(int i=0; i < id.length(); i++)
 				if(id.charAt(i) >= '0' && id.charAt(i) <= '9'){
 					name = id.substring(0, i);
-					if(name.equals("Customer")) i_port=CUSTOMER_PORTS;
-					else if(name.equals("Taxi")) i_port=TAXI_PORTS;
+					if(name.equals("Customer") || name.startsWith("Customer_manual")) i_port=CUSTOMER_PORTS;
+					else if(name.equals("Taxi") || name.startsWith("Taxi_manual")) i_port=TAXI_PORTS;
 		
 					nid = new Integer(id.substring(i));
 					System.out.println("NAME:"+name + "PORT:"+ (i_port+nid));

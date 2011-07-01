@@ -15,7 +15,7 @@ public class ChargeGasPlan extends Plan {
 		moveToGasStation.getParameter("goalLatitude").setValue(getBeliefbase().getBelief("gasStationLatitude").getFact());
 		moveToGasStation.getParameter("goalLongitude").setValue(getBeliefbase().getBelief("gasStationLongitude").getFact());
 		
-		System.out.println(getScope().getAgentName() + " dispatched move goal to (" +
+		System.out.println(getScope().getAgentName() + " dispatched move goal to Gas Station (" +
 				(Integer) moveToGasStation.getParameter("goalLatitude").getValue() + "," +
 				(Integer) moveToGasStation.getParameter("goalLongitude").getValue() + ")");
 		

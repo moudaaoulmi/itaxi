@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3>Taxi!</H3> taxi-o-matic -->
+<!-- <H3>Taxi_manual!</H3> taxi-o-matic -->
 <agent xmlns="http://jadex.sourceforge.net/jadex-bdi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
 	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
-	name="Taxi" package="itaxi.jadex.taxi">
+	name="Taxi_manual" package="itaxi.jadex.taxi">
 
 	<imports>
 		<import>jadex.commons.*</import>
@@ -39,11 +39,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>(new Random().nextInt(38742034 - 38733833 + 1))+38733833</fact>
+			<fact>38741565</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-((new Random().nextInt(9145131 - 9133458 + 1))+9133458)</fact>
+			<fact>-9133464</fact>
 		</belief>
 
 		<!-- velocity in m/s -->
@@ -181,8 +181,6 @@
 			<concrete ref="procap.cnp_execute_task"/>
 		</achievegoalref>
 		
-		
-
 	</goals>
 
 	<plans>
@@ -351,6 +349,15 @@
 					</parameter>
 				</initialgoal>
 
+				<!--initialgoal ref="gotodestination">
+					<parameter ref="goalLatitude">
+						<value>38734486</value> 
+					</parameter>
+					<parameter ref="goalLongitude">
+						<value>-9134209</value>
+					</parameter>
+				</initialgoal-->
+				
 				<initialgoal ref="serviceCustomer"/>
 				<initialgoal ref="keepGasLevelGoal"/>
 

@@ -20,8 +20,9 @@ public class ReceiveRequestPlan extends Plan {
 		//IMessageEvent request = waitForMessageEvent("request_trip");
 		IMessageEvent request = (IMessageEvent)getReason();
 		
-		System.out.println("Received request_trip");
 		Party party = (Party)request.getParameter(SFipa.CONTENT).getValue();
+		System.out.println("Received request_trip from " + party.getPartyID());
+
 		
 		party.set_agentID((IComponentIdentifier) request.getParameter(SFipa.SENDER).getValue());
 		 

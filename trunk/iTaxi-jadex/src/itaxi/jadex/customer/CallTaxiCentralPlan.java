@@ -58,7 +58,7 @@ public class CallTaxiCentralPlan extends Plan {
 		
 		sendMessage(me);
 		
-		System.out.println("message sent");
+		//System.out.println("message sent");
 	}
 	
 	

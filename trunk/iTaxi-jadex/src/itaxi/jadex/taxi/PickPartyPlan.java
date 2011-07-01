@@ -24,7 +24,7 @@ public class PickPartyPlan extends Plan{
 		moveToParty.getParameter("goalLatitude").setValue(party.getPosition().getLatitude());
 		moveToParty.getParameter("goalLongitude").setValue(party.getPosition().getLongitude());
 		
-		System.out.println(getScope().getAgentName() + " dispatched move goal to (" +
+		System.out.println(getScope().getAgentName() + " dispatched move goal to party "+ party.getPartyID() + " in (" +
 				(Integer) moveToParty.getParameter("goalLatitude").getValue() + "," +
 				(Integer) moveToParty.getParameter("goalLongitude").getValue() + ")");
 		

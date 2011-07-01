@@ -18,22 +18,22 @@ public class UpdateEmotionsPlan extends Plan {
 
 	public static boolean isUpdate(CustomerState state, Date date) {
 		if (date == null) {
-			System.out.println("date null!");
+			//System.out.println("date null!");
 			return false;
 		}
 
-		System.out.println("date NOT null! State = " + state + " time = "
-				+ ((new Date()).getTime() - date.getTime()));
+		//System.out.println("date NOT null! State = " + state + " time = "
+		//		+ ((new Date()).getTime() - date.getTime()));
 
 		if (state == CustomerState.HAPPY) {// && (new Date()).getTime() -
 											// date.getTime() > 50){
-			System.out.println("date NOT null! && HAPPY && >50 ->CHANGE STATE!");
+			//System.out.println("date NOT null! && HAPPY && >50 ->CHANGE STATE!");
 			return true;
 		}
 
 		if (state == CustomerState.IMPACIENT) {// && (new Date()).getTime() -
 												// date.getTime() > 100){
-			System.out.println("date NOT null! && IMPACIENT && >100 ->CHANGE STATE!");
+			//System.out.println("date NOT null! && IMPACIENT && >100 ->CHANGE STATE!");
 			return true;
 		}
 
@@ -55,19 +55,15 @@ public class UpdateEmotionsPlan extends Plan {
 			switch (state) {
 			case HAPPY:
 				state = CustomerState.IMPACIENT;
-				System.out.println("Customer state = IMPACIENT");
+				System.out.println("Customer " + getScope().getAgentName() +  " state = IMPACIENT");
 				break;
 			case IMPACIENT:
 				state = CustomerState.ANGRY;
-				System.out.println("Customer state = ANGRY");
-				break;
-			case ANGRY:
-				state = CustomerState.ANGRY;
-				System.out.println("Customer state = ANGRY");
+				System.out.println("Customer " + getScope().getAgentName() +  " state = ANGRY");
 				break;
 			case INIT:
 				state = CustomerState.HAPPY;
-				System.out.println("Customer state = HAPPY");
+				System.out.println("Customer " + getScope().getAgentName() +  "  state = HAPPY");
 				break;
 			}
 
@@ -81,7 +77,7 @@ public class UpdateEmotionsPlan extends Plan {
 
 	private void updateGUIcoordinates(int latitude, int longitude) {
 
-		System.out.println("send UpdateParty for state!");
+		//System.out.println("send UpdateParty for state!");
 
 		Gson gson = new Gson();
 		// gera as coordenadas
