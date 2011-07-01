@@ -1,5 +1,6 @@
 package itaxi.jadex.taxi;
 
+import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.entities.Party;
 import jadex.base.fipa.SFipa;
 import jadex.bdi.runtime.IMessageEvent;
@@ -46,6 +47,16 @@ public class ReceiveRequestPlan extends Plan {
 			System.out.println("AGREED party!!");
 			getBeliefbase().getBelief("customerAccepted").setFact(party);
 			getBeliefbase().getBelief("pickingCustomer").setFact(false);
+			
+			if(party.customerState() == CustomerState.IMPACIENT) {
+				System.out.println("TAXI " + getScope().getAgentName() + " increased velocity to 35m/s.");
+				getBeliefbase().getBelief("velocity").setFact(35);
+			}
+			else if(party.customerState() == CustomerState.ANGRY) {
+				System.out.println("TAXI " + getScope().getAgentName() + " increased velocity to 40m/s.");
+				getBeliefbase().getBelief("velocity").setFact(40);
+			}
+
 		}
 		
 		sendMessage(reply);

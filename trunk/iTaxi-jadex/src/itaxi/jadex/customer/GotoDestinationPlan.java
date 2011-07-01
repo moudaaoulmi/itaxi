@@ -76,7 +76,8 @@ public class GotoDestinationPlan extends Plan {
 								longitude, 
 								destinationLatitude, 
 								destinationLongitude);
-
+			party.customerStateSet((CustomerState)getBeliefbase().getBelief("emotional_state").getFact());
+			
 			IMessageEvent me = createMessageEvent("request_trip");
 			me.getParameterSet(SFipa.RECEIVERS).addValue(taxi);
 			me.getParameter(SFipa.CONTENT).setValue(party);

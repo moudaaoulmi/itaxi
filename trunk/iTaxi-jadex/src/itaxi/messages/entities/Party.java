@@ -4,7 +4,7 @@ import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.coordinates.Coordinates;
 
 import jadex.bridge.IComponentIdentifier;
-
+ 
 public class Party {
 
 	//public enum PartyState{NOTBOOKED, BOOKED, FLYING};
@@ -19,7 +19,8 @@ public class Party {
 	//private long arrivalHour;
 	//private PartyState bookState;
 	
-	private CustomerState _state;
+	private int _state=1;
+
 
 	public Party(){
 		
@@ -54,7 +55,7 @@ public class Party {
 		this.size = size;
 		_position = position;
 		_destination = destination;
-		_state = state;
+		if(state!=null) _state=state.ordinal();
 		//this.setArrivalHour(new Date().getTime());
 	}
 	
@@ -188,12 +189,20 @@ public class Party {
 		this.station = station;
 	}*/
 
-	public void setState(CustomerState _state) {
-		this._state = _state;
+	public void set_state(int state) {
+		this._state = state;
 	}
 
-	public CustomerState getState() {
+	public int get_state() {
 		return _state;
+	}
+
+	public void customerStateSet(CustomerState _state) {
+		this._state = _state.ordinal();
+	}
+
+	public CustomerState customerState() {
+		return CustomerState.convert(_state);
 	}
 
 //	public PartyState getBookState() {
