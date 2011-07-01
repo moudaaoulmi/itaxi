@@ -48,7 +48,7 @@ import com.google.gson.Gson;
 public class iTaxiMainActivity extends MapActivity {
 	
 	//distance between vehicle and party in meters
-	private static int NEARBY_DISTANCE = 30;
+	private static int NEARBY_DISTANCE = 35;
 	 
 	//initial ports
 	private final static int CUSTOMER_PORTS = 55000;
@@ -164,7 +164,7 @@ public class iTaxiMainActivity extends MapActivity {
 		//serverSocket = choosePort();
         
 		try {
-			redirEmulatorPort(MONITORPORT); //TODO redir
+			//redirEmulatorPort(MONITORPORT); //TODO redir
 			serverSocket = new ServerSocket(MONITORPORT);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -492,7 +492,7 @@ public class iTaxiMainActivity extends MapActivity {
 				updateVehiclePosition(vec);
 				//if(roamingVehicles.contains(vec.getVehicleID()))
 					checkPositions(vec);
-				Log.d("Monitor", "UPDATED");
+				//Log.d("Monitor", "UPDATED");
 				break;
 			
 			case UPDATEPARTY:
@@ -503,7 +503,7 @@ public class iTaxiMainActivity extends MapActivity {
 				/*if(!partiesSocks.containsKey(part.getPartyID())) 
 					partiesSocks.put(part.getPartyID(),port);*/
 				updatePartyPosition(part);
-				Log.d("Monitor", "UPDATED");
+				//Log.d("Monitor", "UPDATED");
 				break;
 				 
 			case REMOVE_VEHICLE:
@@ -550,7 +550,7 @@ public class iTaxiMainActivity extends MapActivity {
 				Log.d("Monitor","A mandar TAXI:" + v.get_agentID() + " para:" + p.getPartyID() );
 				//TODO Json bug ip
 				message.setContent(gson.toJson(new ComponentIdentifier(v.get_agentID().getName(), null, v.get_agentID().getResolvers()) ,ComponentIdentifier.class));
-				sendMessage("10.0.2.2", getPort(p.getPartyID()), message); //10.0.2.2: localhost outside android emulator
+				sendMessage("192.168.1.77", getPort(p.getPartyID()), message); //10.0.2.2
 			}
 		}
 	}
@@ -563,8 +563,8 @@ public class iTaxiMainActivity extends MapActivity {
 			for(int i=0; i < id.length(); i++)
 				if(id.charAt(i) >= '0' && id.charAt(i) <= '9'){
 					name = id.substring(0, i);
-					if(name.equals("Customer")) i_port=CUSTOMER_PORTS;
-					else if(name.equals("Taxi")) i_port=TAXI_PORTS;
+					if(name.equals("Customer") || name.startsWith("Customer_manual")) i_port=CUSTOMER_PORTS;
+					else if(name.equals("Taxi") || name.startsWith("Taxi_manual")) i_port=TAXI_PORTS;
 		
 					nid = new Integer(id.substring(i));
 					System.out.println("NAME:"+name + "PORT:"+ (i_port+nid));
