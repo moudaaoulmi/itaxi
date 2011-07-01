@@ -76,8 +76,8 @@
 			<fact>null</fact>
 		</belief>
 		
-		<belief name="pickingCustomer" class="boolean">
-			<fact>false</fact>
+		<belief name="pickingCustomer" class="String">
+			<fact>null</fact>
 		</belief>
 
 	</beliefs>

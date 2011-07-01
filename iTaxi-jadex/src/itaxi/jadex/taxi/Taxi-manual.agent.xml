@@ -39,11 +39,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38741565</fact>
+			<fact>38736352</fact>
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9133464</fact>
+			<fact>-9134005</fact>
 		</belief>
 
 		<!-- velocity in m/s -->
@@ -76,8 +76,8 @@
 			<fact>null</fact>
 		</belief>
 		
-		<belief name="pickingCustomer" class="boolean">
-			<fact>false</fact>
+		<belief name="pickingCustomer" class="String">
+			<fact>null</fact>
 		</belief>
 
 	</beliefs>

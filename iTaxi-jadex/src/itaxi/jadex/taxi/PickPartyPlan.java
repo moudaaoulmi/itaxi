@@ -15,7 +15,7 @@ public class PickPartyPlan extends Plan{
 		
 		System.out.println("PickPartyPlan will move to party=" + party.getPartyID() + " at " + party.get_position());
 	
-		getBeliefbase().getBelief("pickingCustomer").setFact(true);
+		getBeliefbase().getBelief("pickingCustomer").setFact(party.getPartyID());
 		
 		//contract net inform
 		getParameter("result").setValue(getScope().getAgentName());
