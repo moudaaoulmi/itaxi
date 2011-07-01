@@ -15,9 +15,9 @@
 		<import>itaxi.communications.communicator.Communicator</import>
 		<import>itaxi.messages.entities.Party</import>
 		<import>jadex.commons.IFilter</import>
-		<import>itaxi.messages.entities.PartyBid</import>
 		<import>itaxi.jadex.PlanUtil</import>
 		<import>java.util.Random</import>
+		<import>itaxi.jadex.customer.*</import>
 	</imports>
 
 	<capabilities>
@@ -61,7 +61,7 @@
 		</belief>
 		
 		<belief name="consumption" class="double">
-			<fact>0.00025</fact>
+			<fact>0.0034</fact> <!-- 0.00025 -->
 		</belief>
 		
 		<!-- Contract network beliefs -->
@@ -127,13 +127,15 @@
 			</deliberation>
 		</performgoal>
 		
-		<!-- $beliefbase.pickingCustomer == true || PlanUtil.inRange( -->
+		<!--PlanUtil.inRange($beliefbase.latitude , $beliefbase.longitude, $goal.goalLatitude, $goal.goalLongitude, 10) == true -->
 		
 		<achievegoal name="roamArround">
 			<parameter name="goalLatitude" class="int" />
 			<parameter name="goalLongitude" class="int" />
 			<targetcondition>
-				PlanUtil.inRange($beliefbase.latitude , $beliefbase.longitude, $goal.goalLatitude, $goal.goalLongitude, 10) == true
+				$beliefbase.latitude == $goal.goalLatitude
+				&amp;&amp;
+				$beliefbase.longitude == $goal.goalLongitude
 			</targetcondition>
 		</achievegoal>
 		
@@ -220,12 +222,6 @@
 		</plan>
 
 		<plan name="GotoDestination">
-			<parameter name="goalLatitude" class="int">
-				<goalmapping ref="move.goalLatitude" />
-			</parameter>
-			<parameter name="goalLongitude" class="int">
-				<goalmapping ref="move.goalLongitude" />
-			</parameter>
 
 			<body class="GotoDestinationPlan">
 			</body>
@@ -239,10 +235,10 @@
 		
 		<plan name="submoveto">
 			<parameter name="goalLatitude" class="int">
-				<goalmapping ref="move.goalLatitude" />
+				<goalmapping ref="submove.goalLatitude" />
 			</parameter>
 			<parameter name="goalLongitude" class="int">
-				<goalmapping ref="move.goalLongitude" />
+				<goalmapping ref="submove.goalLongitude" />
 			</parameter>
 
 			<body class="SubMoveToPlan">

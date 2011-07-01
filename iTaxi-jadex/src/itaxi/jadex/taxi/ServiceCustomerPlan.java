@@ -1,5 +1,6 @@
 package itaxi.jadex.taxi;
 
+import itaxi.jadex.customer.CustomerState;
 import itaxi.messages.coordinates.Coordinates;
 import itaxi.messages.entities.Party;
 import jadex.base.fipa.SFipa;
@@ -35,6 +36,9 @@ public class ServiceCustomerPlan extends Plan {
 		gotodestination.getParameter("goalLongitude").setValue(destination.getLongitude());
 
 		dispatchSubgoalAndWait(gotodestination);
+
+		System.out.println("TAXI " + getScope().getAgentName() + "changed velocity to 30m/s.");
+		getBeliefbase().getBelief("velocity").setFact(30);
 
 		// mandar mensagem ao customer a dizer q chegou ao destino
 		IMessageEvent me = createMessageEvent("reached_destination");
