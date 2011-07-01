@@ -70,7 +70,7 @@ public class SubMoveToPlan extends Plan {
 
 		message.setContent(newcontent);
  
-		Communicator.sendMessage("localhost", 8002, message);
+		Communicator.sendMessage("192.168.1.84", 8002, message);
 
 	}
 	

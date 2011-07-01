@@ -93,7 +93,7 @@ public class UpdateEmotionsPlan extends Plan {
 			String newcontent = gson.toJson(p, Party.class);
 			message.setContent(newcontent);
 
-			Communicator.sendMessage("localhost", 8002, message);
+			Communicator.sendMessage("192.168.1.84", 8002, message);
 		}
 
 	}

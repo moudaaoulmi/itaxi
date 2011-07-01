@@ -31,11 +31,11 @@
 		</belief>
 
 		<belief name="latitude" class="int">
-			<fact>38737281</fact>  <!-- 38737013 --> 
+			<fact>38733975</fact>  <!-- 38737013 -->  
 		</belief>
 
 		<belief name="longitude" class="int">
-			<fact>-9133903</fact> <!-- -9133909  -->
+			<fact>-9134274</fact> <!-- -9133909  -->
 		</belief>
 
 		<belief name="emotional_state" class="CustomerState">

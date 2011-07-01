@@ -37,7 +37,7 @@ public class CallTaxiManualPlan extends Plan {
 		message.setContent(getScope().getAgentName());
 		
 		PlanUtil.getCommunicator(this); // ready to accept messages from the monitor
-		Communicator.sendMessage("localhost", PlanUtil.MONITOR_PORT, message);
+		Communicator.sendMessage("192.168.1.84", PlanUtil.MONITOR_PORT, message);
 		
 		getBeliefbase().getBelief("taxi_call_time").setFact(new Date());
 		//System.out.println("Setting call time!");

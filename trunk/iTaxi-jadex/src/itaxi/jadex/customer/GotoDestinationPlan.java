@@ -100,7 +100,16 @@ public class GotoDestinationPlan extends Plan {
 				getBeliefbase().getBelief("inTaxi").setFact(false);
 				updateGUIcoordinates(destinationLatitude, destinationLongitude);
 				
-				System.out.println("Customer: Reached destination!!");
+				System.out.println("Customer " +  getScope().getAgentName() + ": Reached destination!!");
+				
+				// KILL
+				waitFor(5000);
+				Message message = new Message(MessageType.REMOVE_PARTY);
+				message.setContent(getScope().getAgentName());
+				Communicator.sendMessage("192.168.1.84", 8002, message);
+				Communicator communicator = (Communicator) getBeliefbase().getBelief("monitorCom").getFact();
+				if(communicator!=null) communicator.stopThread();
+				killAgent();
 				
 			} else {
 				System.out.println("Customer: Taxi refused trip:");
@@ -116,7 +125,7 @@ public class GotoDestinationPlan extends Plan {
 		String newcontent = gson.toJson(new Party(getScope().getAgentName(), 1,coords,null,(CustomerState) getBeliefbase().getBelief("emotional_state").getFact()),Party.class);
 		message.setContent(newcontent);
 
-		Communicator.sendMessage("localhost", 8002, message);
+		Communicator.sendMessage("192.168.1.84", 8002, message);
 
 	}
 	
@@ -124,7 +133,7 @@ public class GotoDestinationPlan extends Plan {
 		getBeliefbase().getBelief("inTaxi").setFact(true);
 		Message message = new Message(MessageType.REMOVE_PARTY);
 		message.setContent(getScope().getAgentName());
-		Communicator.sendMessage("localhost", 8002, message);
+		Communicator.sendMessage("192.168.1.84", 8002, message);
 	}
 	
 	

@@ -21,7 +21,7 @@ public class MakeProposalPlan extends Plan {
 		Double distance=null;
 
 		if(getBeliefbase().getBelief("customerAccepted").getFact() == null &&
-				!(Boolean)getBeliefbase().getBelief("pickingCustomer").getFact())
+			(getBeliefbase().getBelief("pickingCustomer").getFact()==null))
 			distance = taxiPosition.distanceTo(partyDestination);
 		else {
 			

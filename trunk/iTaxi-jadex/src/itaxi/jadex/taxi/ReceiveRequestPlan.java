@@ -42,12 +42,16 @@ public class ReceiveRequestPlan extends Plan {
 		} else if ((gas-10) < (distance * comsumption)) {
 			System.out.println("REFUSED party! : not enough gas for trip");
 			reply = getEventbase().createReply(request,"refuse_trip");
+		} else if (getBeliefbase().getBelief("pickingCustomer").getFact()!=null &&
+				   ((String)getBeliefbase().getBelief("pickingCustomer").getFact()).compareTo(party.getPartyID())!=0) {
+			System.out.println("REFUSED party! : already on course to another party");
+			reply = getEventbase().createReply(request,"refuse_trip");
 		}
 		else {
 			reply = getEventbase().createReply(request,"agree_trip");
 			System.out.println("AGREED party!!");
 			getBeliefbase().getBelief("customerAccepted").setFact(party);
-			getBeliefbase().getBelief("pickingCustomer").setFact(false);
+			getBeliefbase().getBelief("pickingCustomer").setFact(null);
 			
 			if(party.customerState() == CustomerState.IMPACIENT) {
 				System.out.println("TAXI " + getScope().getAgentName() + " increased velocity to 35m/s.");

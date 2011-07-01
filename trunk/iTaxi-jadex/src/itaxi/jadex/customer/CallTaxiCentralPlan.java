@@ -66,7 +66,7 @@ public class CallTaxiCentralPlan extends Plan {
 		Message message = new Message(MessageType.PARTY_WAITING);
 		message.setContent(getScope().getAgentName());
 		PlanUtil.getCommunicator(this); // ready to accept messages from the monitor
-		Communicator.sendMessage("localhost", PlanUtil.MONITOR_PORT, message);
+		Communicator.sendMessage("192.168.1.84", PlanUtil.MONITOR_PORT, message);
 		getBeliefbase().getBelief("taxi_call_time").setFact(new Date());
 	}
 }
