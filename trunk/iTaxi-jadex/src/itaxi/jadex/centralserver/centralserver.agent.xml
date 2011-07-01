@@ -16,6 +16,7 @@
 		<import>jadex.bdi.planlib.protocols.NegotiationRecord</import>
 		<import>itaxi.messages.entities.Party</import>
 		<import>itaxi.messages.coordinates.Coordinates</import>
+		<import>java.util.ArrayList</import>
 	</imports> 
 
 	<capabilities>
@@ -29,9 +30,15 @@
 			<fact>null</fact>
 		</belief>-->
 		
+		<belief name="pendingParties" class="ArrayList">
+			<fact>new ArrayList()</fact>
+		</belief>
+		
 	</beliefs>
 	
 	<goals>
+	
+		<performgoal name="assignPendingPartiesGoal" retry="true" retrydelay="3000" exclude="never"></performgoal>
 	
 		<performgoal name="getTaxisGoal">
 			<parameter name="taxis" class="IComponentIdentifier[]" direction="out"/>
@@ -68,6 +75,13 @@
 	</goals>
 
 	<plans>
+	
+		<plan name="assignPendingPartiesPlan">
+			<body class="AssignPendingPartiesPlan"/>
+			<trigger>
+				<goal ref="assignPendingPartiesGoal"></goal>
+			</trigger>
+		</plan>
 	
 		<plan name="assignPartyPlan">
 			<parameter name="party" class="Party">
@@ -152,6 +166,8 @@
 	<configurations>
 		<configuration name="default">
 			<goals>
+				<initialgoal ref="assignPendingPartiesGoal"></initialgoal>
+			
 				<initialgoal ref="df_keep_registered">
 					<parameter ref="description">
 						<value>
