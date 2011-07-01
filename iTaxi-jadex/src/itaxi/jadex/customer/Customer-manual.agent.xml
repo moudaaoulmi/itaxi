@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- <H3>Customer!</H3> taxi-o-matic -->
+<!-- <H3>Customer-manual!</H3> taxi-o-matic -->
 <agent xmlns="http://jadex.sourceforge.net/jadex-bdi" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://jadex.sourceforge.net/jadex-bdi
 	                    http://jadex.sourceforge.net/jadex-bdi-2.0.xsd"
-	name="Customer" package="itaxi.jadex.customer">
+	name="Customer-manual" package="itaxi.jadex.customer">
 
 	<imports>
 		<import>jadex.commons.*</import>
@@ -142,7 +142,7 @@
 
 		</plan>
 
-		<plan name="callTaxiCentral">
+		<!--plan name="callTaxiCentral">
 			<parameter name="destinationLatitude" class="int">
 				<goalmapping ref="callTaxi.destinationLatitude" />
 			</parameter>
@@ -155,17 +155,17 @@
 				<goal ref="callTaxi">
 				</goal>
 			</trigger>
-		</plan>
+		</plan-->
 
 		
-	<!-- 	<plan name="callTaxiManual">
+		<plan name="callTaxiManual">
 			<body class="CallTaxiManualPlan">
 			</body>
 			<trigger>
 				<goal ref="callTaxi">
 				</goal>
 			</trigger>
-		</plan> -->
+		</plan>
 		 
 
 		<plan name="die">
